@@ -1,6 +1,4 @@
-# jjkit
-
-("Busco trabajo")
+# JJLayout
 
 Create Android Apps faster!!!
 
@@ -18,13 +16,13 @@ allprojects {
 2.- Add the dependency
 ```
 dependencies {
-	        implementation 'com.github.Only-IceSoul:jjkit:LastetTagVersion'
+	        implementation 'com.github.Only-IceSoul:jjlayout:1.1.1'
 	}
 ```
 
 ### Using XML 
 
-[See all Attributes](https://github.com/Only-IceSoul/jjkit/blob/master/jjkit/src/main/res/values/attrs.xml)
+[See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
 
 **cl** = Contraint Layout 
 
@@ -68,7 +66,7 @@ Force Preview: click refresh layout or write anything in onCreate(Activity) then
 
 #### Other Views:
 
-[See all Attributes](https://github.com/Only-IceSoul/jjkit/blob/master/jjkit/src/main/res/values/attrs.xml)
+[See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
 
 **lp** = Layout params
 
@@ -231,7 +229,7 @@ Based in Height
 1300px to 2000px **Medium**  
 1px to 1299px **Small**  
 
-[See Class JJScreen](https://github.com/Only-IceSoul/jjkit/blob/master/jjkit/src/main/java/com/jjlf/jjkit/JJScreen.kt)
+[See Class JJScreen](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/java/com/jjlf/library_layout/JJScreen.kt)
 
 ### XML
 
@@ -255,3 +253,13 @@ Based in Height
 </resources>
 
 ```
+
+
+
+
+
+# License
+
+## Apache License 2.0
+
+[See License](https://github.com/Only-IceSoul/JJLayout/blob/master/LICENSE)
