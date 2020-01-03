@@ -15,7 +15,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.motion.widget.MotionLayout
-import com.jjlf.library_layout.extension.parseUnicode16
 import com.jjlf.library_layout.JJMargin
 import com.jjlf.library_layout.JJPadding
 import com.jjlf.library_layout.JJScreen
@@ -51,7 +50,7 @@ class JJEditTextLineIcon : LinearLayout {
             if (xml) {
                 icon?.text = code
             } else {
-                icon?.text = code.parseUnicode16()
+                icon?.text = String(Character.toChars(Integer.parseInt(code, 16)))
             }
         }
 
