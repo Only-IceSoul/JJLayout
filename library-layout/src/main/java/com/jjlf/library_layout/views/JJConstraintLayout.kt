@@ -22,13 +22,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.appbar.AppBarLayout
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.extension.padding
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJConstraintLayout : ConstraintLayout {
+open class JJConstraintLayout : ConstraintLayout {
 
     var mLayoutChangeListener : OnLayoutChangeListener? = null
 
@@ -2988,7 +2987,17 @@ class JJConstraintLayout : ConstraintLayout {
 
    //endregion
 
+    //region method set get
 
+    fun ssSupportLandScape(support:Boolean) : JJConstraintLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJConstraintLayout {
+        mConfigurationChanged = support
+        return this
+    }
 
     fun addViews(vararg views: View): JJConstraintLayout {
         for (v in views) {
@@ -2997,7 +3006,7 @@ class JJConstraintLayout : ConstraintLayout {
         return this
     }
 
-    //region method set get
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int): JJConstraintLayout {
@@ -3260,7 +3269,10 @@ class JJConstraintLayout : ConstraintLayout {
             mRectClip.setEmpty()
             mRectClip.right = width.toFloat()
             mRectClip.bottom = height.toFloat()
-            mRectClip.padding(mlpPadding)
+            mRectClip.left += mlpPadding.left.toFloat()
+            mRectClip.right -= mlpPadding.right.toFloat()
+            mRectClip.top += mlpPadding.top.toFloat()
+            mRectClip.bottom -= mlpPadding.bottom.toFloat()
 
             canvas?.save()
             if (mIsClipInPathChildren) {

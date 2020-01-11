@@ -19,12 +19,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.extension.padding
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
-class JJLinearLayout : LinearLayout {
+open class JJLinearLayout : LinearLayout {
 
 
     //region init
@@ -2996,7 +2995,10 @@ class JJLinearLayout : LinearLayout {
             mRectClip.setEmpty()
             mRectClip.right = width.toFloat()
             mRectClip.bottom = height.toFloat()
-            mRectClip.padding(mlpPadding)
+            mRectClip.left += mlpPadding.left.toFloat()
+            mRectClip.right -= mlpPadding.right.toFloat()
+            mRectClip.top += mlpPadding.top.toFloat()
+            mRectClip.bottom -= mlpPadding.bottom.toFloat()
 
             canvas?.save()
             if (mIsClipInPathChildren) {
@@ -3067,6 +3069,16 @@ class JJLinearLayout : LinearLayout {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJLinearLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJLinearLayout {
+        mConfigurationChanged = support
+        return this
+    }
 
 
     fun ssClipChildrenToPath(path: Path): JJLinearLayout {

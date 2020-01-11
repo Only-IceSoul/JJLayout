@@ -20,11 +20,11 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
-class JJRecyclerView : RecyclerView{
+open class JJRecyclerView : RecyclerView{
 
 
     private var mIsDefaultAnimation = false
@@ -2985,6 +2985,17 @@ class JJRecyclerView : RecyclerView{
     
   
     //region set
+
+    fun ssSupportLandScape(support:Boolean) : JJRecyclerView {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJRecyclerView {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     fun ssVisibility(type: Int): JJRecyclerView {
         visibility = type

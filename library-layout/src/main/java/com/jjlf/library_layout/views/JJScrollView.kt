@@ -18,11 +18,11 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
-class JJScrollView : ScrollView {
+open class JJScrollView : ScrollView {
 
     private val mIsScrollEnabled = true
 
@@ -2980,6 +2980,16 @@ class JJScrollView : ScrollView {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJScrollView {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJScrollView {
+        mConfigurationChanged = support
+        return this
+    }
 
 
     private var mIdentifier = 0

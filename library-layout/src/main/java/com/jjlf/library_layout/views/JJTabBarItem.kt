@@ -18,12 +18,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJTabBarItem : ConstraintLayout {
+open class JJTabBarItem : ConstraintLayout {
 
     private var mImageView: JJImageView? = null
     private var mDrawableSelected: Drawable? = null
@@ -2996,6 +2996,15 @@ class JJTabBarItem : ConstraintLayout {
     //endregion
 
 
+    fun ssSupportLandScape(support:Boolean) : JJTabBarItem {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJTabBarItem {
+        mConfigurationChanged = support
+        return this
+    }
 
 
 

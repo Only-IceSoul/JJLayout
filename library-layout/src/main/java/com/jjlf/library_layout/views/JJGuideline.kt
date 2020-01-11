@@ -6,7 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.Guideline
 
-class JJGuideline : Guideline {
+open class JJGuideline : Guideline {
 
      constructor(context: Context): super(context){
         id = generateViewId()

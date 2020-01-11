@@ -19,9 +19,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.appbar.AppBarLayout
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
 open class JJMotionLayout : MotionLayout {
@@ -2989,6 +2989,17 @@ open class JJMotionLayout : MotionLayout {
         }
         return this
     }
+
+    fun ssSupportLandScape(support:Boolean) : JJMotionLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJMotionLayout {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     fun ssShowPaths(boolean: Boolean): JJMotionLayout {
         setDebugMode((if(boolean) 2 else 1))

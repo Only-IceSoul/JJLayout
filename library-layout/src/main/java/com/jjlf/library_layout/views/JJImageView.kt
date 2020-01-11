@@ -24,13 +24,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.appbar.AppBarLayout
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.extension.padding
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJImageView : AppCompatImageView {
+open class JJImageView : AppCompatImageView {
     
     private var mIdentifier = 0
     private var mState = 0
@@ -3007,7 +3006,10 @@ class JJImageView : AppCompatImageView {
             mRectClip.setEmpty()
             mRectClip.right = width.toFloat()
             mRectClip.bottom = height.toFloat()
-            mRectClip.padding(mlpPadding)
+            mRectClip.left += mlpPadding.left.toFloat()
+            mRectClip.right -= mlpPadding.right.toFloat()
+            mRectClip.top += mlpPadding.top.toFloat()
+            mRectClip.bottom -= mlpPadding.bottom.toFloat()
 
             canvas?.save()
             if (mIsClipInPathChildren) {
@@ -3079,6 +3081,17 @@ class JJImageView : AppCompatImageView {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJImageView {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJImageView {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     fun ssClipChildrenToPath(path: Path): JJImageView {
         mPathClipChildren = path

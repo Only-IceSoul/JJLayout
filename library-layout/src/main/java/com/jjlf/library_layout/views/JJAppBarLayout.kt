@@ -13,15 +13,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
-
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 import com.jjlf.library_layout.R
 
 
-class JJAppBarLayout : AppBarLayout {
+open class JJAppBarLayout : AppBarLayout {
 
     //region init
 
@@ -2979,6 +2978,17 @@ class JJAppBarLayout : AppBarLayout {
 
 
     //region set
+
+    fun ssSupportLandScape(support:Boolean) : JJAppBarLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJAppBarLayout {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     fun addViews(vararg views: View): JJAppBarLayout {
         for (v in views) {

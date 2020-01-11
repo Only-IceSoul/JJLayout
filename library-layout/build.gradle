@@ -37,7 +37,7 @@ dependencies {
     api 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     api 'com.google.android.material:material:1.0.0'
 
-    api 'com.github.Only-IceSoul:JJUtils:1.0'
+    api 'com.github.Only-IceSoul:JJLayoutUtils:1.0'
 
 
 

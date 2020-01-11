@@ -12,12 +12,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJFrameLayout : FrameLayout {
+open class JJFrameLayout : FrameLayout {
 
     //region init
 
@@ -2974,6 +2974,18 @@ class JJFrameLayout : FrameLayout {
     
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJFrameLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJFrameLayout {
+        mConfigurationChanged = support
+        return this
+    }
+
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int): JJFrameLayout {

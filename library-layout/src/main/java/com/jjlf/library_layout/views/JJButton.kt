@@ -20,12 +20,12 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.extension.padding
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
 
-class JJButton : AppCompatButton {
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
+
+open class JJButton : AppCompatButton {
 
     //region init
 
@@ -2997,7 +2997,11 @@ class JJButton : AppCompatButton {
             mRectClip.setEmpty()
             mRectClip.right = width.toFloat()
             mRectClip.bottom = height.toFloat()
-            mRectClip.padding(mlpPadding)
+
+            mRectClip.left += mlpPadding.left.toFloat()
+            mRectClip.right -= mlpPadding.right.toFloat()
+            mRectClip.top += mlpPadding.top.toFloat()
+            mRectClip.bottom -= mlpPadding.bottom.toFloat()
 
             canvas?.save()
             if (mIsClipInPathChildren) {
@@ -3070,6 +3074,17 @@ class JJButton : AppCompatButton {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJButton {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJButton {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     fun ssClipChildrenToPath(path: Path): JJButton {
         mPathClipChildren = path

@@ -16,12 +16,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.widget.NestedScrollView
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJScrollViewNested : NestedScrollView {
+open class JJScrollViewNested : NestedScrollView {
 
     private val mIsScrollEnabled = true
 
@@ -2979,6 +2979,17 @@ class JJScrollViewNested : NestedScrollView {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJScrollViewNested {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJScrollViewNested {
+        mConfigurationChanged = support
+        return this
+    }
+
 
 
     private var mIdentifier = 0

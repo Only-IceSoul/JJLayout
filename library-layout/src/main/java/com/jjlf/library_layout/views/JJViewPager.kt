@@ -18,11 +18,11 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
-class JJViewPager : ViewPager {
+open class JJViewPager : ViewPager {
 
 
     //region init
@@ -2980,6 +2980,17 @@ class JJViewPager : ViewPager {
 
 
     //region set and get
+
+    fun ssSupportLandScape(support:Boolean) : JJViewPager {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJViewPager {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int):JJViewPager{

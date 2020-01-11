@@ -20,11 +20,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
-class JJScrollViewHorizontal : HorizontalScrollView {
+open class JJScrollViewHorizontal : HorizontalScrollView {
 
     private var mIsScrollEnabled = true
 
@@ -2982,6 +2982,17 @@ class JJScrollViewHorizontal : HorizontalScrollView {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJScrollViewHorizontal {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJScrollViewHorizontal {
+        mConfigurationChanged = support
+        return this
+    }
+
 
 
     private var mIdentifier = 0

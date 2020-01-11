@@ -24,12 +24,12 @@ import androidx.constraintlayout.widget.ConstraintSet
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJEditText : AppCompatEditText {
+open class JJEditText : AppCompatEditText {
 
 
 
@@ -2987,6 +2987,18 @@ class JJEditText : AppCompatEditText {
     //endregion
     
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJEditText {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJEditText {
+        mConfigurationChanged = support
+        return this
+    }
+
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int): JJEditText {

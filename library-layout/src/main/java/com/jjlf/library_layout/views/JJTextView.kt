@@ -28,11 +28,10 @@ import androidx.core.widget.TextViewCompat
 import com.google.android.material.appbar.AppBarLayout
 
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
-
-class JJTextView : AppCompatTextView {
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
+open class JJTextView : AppCompatTextView {
 
     //region init
 
@@ -2988,6 +2987,17 @@ class JJTextView : AppCompatTextView {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJTextView {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJTextView {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int): JJTextView {

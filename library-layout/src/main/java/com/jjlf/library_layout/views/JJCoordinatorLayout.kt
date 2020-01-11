@@ -17,12 +17,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 
-class JJCoordinatorLayout : CoordinatorLayout {
+open class JJCoordinatorLayout : CoordinatorLayout {
 
     //region init
 
@@ -2983,6 +2983,18 @@ class JJCoordinatorLayout : CoordinatorLayout {
         }
         return this
     }
+
+    fun ssSupportLandScape(support:Boolean) : JJCoordinatorLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJCoordinatorLayout {
+        mConfigurationChanged = support
+        return this
+    }
+
+
     fun ssFullScreen(): JJCoordinatorLayout {
         systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE

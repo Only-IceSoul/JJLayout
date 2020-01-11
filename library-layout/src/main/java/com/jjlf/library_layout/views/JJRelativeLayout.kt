@@ -16,9 +16,9 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.jjlf.library_layout.R
-import com.jjlf.jjkit_utils.JJMargin
-import com.jjlf.jjkit_utils.JJPadding
-import com.jjlf.jjkit_utils.JJScreen
+import com.jjlf.jjkit_layoututils.JJScreen
+import com.jjlf.jjkit_layoututils.JJMargin
+import com.jjlf.jjkit_layoututils.JJPadding
 
 open class JJRelativeLayout : RelativeLayout {
 
@@ -2976,6 +2976,17 @@ open class JJRelativeLayout : RelativeLayout {
     //endregion
 
     //region method set get
+
+    fun ssSupportLandScape(support:Boolean) : JJRelativeLayout {
+        mSupportLandScape = support
+        return this
+    }
+
+    fun ssSupportConfigurationChanged(support:Boolean) : JJRelativeLayout {
+        mConfigurationChanged = support
+        return this
+    }
+
 
     private var mIdentifier = 0
     fun ssIdentifier(value: Int): JJRelativeLayout {
