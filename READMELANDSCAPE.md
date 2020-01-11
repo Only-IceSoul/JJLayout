@@ -84,11 +84,11 @@ comming soon : gravity,etc..
   
   Portrait
 
- ![Preview](assets/landscape1.jpg)   
+ ![Preview](assets/landScape1.jpg)   
 
  LandScape
 
-![Preview2](assets/landscape2.jpg)   
+![Preview2](assets/landScape2.jpg)   
 
 
 

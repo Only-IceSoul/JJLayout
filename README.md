@@ -16,7 +16,7 @@ allprojects {
 2.- Add the dependency
 ```
 dependencies {
-	        implementation 'com.github.Only-IceSoul:jjlayout:1.2'
+	        implementation 'com.github.Only-IceSoul:jjlayout:1.2.1'
 	}
 ```
 
