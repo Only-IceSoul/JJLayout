@@ -3,7 +3,6 @@ package com.jjlf.library_layout.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
@@ -14,10 +13,10 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.jjlf.library_layout.JJMargin
-import com.jjlf.library_layout.JJPadding
-import com.jjlf.library_layout.JJScreen
 import com.jjlf.library_layout.R
+import com.jjlf.jjkit_utils.JJMargin
+import com.jjlf.jjkit_utils.JJPadding
+import com.jjlf.jjkit_utils.JJScreen
 
 
 class JJView : View {

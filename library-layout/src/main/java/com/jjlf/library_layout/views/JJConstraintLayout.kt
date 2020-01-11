@@ -21,11 +21,11 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.appbar.AppBarLayout
-import com.jjlf.library_layout.JJMargin
-import com.jjlf.library_layout.JJPadding
-import com.jjlf.library_layout.JJScreen
 import com.jjlf.library_layout.R
-import com.jjlf.library_layout.extension.padding
+import com.jjlf.jjkit_utils.extension.padding
+import com.jjlf.jjkit_utils.JJMargin
+import com.jjlf.jjkit_utils.JJPadding
+import com.jjlf.jjkit_utils.JJScreen
 
 
 class JJConstraintLayout : ConstraintLayout {

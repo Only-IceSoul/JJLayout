@@ -19,10 +19,10 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jjlf.library_layout.JJMargin
-import com.jjlf.library_layout.JJPadding
-import com.jjlf.library_layout.JJScreen
 import com.jjlf.library_layout.R
+import com.jjlf.jjkit_utils.JJMargin
+import com.jjlf.jjkit_utils.JJPadding
+import com.jjlf.jjkit_utils.JJScreen
 
 class JJRecyclerView : RecyclerView{
 

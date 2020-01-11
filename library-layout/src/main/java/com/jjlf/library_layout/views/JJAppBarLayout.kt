@@ -13,9 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.jjlf.library_layout.JJMargin
-import com.jjlf.library_layout.JJPadding
-import com.jjlf.library_layout.JJScreen
+import com.jjlf.jjkit_utils.JJMargin
+import com.jjlf.jjkit_utils.JJPadding
+import com.jjlf.jjkit_utils.JJScreen
 
 
 import com.jjlf.library_layout.R

@@ -3,6 +3,11 @@
 
 ## Using XML
 
+
+**Motion Layout**
+
+Not supported , but u can use : settransition(R.id.landScapeStart,R.id.landScapeEnd)
+
 **Active LandScape**:  
  app:support_landscape="true"
 
@@ -21,6 +26,8 @@ lpl = Layout Params LandScape
 lp support : height , width , margin, padding
 
 comming soon : gravity,etc..
+
+
 
 
     <com.jjlf.library_layout.views.JJConstraintLayout
