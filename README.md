@@ -16,15 +16,19 @@ allprojects {
 2.- Add the dependency
 ```
 dependencies {
-	        implementation 'com.github.Only-IceSoul:jjlayout:1.1.2'
+	        implementation 'com.github.Only-IceSoul:jjlayout:1.2'
 	}
 ```
 
-### Using XML 
+## **Using XML** 
+
+### **ConstrainLayout:**
 
 [See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
 
 **cl** = Contraint Layout 
+
+**lp** = just padding
 
  **Responsive:** ResPercentScreenHeight/Witdh (array-float[4]),   
  Responsive (array-dimension[4])  [Responsive](#Responsive)
@@ -55,7 +59,7 @@ dependencies {
 
 **Preview XML:**
 
-Force Preview: click refresh layout or write anything in onCreate(Activity) then Re-build 
+Force Preview: click force refresh layout or Re-build 
 
 ![Refresh](assets/refresh_preview.jpg)
 
@@ -64,7 +68,7 @@ Force Preview: click refresh layout or write anything in onCreate(Activity) then
 ![Preview](assets/cljjkit.jpg)
 
 
-#### Other Views:
+### **Other Views:**
 
 [See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
 
@@ -86,7 +90,7 @@ Force Preview: click refresh layout or write anything in onCreate(Activity) then
         />
 
 
-### Using Programmatically
+## **Using Programmatically**
 
 #### Parent ConstraintLayout
 
@@ -139,7 +143,9 @@ Force Preview: click refresh layout or write anything in onCreate(Activity) then
 
 ```
 
-#### Motion Layout
+### **Motion Layout**
+
+**Just code**
 
 Set = ss  
 Get = gg
@@ -254,9 +260,9 @@ Based in Height
 
 ```
 
+# LANDSCAPE
 
-
-
+[See Full Guide](READMELANDSCAPE.md)
 
 # License
 

@@ -1,9 +1,7 @@
 package com.jjlf.library_layout
 
 import android.content.res.Resources
-import android.util.DisplayMetrics
 import android.util.TypedValue
-import java.lang.reflect.TypeVariable
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

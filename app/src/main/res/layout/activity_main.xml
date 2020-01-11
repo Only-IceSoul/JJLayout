@@ -11,42 +11,58 @@
         android:id="@+id/topView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:support_configuration_changed="true"
+        app:support_landscape="true"
+
         app:clFillParentHorizontally="true"
+        app:cllFillParentHorizontally="true"
+
         app:clHeightPercentScreenHeight="0.3"
+        app:cllHeightPercentScreenWidth="0.3"
+
         app:clTopToTopParent="true"
-        app:clMarginHorizontalPerScWidth="0.1"
+        app:cllTopToTopParent="true"
+
+        app:clMarginHorizontalPerScWidth="0.2"
+        app:cllMarginHorizontalPerScHeight="0.45"
+
         app:clMarginTopPercentScreenHeight="0.1"
+        app:cllMarginTopPercentScreenHeight="0.1"
+
+        android:padding="20dp"
+        app:lplPadding="5dp"
+
         android:background="@color/colorPrimary"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints" >
+
+        <com.jjlf.library_layout.views.JJView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:clFillParent="true"
+            android:background="@color/colorAccent"
+            />
+
+    </com.jjlf.library_layout.views.JJConstraintLayout>
 
     <com.jjlf.library_layout.views.JJView
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        app:clTopToBottomOf="@id/topView"
+        android:layout_height="50dp"
+
+        app:support_configuration_changed="true"
+
+        app:support_landscape="true"
+        app:layout_height_landscape="50dp"
+
+        app:clBottomToTopOf="@id/topView"
         app:clWidthResponsivePercentScreenWidth="@array/widthFloat"
-        app:clMarginTopResPerScHeight="@array/marginTop"
+        app:clCenterHorizontallyOf="@id/topView"
+
+        app:cllBottomToTopOf="@id/topView"
+        app:cllWidthResponsivePercentScreenWidth="@array/widthFloat"
+        app:cllCenterHorizontallyOf="@id/topView"
+
         android:background="@color/colorAccent"
         tools:ignore="MissingConstraints"/>
 
-    <com.jjlf.library_layout.views.JJLinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:clWidthResponsive="@array/widthDimension"
-        app:clHeightPercent="0.1"
-        app:clCenterHorizontallyOf="@id/topView"
-        app:clCenterInTopVerticallyOf="@id/topView"
-        android:background="@android:color/holo_green_dark"
-        tools:ignore="MissingConstraints"/>
-
-    <com.jjlf.library_layout.views.JJImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@mipmap/ic_launcher_round"
-        app:clCenterInEndHorizontallyOf="@id/topView"
-        app:clTopToTopOf="@id/topView"
-        app:clMarginTopPercentScreenHeight="0.25"
-        app:clHeightPercentScreenHeight="0.1"
-        app:clWidthPercentScreenHeight="0.1"
-        tools:ignore="MissingConstraints" />
 
 </com.jjlf.library_layout.views.JJConstraintLayout>
