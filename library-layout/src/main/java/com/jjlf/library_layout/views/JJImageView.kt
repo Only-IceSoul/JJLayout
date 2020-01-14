@@ -4291,8 +4291,8 @@ open class JJImageView : AppCompatImageView {
 
 
     fun mlFillParent(): JJImageView {
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
@@ -4301,8 +4301,8 @@ open class JJImageView : AppCompatImageView {
     }
 
     fun mlFillParent(margin: JJMargin): JJImageView {
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
@@ -4311,28 +4311,28 @@ open class JJImageView : AppCompatImageView {
     }
 
     fun mlFillParentHorizontally(): JJImageView {
-        mConstraintSet.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
         return this
     }
 
     fun mlFillParentVertically(): JJImageView {
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
         return this
     }
 
     fun mlFillParentHorizontally(startMargin: Int, endMargin: Int): JJImageView {
-        mConstraintSet.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endMargin)
         return this
     }
 
     fun mlFillParentVertically(topMargin: Int, bottomMargin: Int): JJImageView {
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
         mMotionConstraintSet?.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
         return this

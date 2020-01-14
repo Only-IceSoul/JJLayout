@@ -16,7 +16,7 @@ allprojects {
 2.- Add the dependency
 ```
 dependencies {
-	        implementation 'com.github.Only-IceSoul:JJLayout:1.4.2'
+	        implementation 'com.github.Only-IceSoul:JJLayout:1.4.3'
 	}
 ```
 
@@ -259,6 +259,10 @@ Based in Height
 </resources>
 
 ```
+
+# Clip
+
+Using canvas clip - Not anti-aliasing
 
 # LANDSCAPE
 

@@ -3782,8 +3782,8 @@ open class JJViewPager : ViewPager {
 
 
     fun mlFillParent(): JJViewPager {
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
@@ -3792,8 +3792,8 @@ open class JJViewPager : ViewPager {
     }
 
     fun mlFillParent(margin: JJMargin): JJViewPager {
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
@@ -3802,28 +3802,28 @@ open class JJViewPager : ViewPager {
     }
 
     fun mlFillParentHorizontally(): JJViewPager {
-        mConstraintSet.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
         return this
     }
 
     fun mlFillParentVertically(): JJViewPager {
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
         mMotionConstraintSet?.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
         return this
     }
 
     fun mlFillParentHorizontally(startMargin: Int, endMargin: Int): JJViewPager {
-        mConstraintSet.constrainWidth(id,0)
+        mMotionConstraintSet?.constrainWidth(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
         mMotionConstraintSet?.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endMargin)
         return this
     }
 
     fun mlFillParentVertically(topMargin: Int, bottomMargin: Int): JJViewPager {
-        mConstraintSet.constrainHeight(id,0)
+        mMotionConstraintSet?.constrainHeight(id,0)
         mMotionConstraintSet?.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
         mMotionConstraintSet?.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
         return this
