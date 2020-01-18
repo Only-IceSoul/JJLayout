@@ -3224,7 +3224,98 @@ open class JJEditText : AppCompatEditText {
     //endregion
 
     //region ConstraintLayout LandScape Params
-    private val mConstraintSetLandScape = ConstraintSet()
+    protected val mConstraintSetLandScape = ConstraintSet()
+
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJEditText {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJEditText {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJEditText {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun cllStringCustomAttribute(attrName: String, value: String): JJEditText {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun cllRotation(float: Float): JJEditText {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun cllRotationX(float: Float): JJEditText {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun cllRotationY(float: Float): JJEditText {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun cllTranslation(x: Float,y: Float): JJEditText {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun cllTranslationX(x: Float): JJEditText {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJEditText {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJEditText {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJEditText {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJEditText {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJEditText {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJEditText {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJEditText {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJEditText {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJEditText {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun cllApply(): JJEditText {
         mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
@@ -4021,8 +4112,98 @@ open class JJEditText : AppCompatEditText {
     //endregion
 
     //region ConstraintLayout Params
-    private val mConstraintSet = ConstraintSet()
+    protected val mConstraintSet = ConstraintSet()
 
+
+    fun clFloatCustomAttribute(attrName: String, value: Float): JJEditText {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun clIntCustomAttribute(attrName: String, value: Int): JJEditText {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun clColorCustomAttribute(attrName: String, value: Int): JJEditText {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun clStringCustomAttribute(attrName: String, value: String): JJEditText {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun clRotation(float: Float): JJEditText {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun clRotationX(float: Float): JJEditText {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun clRotationY(float: Float): JJEditText {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun clTranslation(x: Float,y: Float): JJEditText {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun clTranslationX(x: Float): JJEditText {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun clTranslationY(y: Float): JJEditText {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun clTranslationZ(z: Float): JJEditText {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun clTransformPivot(x: Float, y: Float): JJEditText {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun clTransformPivotX(x: Float): JJEditText {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun clTransformPivotY(y: Float): JJEditText {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun clScaleX(x: Float): JJEditText {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun clScaleY(y: Float): JJEditText {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun clDimensionRatio(ratio: String): JJEditText {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun clAlpha(alpha: Float): JJEditText {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+    
     fun clGetConstraint() : ConstraintSet {
         return mConstraintSet
     }

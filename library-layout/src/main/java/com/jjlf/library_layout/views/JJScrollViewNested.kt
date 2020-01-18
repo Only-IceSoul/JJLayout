@@ -3100,7 +3100,98 @@ open class JJScrollViewNested : NestedScrollView {
     //endregion
 
     //region ConstraintLayout LandScape Params
-    private val mConstraintSetLandScape = ConstraintSet()
+    protected val mConstraintSetLandScape = ConstraintSet()
+
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJScrollViewNested {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJScrollViewNested {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJScrollViewNested {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun cllStringCustomAttribute(attrName: String, value: String): JJScrollViewNested {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun cllRotation(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun cllRotationX(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun cllRotationY(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun cllTranslation(x: Float,y: Float): JJScrollViewNested {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun cllTranslationX(x: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJScrollViewNested {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJScrollViewNested {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJScrollViewNested {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJScrollViewNested {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun cllApply(): JJScrollViewNested {
         mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
@@ -3458,7 +3549,7 @@ open class JJScrollViewNested : NestedScrollView {
 
     //region MotionLayout Params
 
-    var mMotionConstraintSet: ConstraintSet? = null
+    private var mMotionConstraintSet: ConstraintSet? = null
 
 
     fun mlVisibilityMode(visibility: Int): JJScrollViewNested {
@@ -3897,7 +3988,98 @@ open class JJScrollViewNested : NestedScrollView {
     //endregion
 
     //region ConstraintLayout Params
-    private val mConstraintSet = ConstraintSet()
+    protected val mConstraintSet = ConstraintSet()
+
+
+    fun clFloatCustomAttribute(attrName: String, value: Float): JJScrollViewNested {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun clIntCustomAttribute(attrName: String, value: Int): JJScrollViewNested {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun clColorCustomAttribute(attrName: String, value: Int): JJScrollViewNested {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun clStringCustomAttribute(attrName: String, value: String): JJScrollViewNested {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun clRotation(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun clRotationX(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun clRotationY(float: Float): JJScrollViewNested {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun clTranslation(x: Float,y: Float): JJScrollViewNested {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun clTranslationX(x: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun clTranslationY(y: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun clTranslationZ(z: Float): JJScrollViewNested {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun clTransformPivot(x: Float, y: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun clTransformPivotX(x: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun clTransformPivotY(y: Float): JJScrollViewNested {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun clScaleX(x: Float): JJScrollViewNested {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun clScaleY(y: Float): JJScrollViewNested {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun clDimensionRatio(ratio: String): JJScrollViewNested {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun clAlpha(alpha: Float): JJScrollViewNested {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun clGetConstraint() : ConstraintSet {
         return mConstraintSet

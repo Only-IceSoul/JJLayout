@@ -3056,7 +3056,98 @@ open class JJView : View {
 
 
     //region ConstraintLayout LandScape Params
-    private val mConstraintSetLandScape = ConstraintSet()
+    protected val mConstraintSetLandScape = ConstraintSet()
+
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJView {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJView {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJView {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun cllStringCustomAttribute(attrName: String, value: String): JJView {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun cllRotation(float: Float): JJView {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun cllRotationX(float: Float): JJView {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun cllRotationY(float: Float): JJView {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun cllTranslation(x: Float,y: Float): JJView {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun cllTranslationX(x: Float): JJView {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJView {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJView {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJView {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJView {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJView {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJView {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJView {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJView {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJView {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun cllApply(): JJView {
         mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
@@ -3853,7 +3944,98 @@ open class JJView : View {
     //endregion
     
     //region ConstraintLayout Params
-    private val mConstraintSet = ConstraintSet()
+    protected val mConstraintSet = ConstraintSet()
+
+
+    fun clFloatCustomAttribute(attrName: String, value: Float): JJView {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun clIntCustomAttribute(attrName: String, value: Int): JJView {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun clColorCustomAttribute(attrName: String, value: Int): JJView {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun clStringCustomAttribute(attrName: String, value: String): JJView {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun clRotation(float: Float): JJView {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun clRotationX(float: Float): JJView {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun clRotationY(float: Float): JJView {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun clTranslation(x: Float,y: Float): JJView {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun clTranslationX(x: Float): JJView {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun clTranslationY(y: Float): JJView {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun clTranslationZ(z: Float): JJView {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun clTransformPivot(x: Float, y: Float): JJView {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun clTransformPivotX(x: Float): JJView {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun clTransformPivotY(y: Float): JJView {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun clScaleX(x: Float): JJView {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun clScaleY(y: Float): JJView {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun clDimensionRatio(ratio: String): JJView {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun clAlpha(alpha: Float): JJView {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun clGetConstraint() : ConstraintSet {
         return mConstraintSet

@@ -3315,7 +3315,98 @@ open class JJImageButton : AppCompatImageButton {
     //endregion
 
     //region ConstraintLayout LandScape Params
-    private val mConstraintSetLandScape = ConstraintSet()
+    protected val mConstraintSetLandScape = ConstraintSet()
+
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJImageButton {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJImageButton {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJImageButton {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun cllStringCustomAttribute(attrName: String, value: String): JJImageButton {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun cllRotation(float: Float): JJImageButton {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun cllRotationX(float: Float): JJImageButton {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun cllRotationY(float: Float): JJImageButton {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun cllTranslation(x: Float,y: Float): JJImageButton {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun cllTranslationX(x: Float): JJImageButton {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJImageButton {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJImageButton {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJImageButton {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJImageButton {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJImageButton {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJImageButton {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJImageButton {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJImageButton {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJImageButton {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun cllApply(): JJImageButton {
         mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
@@ -4286,7 +4377,99 @@ open class JJImageButton : AppCompatImageButton {
     //endregion
 
     //region ConstraintLayout Params
-    private val mConstraintSet = ConstraintSet()
+    protected val mConstraintSet = ConstraintSet()
+
+
+
+    fun clFloatCustomAttribute(attrName: String, value: Float): JJImageButton {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun clIntCustomAttribute(attrName: String, value: Int): JJImageButton {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun clColorCustomAttribute(attrName: String, value: Int): JJImageButton {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun clStringCustomAttribute(attrName: String, value: String): JJImageButton {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun clRotation(float: Float): JJImageButton {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun clRotationX(float: Float): JJImageButton {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun clRotationY(float: Float): JJImageButton {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun clTranslation(x: Float,y: Float): JJImageButton {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun clTranslationX(x: Float): JJImageButton {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun clTranslationY(y: Float): JJImageButton {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun clTranslationZ(z: Float): JJImageButton {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun clTransformPivot(x: Float, y: Float): JJImageButton {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun clTransformPivotX(x: Float): JJImageButton {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun clTransformPivotY(y: Float): JJImageButton {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun clScaleX(x: Float): JJImageButton {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun clScaleY(y: Float): JJImageButton {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun clDimensionRatio(ratio: String): JJImageButton {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun clAlpha(alpha: Float): JJImageButton {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun clGetConstraint() : ConstraintSet {
         return mConstraintSet

@@ -27,7 +27,7 @@ import com.jjlf.jjkit_layoututils.JJPadding
 open class JJRecyclerView : RecyclerView{
 
 
-    private var mIsDefaultAnimation = false
+
 
 
     //region init
@@ -3002,12 +3002,6 @@ open class JJRecyclerView : RecyclerView{
         return this
     }
 
-    fun ssIsDefaultAnimationEnabled(boolean: Boolean): JJRecyclerView {
-        mIsDefaultAnimation = boolean
-        return this
-    }
-
-
     fun ssMinimumHeight(h:Int): JJRecyclerView {
         minimumHeight = h
         return this
@@ -3060,38 +3054,100 @@ open class JJRecyclerView : RecyclerView{
     }
     //endregion
 
-    //region override
-    override fun attachLayoutAnimationParameters(child: View?, params: ViewGroup.LayoutParams?, index: Int, count: Int) {
-
-        if (adapter != null && layoutManager is GridLayoutManager && mIsDefaultAnimation) {
-
-            var animationParams: GridLayoutAnimationController.AnimationParameters? =
-                params?.layoutAnimationParameters as? GridLayoutAnimationController.AnimationParameters
-
-            if (animationParams == null) {
-                animationParams = GridLayoutAnimationController.AnimationParameters()
-                params?.layoutAnimationParameters = animationParams
-            }
-
-            val columns = (layoutManager as GridLayoutManager).getSpanCount()
-
-
-            animationParams.count = count
-            animationParams.index = index
-            animationParams.columnsCount = columns
-            animationParams.rowsCount = count / columns + 1
-
-            animationParams.column = index % columns
-            animationParams.row = index % columns + index / columns
-
-        } else {
-            super.attachLayoutAnimationParameters(child, params, index, count)
-        }
-    }
-    //endregion
 
     //region ConstraintLayout LandScape Params
-    private val mConstraintSetLandScape = ConstraintSet()
+    protected val mConstraintSetLandScape = ConstraintSet()
+
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJRecyclerView {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJRecyclerView {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJRecyclerView {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun cllStringCustomAttribute(attrName: String, value: String): JJRecyclerView {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun cllRotation(float: Float): JJRecyclerView {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun cllRotationX(float: Float): JJRecyclerView {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun cllRotationY(float: Float): JJRecyclerView {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun cllTranslation(x: Float,y: Float): JJRecyclerView {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun cllTranslationX(x: Float): JJRecyclerView {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJRecyclerView {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJRecyclerView {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJRecyclerView {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJRecyclerView {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJRecyclerView {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJRecyclerView {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun cllApply(): JJRecyclerView {
         mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
@@ -3622,7 +3678,7 @@ open class JJRecyclerView : RecyclerView{
 
     //region MotionLayout Params
 
-    var mMotionConstraintSet: ConstraintSet? = null
+    private var mMotionConstraintSet: ConstraintSet? = null
 
 
     fun mlVisibilityMode(visibility: Int): JJRecyclerView {
@@ -4061,7 +4117,98 @@ open class JJRecyclerView : RecyclerView{
     //endregion
 
     //region ConstraintLayout Params
-    private val mConstraintSet = ConstraintSet()
+    protected val mConstraintSet = ConstraintSet()
+
+
+    fun clFloatCustomAttribute(attrName: String, value: Float): JJRecyclerView {
+        mConstraintSet.setFloatValue(id,attrName,value)
+        return this
+    }
+
+    fun clIntCustomAttribute(attrName: String, value: Int): JJRecyclerView {
+        mConstraintSet.setIntValue(id,attrName,value)
+        return this
+    }
+
+    fun clColorCustomAttribute(attrName: String, value: Int): JJRecyclerView {
+        mConstraintSet.setColorValue(id,attrName,value)
+        return this
+    }
+
+    fun clStringCustomAttribute(attrName: String, value: String): JJRecyclerView {
+        mConstraintSet.setStringValue(id,attrName,value)
+        return this
+    }
+
+    fun clRotation(float: Float): JJRecyclerView {
+        mConstraintSet.setRotation(id,float)
+        return this
+    }
+
+    fun clRotationX(float: Float): JJRecyclerView {
+        mConstraintSet.setRotationX(id,float)
+        return this
+    }
+
+    fun clRotationY(float: Float): JJRecyclerView {
+        mConstraintSet.setRotationY(id,float)
+        return this
+    }
+
+    fun clTranslation(x: Float,y: Float): JJRecyclerView {
+        mConstraintSet.setTranslation(id,x,y)
+        return this
+    }
+    fun clTranslationX(x: Float): JJRecyclerView {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun clTranslationY(y: Float): JJRecyclerView {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun clTranslationZ(z: Float): JJRecyclerView {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun clTransformPivot(x: Float, y: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun clTransformPivotX(x: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun clTransformPivotY(y: Float): JJRecyclerView {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun clScaleX(x: Float): JJRecyclerView {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun clScaleY(y: Float): JJRecyclerView {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun clDimensionRatio(ratio: String): JJRecyclerView {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun clAlpha(alpha: Float): JJRecyclerView {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
 
     fun clGetConstraint() : ConstraintSet {
         return mConstraintSet
