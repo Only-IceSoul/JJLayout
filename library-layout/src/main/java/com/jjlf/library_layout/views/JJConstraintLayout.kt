@@ -40,7 +40,7 @@ open class JJConstraintLayout : ConstraintLayout {
 
         mConstraintSetLandScape.constrainWidth(id,0)
         mConstraintSetLandScape.constrainHeight(id,0)
-        mInit = false
+
     }
 
     private var mSupportLandScape = false

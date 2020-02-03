@@ -44,7 +44,7 @@ open class JJImageView : AppCompatImageView {
         mConstraintSet.constrainHeight(id,0)
         mConstraintSetLandScape.constrainWidth(id,0)
         mConstraintSetLandScape.constrainHeight(id,0)
-        mInit = false
+
     }
 
     private var mIgnoreCl = false
