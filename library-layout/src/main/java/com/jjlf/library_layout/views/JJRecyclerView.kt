@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.GridLayoutAnimationController
 import android.view.animation.LayoutAnimationController
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -17,7 +16,6 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jjlf.library_layout.R
 import com.jjlf.jjkit_layoututils.JJScreen

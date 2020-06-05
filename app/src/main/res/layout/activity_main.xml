@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.jjlf.library_layout.views.JJConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.jjlf.library_layout.views.JJConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,9 +12,10 @@
         android:id="@+id/topView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+
+
         app:support_configuration_changed="true"
         app:support_landscape="true"
-
         app:clFillParentHorizontally="true"
         app:cllFillParentHorizontally="true"
 
@@ -33,14 +35,14 @@
         app:lplPadding="5dp"
 
         android:background="@color/colorPrimary"
-        tools:ignore="MissingConstraints" >
+        tools:ignore="MissingConstraints">
 
         <com.jjlf.library_layout.views.JJView
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:clFillParent="true"
-            android:background="@color/colorAccent"
-            />
+
+            android:background="@color/colorAccent" />
 
     </com.jjlf.library_layout.views.JJConstraintLayout>
 
@@ -58,11 +60,11 @@
         app:clCenterHorizontallyOf="@id/topView"
 
         app:cllBottomToTopOf="@id/topView"
-        app:cllWidthResponsivePercentScreenWidth="@array/widthFloat"
+        app:cllWidthPercentScreenWidth="0.1"
         app:cllCenterHorizontallyOf="@id/topView"
 
         android:background="@color/colorAccent"
-        tools:ignore="MissingConstraints"/>
+        tools:ignore="MissingConstraints" />
 
 
 </com.jjlf.library_layout.views.JJConstraintLayout>
