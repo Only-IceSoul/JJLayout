@@ -3,16 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/MainContainer"
     tools:context=".MainActivity">
 
     <com.jjlf.library_layout.views.JJConstraintLayout
+
         android:id="@+id/topView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
 
         app:support_configuration_changed="true"
         app:support_landscape="true"
@@ -50,8 +51,9 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
 
-        app:support_configuration_changed="true"
 
+
+        app:support_configuration_changed="true"
         app:support_landscape="true"
         app:layout_height_landscape="50dp"
 
