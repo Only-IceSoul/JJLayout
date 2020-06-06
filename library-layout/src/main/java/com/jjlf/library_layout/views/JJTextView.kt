@@ -3183,20 +3183,20 @@ open class JJTextView : AppCompatTextView {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJTextView{
+     fun lpWidth(w: Int) : JJTextView{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJTextView{
+     fun lpHeight(h: Int) : JJTextView{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJTextView{
+     fun lpPadding(pad: JJPadding) : JJTextView{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJTextView{
+     fun lpMargin(mar: JJMargin) : JJTextView{
         mlpMargins = mar
         return this
     }
@@ -3205,20 +3205,20 @@ open class JJTextView : AppCompatTextView {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJTextView{
+     fun lplWidth(w: Int) : JJTextView{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJTextView{
+     fun lplHeight(h: Int) : JJTextView{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJTextView{
+     fun lplPadding(pad: JJPadding) : JJTextView{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJTextView{
+     fun lplMargin(mar: JJMargin) : JJTextView{
         mlsMargins = mar
         return this
     }

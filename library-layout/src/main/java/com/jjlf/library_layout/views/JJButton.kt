@@ -3311,20 +3311,20 @@ open class JJButton : AppCompatButton {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJButton{
+    fun lpWidth(w: Int) : JJButton{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJButton{
+    fun lpHeight(h: Int) : JJButton{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJButton{
+    fun lpPadding(pad: JJPadding) : JJButton{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJButton{
+    fun lpMargin(mar: JJMargin) : JJButton{
         mlpMargins = mar
         return this
     }
@@ -3333,20 +3333,20 @@ open class JJButton : AppCompatButton {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJButton{
+    fun lplWidth(w: Int) : JJButton{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJButton{
+    fun lplHeight(h: Int) : JJButton{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJButton{
+    fun lplPadding(pad: JJPadding) : JJButton{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJButton{
+    fun lplMargin(mar: JJMargin) : JJButton{
         mlsMargins = mar
         return this
     }

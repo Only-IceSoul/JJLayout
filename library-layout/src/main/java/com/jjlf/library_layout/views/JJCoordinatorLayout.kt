@@ -3052,20 +3052,20 @@ open class JJCoordinatorLayout : CoordinatorLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJCoordinatorLayout{
+    fun lpWidth(w: Int) : JJCoordinatorLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJCoordinatorLayout{
+    fun lpHeight(h: Int) : JJCoordinatorLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJCoordinatorLayout{
+    fun lpPadding(pad: JJPadding) : JJCoordinatorLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJCoordinatorLayout{
+    fun lpMargin(mar: JJMargin) : JJCoordinatorLayout{
         mlpMargins = mar
         return this
     }
@@ -3074,20 +3074,20 @@ open class JJCoordinatorLayout : CoordinatorLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJCoordinatorLayout{
+    fun lplWidth(w: Int) : JJCoordinatorLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJCoordinatorLayout{
+    fun lplHeight(h: Int) : JJCoordinatorLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJCoordinatorLayout{
+    fun lplPadding(pad: JJPadding) : JJCoordinatorLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJCoordinatorLayout{
+    fun lplMargin(mar: JJMargin) : JJCoordinatorLayout{
         mlsMargins = mar
         return this
     }

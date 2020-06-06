@@ -3054,20 +3054,20 @@ open class JJRecyclerView : RecyclerView{
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJRecyclerView{
+     fun lpWidth(w: Int) : JJRecyclerView{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJRecyclerView{
+     fun lpHeight(h: Int) : JJRecyclerView{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJRecyclerView{
+     fun lpPadding(pad: JJPadding) : JJRecyclerView{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJRecyclerView{
+     fun lpMargin(mar: JJMargin) : JJRecyclerView{
         mlpMargins = mar
         return this
     }
@@ -3076,20 +3076,20 @@ open class JJRecyclerView : RecyclerView{
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJRecyclerView{
+     fun lplWidth(w: Int) : JJRecyclerView{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJRecyclerView{
+     fun lplHeight(h: Int) : JJRecyclerView{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJRecyclerView{
+     fun lplPadding(pad: JJPadding) : JJRecyclerView{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJRecyclerView{
+     fun lplMargin(mar: JJMargin) : JJRecyclerView{
         mlsMargins = mar
         return this
     }

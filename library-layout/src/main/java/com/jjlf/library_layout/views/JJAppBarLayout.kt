@@ -3037,20 +3037,20 @@ open class JJAppBarLayout : AppBarLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJAppBarLayout{
+    fun lpWidth(w: Int) : JJAppBarLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJAppBarLayout{
+    fun lpHeight(h: Int) : JJAppBarLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJAppBarLayout{
+    fun lpPadding(pad: JJPadding) : JJAppBarLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJAppBarLayout{
+    fun lpMargin(mar: JJMargin) : JJAppBarLayout{
         mlpMargins = mar
         return this
     }
@@ -3059,20 +3059,20 @@ open class JJAppBarLayout : AppBarLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJAppBarLayout{
+    fun lplWidth(w: Int) : JJAppBarLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJAppBarLayout{
+    fun lplHeight(h: Int) : JJAppBarLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJAppBarLayout{
+    fun lplPadding(pad: JJPadding) : JJAppBarLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJAppBarLayout{
+    fun lplMargin(mar: JJMargin) : JJAppBarLayout{
         mlsMargins = mar
         return this
     }

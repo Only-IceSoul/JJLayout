@@ -3324,20 +3324,20 @@ open class JJLinearLayout : LinearLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJLinearLayout{
+     fun lpWidth(w: Int) : JJLinearLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJLinearLayout{
+     fun lpHeight(h: Int) : JJLinearLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJLinearLayout{
+     fun lpPadding(pad: JJPadding) : JJLinearLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJLinearLayout{
+     fun lpMargin(mar: JJMargin) : JJLinearLayout{
         mlpMargins = mar
         return this
     }
@@ -3346,20 +3346,20 @@ open class JJLinearLayout : LinearLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJLinearLayout{
+     fun lplWidth(w: Int) : JJLinearLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJLinearLayout{
+     fun lplHeight(h: Int) : JJLinearLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJLinearLayout{
+     fun lplPadding(pad: JJPadding) : JJLinearLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJLinearLayout{
+     fun lplMargin(mar: JJMargin) : JJLinearLayout{
         mlsMargins = mar
         return this
     }

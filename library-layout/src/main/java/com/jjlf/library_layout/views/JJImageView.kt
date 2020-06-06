@@ -3323,20 +3323,20 @@ open class JJImageView : AppCompatImageView {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJImageView{
+     fun lpWidth(w: Int) : JJImageView{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJImageView{
+     fun lpHeight(h: Int) : JJImageView{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJImageView{
+     fun lpPadding(pad: JJPadding) : JJImageView{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJImageView{
+     fun lpMargin(mar: JJMargin) : JJImageView{
         mlpMargins = mar
         return this
     }
@@ -3345,20 +3345,20 @@ open class JJImageView : AppCompatImageView {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJImageView{
+     fun lplWidth(w: Int) : JJImageView{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJImageView{
+     fun lplHeight(h: Int) : JJImageView{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJImageView{
+     fun lplPadding(pad: JJPadding) : JJImageView{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJImageView{
+     fun lplMargin(mar: JJMargin) : JJImageView{
         mlsMargins = mar
         return this
     }

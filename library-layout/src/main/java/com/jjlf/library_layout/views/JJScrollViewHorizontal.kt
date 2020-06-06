@@ -3124,20 +3124,20 @@ open class JJScrollViewHorizontal : HorizontalScrollView {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJScrollViewHorizontal{
+     fun lpWidth(w: Int) : JJScrollViewHorizontal{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJScrollViewHorizontal{
+     fun lpHeight(h: Int) : JJScrollViewHorizontal{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJScrollViewHorizontal{
+     fun lpPadding(pad: JJPadding) : JJScrollViewHorizontal{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJScrollViewHorizontal{
+     fun lpMargin(mar: JJMargin) : JJScrollViewHorizontal{
         mlpMargins = mar
         return this
     }
@@ -3146,20 +3146,20 @@ open class JJScrollViewHorizontal : HorizontalScrollView {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJScrollViewHorizontal{
+     fun lplWidth(w: Int) : JJScrollViewHorizontal{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJScrollViewHorizontal{
+     fun lplHeight(h: Int) : JJScrollViewHorizontal{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJScrollViewHorizontal{
+     fun lplPadding(pad: JJPadding) : JJScrollViewHorizontal{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJScrollViewHorizontal{
+     fun lplMargin(mar: JJMargin) : JJScrollViewHorizontal{
         mlsMargins = mar
         return this
     }

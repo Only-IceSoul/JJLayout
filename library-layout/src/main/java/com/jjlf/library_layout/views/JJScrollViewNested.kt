@@ -3106,20 +3106,20 @@ open class JJScrollViewNested : NestedScrollView {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJScrollViewNested{
+     fun lpWidth(w: Int) : JJScrollViewNested{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJScrollViewNested{
+     fun lpHeight(h: Int) : JJScrollViewNested{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJScrollViewNested{
+     fun lpPadding(pad: JJPadding) : JJScrollViewNested{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJScrollViewNested{
+     fun lpMargin(mar: JJMargin) : JJScrollViewNested{
         mlpMargins = mar
         return this
     }
@@ -3128,20 +3128,20 @@ open class JJScrollViewNested : NestedScrollView {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJScrollViewNested{
+     fun lplWidth(w: Int) : JJScrollViewNested{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJScrollViewNested{
+     fun lplHeight(h: Int) : JJScrollViewNested{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJScrollViewNested{
+     fun lplPadding(pad: JJPadding) : JJScrollViewNested{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJScrollViewNested{
+     fun lplMargin(mar: JJMargin) : JJScrollViewNested{
         mlsMargins = mar
         return this
     }

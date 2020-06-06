@@ -3062,20 +3062,20 @@ open class JJRelativeLayout : RelativeLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJRelativeLayout{
+     fun lpWidth(w: Int) : JJRelativeLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJRelativeLayout{
+     fun lpHeight(h: Int) : JJRelativeLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJRelativeLayout{
+     fun lpPadding(pad: JJPadding) : JJRelativeLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJRelativeLayout{
+     fun lpMargin(mar: JJMargin) : JJRelativeLayout{
         mlpMargins = mar
         return this
     }
@@ -3084,20 +3084,20 @@ open class JJRelativeLayout : RelativeLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJRelativeLayout{
+     fun lplWidth(w: Int) : JJRelativeLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJRelativeLayout{
+     fun lplHeight(h: Int) : JJRelativeLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJRelativeLayout{
+     fun lplPadding(pad: JJPadding) : JJRelativeLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJRelativeLayout{
+     fun lplMargin(mar: JJMargin) : JJRelativeLayout{
         mlsMargins = mar
         return this
     }

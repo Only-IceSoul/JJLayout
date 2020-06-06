@@ -3062,20 +3062,20 @@ open class JJView : View {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJView{
+     fun lpWidth(w: Int) : JJView{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJView{
+     fun lpHeight(h: Int) : JJView{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJView{
+     fun lpPadding(pad: JJPadding) : JJView{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJView{
+     fun lpMargin(mar: JJMargin) : JJView{
         mlpMargins = mar
         return this
     }
@@ -3084,20 +3084,20 @@ open class JJView : View {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJView{
+     fun lplWidth(w: Int) : JJView{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJView{
+     fun lplHeight(h: Int) : JJView{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJView{
+     fun lplPadding(pad: JJPadding) : JJView{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJView{
+     fun lplMargin(mar: JJMargin) : JJView{
         mlsMargins = mar
         return this
     }

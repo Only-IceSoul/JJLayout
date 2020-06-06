@@ -3113,20 +3113,20 @@ open class JJScrollView : ScrollView {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJScrollView{
+     fun lpWidth(w: Int) : JJScrollView{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJScrollView{
+     fun lpHeight(h: Int) : JJScrollView{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJScrollView{
+     fun lpPadding(pad: JJPadding) : JJScrollView{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJScrollView{
+     fun lpMargin(mar: JJMargin) : JJScrollView{
         mlpMargins = mar
         return this
     }
@@ -3135,20 +3135,20 @@ open class JJScrollView : ScrollView {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJScrollView{
+     fun lplWidth(w: Int) : JJScrollView{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJScrollView{
+     fun lplHeight(h: Int) : JJScrollView{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJScrollView{
+     fun lplPadding(pad: JJPadding) : JJScrollView{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJScrollView{
+     fun lplMargin(mar: JJMargin) : JJScrollView{
         mlsMargins = mar
         return this
     }

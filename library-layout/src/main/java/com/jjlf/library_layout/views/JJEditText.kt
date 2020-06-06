@@ -3230,20 +3230,20 @@ open class JJEditText : AppCompatEditText {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJEditText{
+    fun lpWidth(w: Int) : JJEditText{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJEditText{
+    fun lpHeight(h: Int) : JJEditText{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJEditText{
+    fun lpPadding(pad: JJPadding) : JJEditText{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJEditText{
+    fun lpMargin(mar: JJMargin) : JJEditText{
         mlpMargins = mar
         return this
     }
@@ -3252,20 +3252,20 @@ open class JJEditText : AppCompatEditText {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJEditText{
+    fun lplWidth(w: Int) : JJEditText{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJEditText{
+    fun lplHeight(h: Int) : JJEditText{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJEditText{
+    fun lplPadding(pad: JJPadding) : JJEditText{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJEditText{
+    fun lplMargin(mar: JJMargin) : JJEditText{
         mlsMargins = mar
         return this
     }

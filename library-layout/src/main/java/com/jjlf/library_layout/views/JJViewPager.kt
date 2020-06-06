@@ -3066,20 +3066,20 @@ open class JJViewPager : ViewPager {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJViewPager{
+     fun lpWidth(w: Int) : JJViewPager{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJViewPager{
+     fun lpHeight(h: Int) : JJViewPager{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJViewPager{
+     fun lpPadding(pad: JJPadding) : JJViewPager{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJViewPager{
+     fun lpMargin(mar: JJMargin) : JJViewPager{
         mlpMargins = mar
         return this
     }
@@ -3088,20 +3088,20 @@ open class JJViewPager : ViewPager {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJViewPager{
+     fun lplWidth(w: Int) : JJViewPager{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJViewPager{
+     fun lplHeight(h: Int) : JJViewPager{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJViewPager{
+     fun lplPadding(pad: JJPadding) : JJViewPager{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJViewPager{
+     fun lplMargin(mar: JJMargin) : JJViewPager{
         mlsMargins = mar
         return this
     }

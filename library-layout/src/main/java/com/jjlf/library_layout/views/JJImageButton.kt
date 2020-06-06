@@ -3320,20 +3320,20 @@ open class JJImageButton : AppCompatImageButton {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJImageButton{
+     fun lpWidth(w: Int) : JJImageButton{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJImageButton{
+     fun lpHeight(h: Int) : JJImageButton{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJImageButton{
+     fun lpPadding(pad: JJPadding) : JJImageButton{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJImageButton{
+     fun lpMargin(mar: JJMargin) : JJImageButton{
         mlpMargins = mar
         return this
     }
@@ -3342,20 +3342,20 @@ open class JJImageButton : AppCompatImageButton {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJImageButton{
+     fun lplWidth(w: Int) : JJImageButton{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJImageButton{
+     fun lplHeight(h: Int) : JJImageButton{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJImageButton{
+     fun lplPadding(pad: JJPadding) : JJImageButton{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJImageButton{
+     fun lplMargin(mar: JJMargin) : JJImageButton{
         mlsMargins = mar
         return this
     }

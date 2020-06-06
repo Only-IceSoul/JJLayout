@@ -3354,20 +3354,20 @@ open class JJConstraintLayout : ConstraintLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJConstraintLayout{
+    fun lpWidth(w: Int) : JJConstraintLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJConstraintLayout{
+    fun lpHeight(h: Int) : JJConstraintLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJConstraintLayout{
+    fun lpPadding(pad: JJPadding) : JJConstraintLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJConstraintLayout{
+    fun lpMargin(mar: JJMargin) : JJConstraintLayout{
         mlpMargins = mar
         return this
     }
@@ -3376,20 +3376,20 @@ open class JJConstraintLayout : ConstraintLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJConstraintLayout{
+    fun lplWidth(w: Int) : JJConstraintLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJConstraintLayout{
+    fun lplHeight(h: Int) : JJConstraintLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJConstraintLayout{
+    fun lplPadding(pad: JJPadding) : JJConstraintLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJConstraintLayout{
+    fun lplMargin(mar: JJMargin) : JJConstraintLayout{
         mlsMargins = mar
         return this
     }

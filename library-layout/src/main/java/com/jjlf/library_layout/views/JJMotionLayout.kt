@@ -3106,20 +3106,20 @@ open class JJMotionLayout : MotionLayout {
 
     //region layout params 
 
-    private fun lpWidth(w: Int) : JJMotionLayout{
+     fun lpWidth(w: Int) : JJMotionLayout{
         mlpWidth = w
         return this
     }
-    private fun lpHeight(h: Int) : JJMotionLayout{
+     fun lpHeight(h: Int) : JJMotionLayout{
         mlpHeight = h
         return this
     }
-    private fun lpPadding(pad: JJPadding) : JJMotionLayout{
+     fun lpPadding(pad: JJPadding) : JJMotionLayout{
         mlpPadding = pad
         return this
     }
 
-    private fun lpMargin(mar: JJMargin) : JJMotionLayout{
+     fun lpMargin(mar: JJMargin) : JJMotionLayout{
         mlpMargins = mar
         return this
     }
@@ -3128,20 +3128,20 @@ open class JJMotionLayout : MotionLayout {
 
     //region layout params landscape
 
-    private fun lplWidth(w: Int) : JJMotionLayout{
+     fun lplWidth(w: Int) : JJMotionLayout{
         mlsWidth = w
         return this
     }
-    private fun lplHeight(h: Int) : JJMotionLayout{
+     fun lplHeight(h: Int) : JJMotionLayout{
         mlsHeight = h
         return this
     }
-    private fun lpladding(pad: JJPadding) : JJMotionLayout{
+     fun lplPadding(pad: JJPadding) : JJMotionLayout{
         mlsPadding = pad
         return this
     }
 
-    private fun lplMargin(mar: JJMargin) : JJMotionLayout{
+     fun lplMargin(mar: JJMargin) : JJMotionLayout{
         mlsMargins = mar
         return this
     }
