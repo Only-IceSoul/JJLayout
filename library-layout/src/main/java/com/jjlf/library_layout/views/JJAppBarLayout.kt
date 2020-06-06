@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.Interpolator
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -3034,626 +3035,261 @@ open class JJAppBarLayout : AppBarLayout {
     //endregion
 
 
-    //region ConstraintLayout LandScape Params
-    protected val mConstraintSetLandScape = ConstraintSet()
-
-    fun cllApply(): JJAppBarLayout {
-        mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
-        return this
-    }
-
-
-    fun cllFloatCustomAttribute(attrName: String, value: Float): JJAppBarLayout {
-        mConstraintSet.setFloatValue(id,attrName,value)
-        return this
-    }
-
-    fun cllIntCustomAttribute(attrName: String, value: Int): JJAppBarLayout {
-        mConstraintSet.setIntValue(id,attrName,value)
-        return this
-    }
-
-    fun cllColorCustomAttribute(attrName: String, value: Int): JJAppBarLayout {
-        mConstraintSet.setColorValue(id,attrName,value)
-        return this
-    }
-
-    fun cllStringCustomAttribute(attrName: String, value: String): JJAppBarLayout {
-        mConstraintSet.setStringValue(id,attrName,value)
-        return this
-    }
-
-    fun cllRotation(float: Float): JJAppBarLayout {
-        mConstraintSet.setRotation(id,float)
-        return this
-    }
-
-    fun cllRotationX(float: Float): JJAppBarLayout {
-        mConstraintSet.setRotationX(id,float)
-        return this
-    }
-
-    fun cllRotationY(float: Float): JJAppBarLayout {
-        mConstraintSet.setRotationY(id,float)
-        return this
-    }
-
-    fun cllTranslation(x: Float,y: Float): JJAppBarLayout {
-        mConstraintSet.setTranslation(id,x,y)
-        return this
-    }
-    fun cllTranslationX(x: Float): JJAppBarLayout {
-        mConstraintSet.setTranslationX(id,x)
-        return this
-    }
-
-    fun cllTranslationY(y: Float): JJAppBarLayout {
-        mConstraintSet.setTranslationY(id,y)
-        return this
-    }
-
-    fun cllTranslationZ(z: Float): JJAppBarLayout {
-        mConstraintSet.setTranslationZ(id,z)
-        return this
-    }
-
-    fun cllTransformPivot(x: Float, y: Float): JJAppBarLayout {
-        mConstraintSet.setTransformPivot(id,x,y)
-        return this
-    }
-
-    fun cllTransformPivotX(x: Float): JJAppBarLayout {
-        mConstraintSet.setTransformPivotX(id,x)
-        return this
-    }
-
-    fun cllTransformPivotY(y: Float): JJAppBarLayout {
-        mConstraintSet.setTransformPivotY(id,y)
-        return this
-    }
-
-    fun cllScaleX(x: Float): JJAppBarLayout {
-        mConstraintSet.setScaleX(id,x)
-        return this
-    }
-
-    fun cllScaleY(y: Float): JJAppBarLayout {
-        mConstraintSet.setScaleY(id,y)
-        return this
-    }
-
-    fun cllDimensionRatio(ratio: String): JJAppBarLayout {
-        mConstraintSet.setDimensionRatio(id,ratio)
-        return this
-    }
-
-    fun cllAlpha(alpha: Float): JJAppBarLayout {
-        mConstraintSet.setAlpha(id,alpha)
-        return this
-    }
-
-
-    fun cllVisibilityMode(visibility: Int): JJAppBarLayout {
-        mConstraintSetLandScape.setVisibilityMode(id, visibility)
-        return this
-    }
-
-    fun cllVerticalBias(float: Float): JJAppBarLayout {
-        mConstraintSetLandScape.setVerticalBias(id,float)
-        return this
-    }
-    fun cllHorizontalBias(float: Float): JJAppBarLayout {
-        mConstraintSetLandScape.setHorizontalBias(id,float)
-        return this
-    }
-
-    fun cllCenterHorizontallyOf(viewId: Int, marginStart: Int = 0, marginEnd: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.START, marginStart)
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.END, marginEnd)
-        mConstraintSetLandScape.setHorizontalBias(id,0.5f)
-        return this
-    }
-    fun cllCenterVerticallyOf(viewId: Int,marginTop: Int = 0, marginBottom: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.TOP, marginTop)
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.BOTTOM, marginBottom)
-        mConstraintSetLandScape.setVerticalBias(id,0.5f)
-        return this
-    }
-
-    fun cllMargins(margins: JJMargin) : JJAppBarLayout {
-        mConstraintSetLandScape.setMargin(id,ConstraintSet.TOP,margins.top)
-        mConstraintSetLandScape.setMargin(id,ConstraintSet.BOTTOM,margins.bottom)
-        mConstraintSetLandScape.setMargin(id,ConstraintSet.END,margins.right)
-        mConstraintSetLandScape.setMargin(id,ConstraintSet.START,margins.left)
-        return this
-    }
-
-
-    fun cllTopToTop(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.TOP, margin)
-        return this
-    }
-
-    fun cllTopToTopParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin)
-        return this
-    }
-
-
-    fun cllTopToBottom(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.BOTTOM, margin)
-        return this
-    }
-
-    fun cllTopToBottomParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin)
-        return this
-    }
-
-    fun cllBottomToTop(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.TOP, margin)
-        return this
-    }
-
-    fun cllBottomToTopParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin)
-        return this
-    }
-
-    fun cllBottomToBottom(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.BOTTOM, margin)
-        return this
-    }
-
-    fun cllBottomToBottomParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin)
-        return this
-    }
-
-    fun cllStartToStart(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.START, margin)
-        return this
-    }
-
-    fun cllStartToStartParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin)
-        return this
-    }
-
-    fun cllStartToEnd(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.END, margin)
-        return this
-    }
-
-    fun cllStartToEndParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.END, margin)
-        return this
-    }
-
-    fun cllEndToEnd(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.END, margin)
-        return this
-    }
-
-    fun cllEndToEndParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin)
-        return this
-    }
-
-
-    fun cllEndToStart(viewId: Int, margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.START, margin)
-        return this
-    }
-
-    fun cllEndToStartParent(margin: Int = 0): JJAppBarLayout {
-        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START, margin)
-        return this
-    }
-
-
-    fun cllWidth(width: Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainWidth(id, width)
-        return this
-    }
-
-    fun cllHeight(height: Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainHeight(id, height)
-        return this
-    }
-
-    fun cllPercentWidth(width: Float): JJAppBarLayout {
-        mConstraintSetLandScape.constrainPercentWidth(id, width)
-        return this
-    }
-
-    fun cllPercentHeight(height: Float): JJAppBarLayout {
-        mConstraintSetLandScape.constrainPercentHeight(id, height)
-        return this
-    }
-
-    fun cllCenterInParent(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
-        return this
-    }
-
-    fun cllCenterInParent(verticalBias: Float, horizontalBias: Float, margin: JJMargin): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin.bottom)
-        mConstraintSetLandScape.setVerticalBias(id, verticalBias)
-        mConstraintSetLandScape.setHorizontalBias(id, horizontalBias)
-        return this
-    }
-
-    fun cllCenterInParentVertically(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
-        return this
-    }
-
-    fun cllCenterInParentHorizontally(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
-        return this
-    }
-
-    fun cllCenterInParentVertically(bias: Float, topMargin: Int, bottomMargin: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
-        mConstraintSetLandScape.setVerticalBias(id, bias)
-        return this
-    }
-
-    fun cllCenterInParentHorizontally(bias: Float, startMargin: Int, endtMargin: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endtMargin)
-        mConstraintSetLandScape.setHorizontalBias(id, bias)
-        return this
-    }
-
-
-    fun cllCenterInParentTopVertically(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
-        return this
-    }
-
-
-    fun cllCenterInParentBottomVertically(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
-        return this
-    }
+    //region layout params 
 
-    fun cllCenterInParentStartHorizontally(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+    private fun lpWidth(w: Int) : JJAppBarLayout{
+        mlpWidth = w
         return this
     }
-
-    fun cllCenterInParentEndHorizontally(): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
-        return this
-    }
-
-    fun cllCenterInTopVertically(topId: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, topId, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, topId, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+    private fun lpHeight(h: Int) : JJAppBarLayout{
+        mlpHeight = h
         return this
     }
-
-
-    fun cllCenterInBottomVertically(bottomId: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, bottomId, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, bottomId, ConstraintSet.BOTTOM, 0)
-        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+    private fun lpPadding(pad: JJPadding) : JJAppBarLayout{
+        mlpPadding = pad
         return this
     }
 
-    fun cllCenterInStartHorizontally(startId: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, startId, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, startId, ConstraintSet.START, 0)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+    private fun lpMargin(mar: JJMargin) : JJAppBarLayout{
+        mlpMargins = mar
         return this
     }
 
-    fun cllCenterInEndHorizontally(endId: Int): JJAppBarLayout {
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, endId, ConstraintSet.END, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, endId, ConstraintSet.END, 0)
-        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
-        return this
-    }
+    //endregion
 
-    fun cllCenterVertically(topId: Int, topSide: Int, topMargin: Int, bottomId: Int, bottomSide: Int, bottomMargin: Int, bias: Float): JJAppBarLayout {
-        mConstraintSetLandScape.centerVertically(id, topId, topSide, topMargin, bottomId, bottomSide, bottomMargin, bias)
-        return this
-    }
+    //region layout params landscape
 
-    fun cllCenterHorizontally(startId: Int, startSide: Int, startMargin: Int, endId: Int, endSide: Int, endMargin: Int, bias: Float): JJAppBarLayout {
-        mConstraintSetLandScape.centerHorizontally(id, startId, startSide, startMargin, endId, endSide, endMargin, bias)
+    private fun lplWidth(w: Int) : JJAppBarLayout{
+        mlsWidth = w
         return this
     }
-
-
-    fun cllFillParent(): JJAppBarLayout {
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.constrainHeight(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+    private fun lplHeight(h: Int) : JJAppBarLayout{
+        mlsHeight = h
         return this
     }
-
-    fun cllFillParent(margin: JJMargin): JJAppBarLayout {
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.constrainHeight(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin.bottom)
+    private fun lpladding(pad: JJPadding) : JJAppBarLayout{
+        mlsPadding = pad
         return this
     }
 
-    fun cllFillParentHorizontally(): JJAppBarLayout {
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+    private fun lplMargin(mar: JJMargin) : JJAppBarLayout{
+        mlsMargins = mar
         return this
     }
 
-    fun cllFillParentVertically(): JJAppBarLayout {
-        mConstraintSetLandScape.constrainHeight(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-        return this
-    }
+    //endregion 
 
-    fun cllFillParentHorizontally(startMargin: Int, endMargin: Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
-        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endMargin)
-        return this
-    }
+    //region CoordinatorLayout params
 
-    fun cllFillParentVertically(topMargin: Int, bottomMargin: Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainHeight(id,0)
-        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
-        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
-        return this
+    private fun setupCol() {
+        val a = layoutParams as?  CoordinatorLayout.LayoutParams
+        layoutParams = a
     }
 
-    fun cllVisibility(visibility: Int): JJAppBarLayout {
-        mConstraintSetLandScape.setVisibility(id, visibility)
+    fun colGravity(gravity: Int): JJAppBarLayout {
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
         return this
     }
 
-
-
-    fun cllElevation(elevation: Float): JJAppBarLayout {
-        mConstraintSetLandScape.setElevation(id, elevation)
-
-        return this
+    fun colBehavior(behavior: AppBarLayout.Behavior){
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
     }
 
-    fun cllConstraintSet() : ConstraintSet {
-        return mConstraintSetLandScape
-    }
+    //endregion
 
-    fun cllMinWidth(w:Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainMinWidth(id,w)
-        return this
-    }
+    //region AppBarLayout Params
 
-    fun cllMinHeight(h:Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainMinHeight(id,h)
-        return this
+    private  fun setupAblp(){
+        val a = layoutParams as? AppBarLayout.LayoutParams
+        layoutParams = a
     }
 
-    fun cllMaxWidth(w:Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainMaxWidth(id,w)
+    fun ablScrollFlags(flags: Int) : JJAppBarLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
         return this
     }
 
-    fun cllMaxHeight(h:Int): JJAppBarLayout {
-        mConstraintSetLandScape.constrainMaxHeight(id,h)
+    fun ablScrollInterpolator(interpolator: Interpolator) : JJAppBarLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
         return this
     }
-
-
-
-
-
 
-//endregion
+    //endregion
 
     //region RelativeLayout Params
 
-    private var mRlp: RelativeLayout.LayoutParams? = null
-
     private fun setupRlp(){
-        if(mRlp == null) {
-            mRlp = layoutParams as? RelativeLayout.LayoutParams
-            layoutParams = mRlp
-        }
-    }
-
-    fun rlWidth(width: Int): JJAppBarLayout {
-        setupRlp()
-        mRlp!!.width = width
-        return this
-    }
-
-    fun rlHeight(height: Int): JJAppBarLayout {
-        setupRlp()
-        mRlp!!.height = height
-        return this
+        val a = layoutParams as? RelativeLayout.LayoutParams
+        layoutParams = a
     }
 
     fun rlAbove(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ABOVE,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
         return this
     }
 
     fun rlBelow(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.BELOW,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
         return this
     }
 
     fun rlAlignParentBottom(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
         return this
     }
 
     fun rlAlignParentTop(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
         return this
     }
 
     fun rlAlignParentStart(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_START,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
         return this
     }
 
     fun rlAlignParentEnd(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_END,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
         return this
     }
 
     fun rlAlignParentLeft(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
         return this
     }
 
     fun rlAlignParentRight(value : Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
         return this
     }
 
     fun rlAlignEnd(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_END,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
         return this
     }
 
     fun rlAlignStart(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_START,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
         return this
     }
 
     fun rlAlignTop(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_TOP,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
         return this
     }
 
     fun rlAlignBottom(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
         return this
     }
 
 
     fun rlAlignLeft(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_LEFT,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
         return this
     }
 
     fun rlAlignRight(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
         return this
     }
 
     fun rlRightToLeft(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.LEFT_OF,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
         return this
     }
 
     fun rlLeftToRight(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.RIGHT_OF,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
         return this
     }
 
     fun rlStartToEnd(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.END_OF,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
         return this
     }
 
     fun rlEndToStart(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.START_OF,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
         return this
     }
 
     fun rlCenterInParent(value:Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_IN_PARENT,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
         return this
     }
 
     fun rlCenterInParentVertically(value:Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_VERTICAL,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
         return this
     }
 
     fun rlCenterInParentHorizontally(value:Boolean = true): JJAppBarLayout {
         setupRlp()
         val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
         return this
     }
 
     fun rlAlignBaseline(viewId: Int): JJAppBarLayout {
         setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
         return this
     }
 
-    fun rlMargins(margins: JJMargin): JJAppBarLayout {
-        setupRlp()
-        mRlp!!.setMargins(margins.left,margins.top,margins.right,margins.bottom)
+
+    //endregion
+
+    //region LinearLayout Params
+    private fun setupLlp() {
+        val a = layoutParams as? LinearLayout.LayoutParams
+        layoutParams = a
+    }
+    fun llWeight(w: Float): JJAppBarLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
+        return this
+    }
+    fun llGravity(gravity: Int): JJAppBarLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
         return this
     }
 
     //endregion
+
 
     //region MotionLayout Params
 
@@ -4534,98 +4170,452 @@ open class JJAppBarLayout : AppBarLayout {
 
     //endregion
 
-    //region LinearLayout params
+    //region ConstraintLayout LandScape Params
+    protected val mConstraintSetLandScape = ConstraintSet()
 
-    private var mLlp: LinearLayout.LayoutParams? = null
-    private fun setupLlp() {
-        if (mLlp == null) {
-            mLlp = layoutParams as?  LinearLayout.LayoutParams
-            layoutParams = mLlp
-        }
-    }
-
-    fun llWidth(width: Int): JJAppBarLayout {
-        setupLlp()
-        mLlp!!.width = width
+    fun cllApply(): JJAppBarLayout {
+        mConstraintSetLandScape.applyTo(parent as ConstraintLayout)
         return this
     }
 
-    fun llHeight(height: Int): JJAppBarLayout {
-        setupLlp()
-        mLlp!!.height = height
+
+    fun cllFloatCustomAttribute(attrName: String, value: Float): JJAppBarLayout {
+        mConstraintSet.setFloatValue(id,attrName,value)
         return this
     }
 
-    fun llWeight(weigth: Float): JJAppBarLayout {
-        setupLlp()
-        mLlp!!.weight = weigth
+    fun cllIntCustomAttribute(attrName: String, value: Int): JJAppBarLayout {
+        mConstraintSet.setIntValue(id,attrName,value)
         return this
     }
 
-    fun llGravity(gravity: Int): JJAppBarLayout {
-        setupLlp()
-        mLlp!!.gravity = gravity
+    fun cllColorCustomAttribute(attrName: String, value: Int): JJAppBarLayout {
+        mConstraintSet.setColorValue(id,attrName,value)
         return this
     }
 
-    //endregion
-
-    //region CoordinatorLayout params
-
-    private var mCol: CoordinatorLayout.LayoutParams? = null
-    private fun setupCol() {
-        if (mCol == null) {
-            mCol = layoutParams as?  CoordinatorLayout.LayoutParams
-            layoutParams = mCol
-        }
-    }
-
-    fun colWidth(width: Int): JJAppBarLayout {
-        setupCol()
-        mCol!!.width = width
+    fun cllStringCustomAttribute(attrName: String, value: String): JJAppBarLayout {
+        mConstraintSet.setStringValue(id,attrName,value)
         return this
     }
 
-    fun colHeight(height: Int): JJAppBarLayout {
-        setupCol()
-        mCol!!.height = height
+    fun cllRotation(float: Float): JJAppBarLayout {
+        mConstraintSet.setRotation(id,float)
         return this
     }
 
-    fun colGravity(gravity: Int): JJAppBarLayout {
-        setupCol()
-        mCol!!.gravity = gravity
+    fun cllRotationX(float: Float): JJAppBarLayout {
+        mConstraintSet.setRotationX(id,float)
         return this
     }
 
-    fun colBehavior(behavior: Behavior){
-        setupCol()
-        mCol!!.behavior = behavior
-    }
-
-    //endregion
-
-    //region ScrollView params
-    private var mSvp: RelativeLayout.LayoutParams? = null
-
-    private fun setupSvp() {
-        if (mSvp == null) {
-            mSvp = layoutParams as?  RelativeLayout.LayoutParams
-            layoutParams = mSvp
-        }
-    }
-
-    fun svWidth(width: Int): JJAppBarLayout {
-        setupSvp()
-        mSvp!!.width = width
+    fun cllRotationY(float: Float): JJAppBarLayout {
+        mConstraintSet.setRotationY(id,float)
         return this
     }
 
-    fun svHeight(height: Int): JJAppBarLayout {
-        setupSvp()
-        mSvp!!.height = height
+    fun cllTranslation(x: Float,y: Float): JJAppBarLayout {
+        mConstraintSet.setTranslation(id,x,y)
         return this
     }
-    //endregion
+    fun cllTranslationX(x: Float): JJAppBarLayout {
+        mConstraintSet.setTranslationX(id,x)
+        return this
+    }
+
+    fun cllTranslationY(y: Float): JJAppBarLayout {
+        mConstraintSet.setTranslationY(id,y)
+        return this
+    }
+
+    fun cllTranslationZ(z: Float): JJAppBarLayout {
+        mConstraintSet.setTranslationZ(id,z)
+        return this
+    }
+
+    fun cllTransformPivot(x: Float, y: Float): JJAppBarLayout {
+        mConstraintSet.setTransformPivot(id,x,y)
+        return this
+    }
+
+    fun cllTransformPivotX(x: Float): JJAppBarLayout {
+        mConstraintSet.setTransformPivotX(id,x)
+        return this
+    }
+
+    fun cllTransformPivotY(y: Float): JJAppBarLayout {
+        mConstraintSet.setTransformPivotY(id,y)
+        return this
+    }
+
+    fun cllScaleX(x: Float): JJAppBarLayout {
+        mConstraintSet.setScaleX(id,x)
+        return this
+    }
+
+    fun cllScaleY(y: Float): JJAppBarLayout {
+        mConstraintSet.setScaleY(id,y)
+        return this
+    }
+
+    fun cllDimensionRatio(ratio: String): JJAppBarLayout {
+        mConstraintSet.setDimensionRatio(id,ratio)
+        return this
+    }
+
+    fun cllAlpha(alpha: Float): JJAppBarLayout {
+        mConstraintSet.setAlpha(id,alpha)
+        return this
+    }
+
+
+    fun cllVisibilityMode(visibility: Int): JJAppBarLayout {
+        mConstraintSetLandScape.setVisibilityMode(id, visibility)
+        return this
+    }
+
+    fun cllVerticalBias(float: Float): JJAppBarLayout {
+        mConstraintSetLandScape.setVerticalBias(id,float)
+        return this
+    }
+    fun cllHorizontalBias(float: Float): JJAppBarLayout {
+        mConstraintSetLandScape.setHorizontalBias(id,float)
+        return this
+    }
+
+    fun cllCenterHorizontallyOf(viewId: Int, marginStart: Int = 0, marginEnd: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.START, marginStart)
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.END, marginEnd)
+        mConstraintSetLandScape.setHorizontalBias(id,0.5f)
+        return this
+    }
+    fun cllCenterVerticallyOf(viewId: Int,marginTop: Int = 0, marginBottom: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.TOP, marginTop)
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.BOTTOM, marginBottom)
+        mConstraintSetLandScape.setVerticalBias(id,0.5f)
+        return this
+    }
+
+    fun cllMargins(margins: JJMargin) : JJAppBarLayout {
+        mConstraintSetLandScape.setMargin(id,ConstraintSet.TOP,margins.top)
+        mConstraintSetLandScape.setMargin(id,ConstraintSet.BOTTOM,margins.bottom)
+        mConstraintSetLandScape.setMargin(id,ConstraintSet.END,margins.right)
+        mConstraintSetLandScape.setMargin(id,ConstraintSet.START,margins.left)
+        return this
+    }
+
+
+    fun cllTopToTop(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.TOP, margin)
+        return this
+    }
+
+    fun cllTopToTopParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin)
+        return this
+    }
+
+
+    fun cllTopToBottom(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, viewId, ConstraintSet.BOTTOM, margin)
+        return this
+    }
+
+    fun cllTopToBottomParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin)
+        return this
+    }
+
+    fun cllBottomToTop(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.TOP, margin)
+        return this
+    }
+
+    fun cllBottomToTopParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin)
+        return this
+    }
+
+    fun cllBottomToBottom(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, viewId, ConstraintSet.BOTTOM, margin)
+        return this
+    }
+
+    fun cllBottomToBottomParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin)
+        return this
+    }
+
+    fun cllStartToStart(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.START, margin)
+        return this
+    }
+
+    fun cllStartToStartParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin)
+        return this
+    }
+
+    fun cllStartToEnd(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, viewId, ConstraintSet.END, margin)
+        return this
+    }
+
+    fun cllStartToEndParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.END, margin)
+        return this
+    }
+
+    fun cllEndToEnd(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.END, margin)
+        return this
+    }
+
+    fun cllEndToEndParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin)
+        return this
+    }
+
+
+    fun cllEndToStart(viewId: Int, margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, viewId, ConstraintSet.START, margin)
+        return this
+    }
+
+    fun cllEndToStartParent(margin: Int = 0): JJAppBarLayout {
+        mConstraintSetLandScape.connect(this.id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START, margin)
+        return this
+    }
+
+
+    fun cllWidth(width: Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainWidth(id, width)
+        return this
+    }
+
+    fun cllHeight(height: Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainHeight(id, height)
+        return this
+    }
+
+    fun cllPercentWidth(width: Float): JJAppBarLayout {
+        mConstraintSetLandScape.constrainPercentWidth(id, width)
+        return this
+    }
+
+    fun cllPercentHeight(height: Float): JJAppBarLayout {
+        mConstraintSetLandScape.constrainPercentHeight(id, height)
+        return this
+    }
+
+    fun cllCenterInParent(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInParent(verticalBias: Float, horizontalBias: Float, margin: JJMargin): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin.bottom)
+        mConstraintSetLandScape.setVerticalBias(id, verticalBias)
+        mConstraintSetLandScape.setHorizontalBias(id, horizontalBias)
+        return this
+    }
+
+    fun cllCenterInParentVertically(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInParentHorizontally(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInParentVertically(bias: Float, topMargin: Int, bottomMargin: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
+        mConstraintSetLandScape.setVerticalBias(id, bias)
+        return this
+    }
+
+    fun cllCenterInParentHorizontally(bias: Float, startMargin: Int, endtMargin: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endtMargin)
+        mConstraintSetLandScape.setHorizontalBias(id, bias)
+        return this
+    }
+
+
+    fun cllCenterInParentTopVertically(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        return this
+    }
+
+
+    fun cllCenterInParentBottomVertically(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInParentStartHorizontally(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInParentEndHorizontally(): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInTopVertically(topId: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, topId, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, topId, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        return this
+    }
+
+
+    fun cllCenterInBottomVertically(bottomId: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, bottomId, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, bottomId, ConstraintSet.BOTTOM, 0)
+        mConstraintSetLandScape.setVerticalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInStartHorizontally(startId: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, startId, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, startId, ConstraintSet.START, 0)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterInEndHorizontally(endId: Int): JJAppBarLayout {
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, endId, ConstraintSet.END, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, endId, ConstraintSet.END, 0)
+        mConstraintSetLandScape.setHorizontalBias(id, 0.5f)
+        return this
+    }
+
+    fun cllCenterVertically(topId: Int, topSide: Int, topMargin: Int, bottomId: Int, bottomSide: Int, bottomMargin: Int, bias: Float): JJAppBarLayout {
+        mConstraintSetLandScape.centerVertically(id, topId, topSide, topMargin, bottomId, bottomSide, bottomMargin, bias)
+        return this
+    }
+
+    fun cllCenterHorizontally(startId: Int, startSide: Int, startMargin: Int, endId: Int, endSide: Int, endMargin: Int, bias: Float): JJAppBarLayout {
+        mConstraintSetLandScape.centerHorizontally(id, startId, startSide, startMargin, endId, endSide, endMargin, bias)
+        return this
+    }
+
+
+    fun cllFillParent(): JJAppBarLayout {
+        mConstraintSetLandScape.constrainWidth(id,0)
+        mConstraintSetLandScape.constrainHeight(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        return this
+    }
+
+    fun cllFillParent(margin: JJMargin): JJAppBarLayout {
+        mConstraintSetLandScape.constrainWidth(id,0)
+        mConstraintSetLandScape.constrainHeight(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, margin.top)
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, margin.left)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, margin.right)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, margin.bottom)
+        return this
+    }
+
+    fun cllFillParentHorizontally(): JJAppBarLayout {
+        mConstraintSetLandScape.constrainWidth(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 0)
+        return this
+    }
+
+    fun cllFillParentVertically(): JJAppBarLayout {
+        mConstraintSetLandScape.constrainHeight(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+        return this
+    }
+
+    fun cllFillParentHorizontally(startMargin: Int, endMargin: Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainWidth(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, startMargin)
+        mConstraintSetLandScape.connect(id, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, endMargin)
+        return this
+    }
+
+    fun cllFillParentVertically(topMargin: Int, bottomMargin: Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainHeight(id,0)
+        mConstraintSetLandScape.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP, topMargin)
+        mConstraintSetLandScape.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, bottomMargin)
+        return this
+    }
+
+    fun cllVisibility(visibility: Int): JJAppBarLayout {
+        mConstraintSetLandScape.setVisibility(id, visibility)
+        return this
+    }
+
+
+
+    fun cllElevation(elevation: Float): JJAppBarLayout {
+        mConstraintSetLandScape.setElevation(id, elevation)
+
+        return this
+    }
+
+    fun cllConstraintSet() : ConstraintSet {
+        return mConstraintSetLandScape
+    }
+
+    fun cllMinWidth(w:Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainMinWidth(id,w)
+        return this
+    }
+
+    fun cllMinHeight(h:Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainMinHeight(id,h)
+        return this
+    }
+
+    fun cllMaxWidth(w:Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainMaxWidth(id,w)
+        return this
+    }
+
+    fun cllMaxHeight(h:Int): JJAppBarLayout {
+        mConstraintSetLandScape.constrainMaxHeight(id,h)
+        return this
+    }
+
+
+
+
+
+
+//endregion
 
 }

@@ -3102,6 +3102,264 @@ open class JJMotionLayout : MotionLayout {
     
     //endregion
 
+
+
+    //region layout params 
+
+    private fun lpWidth(w: Int) : JJMotionLayout{
+        mlpWidth = w
+        return this
+    }
+    private fun lpHeight(h: Int) : JJMotionLayout{
+        mlpHeight = h
+        return this
+    }
+    private fun lpPadding(pad: JJPadding) : JJMotionLayout{
+        mlpPadding = pad
+        return this
+    }
+
+    private fun lpMargin(mar: JJMargin) : JJMotionLayout{
+        mlpMargins = mar
+        return this
+    }
+
+    //endregion
+
+    //region layout params landscape
+
+    private fun lplWidth(w: Int) : JJMotionLayout{
+        mlsWidth = w
+        return this
+    }
+    private fun lplHeight(h: Int) : JJMotionLayout{
+        mlsHeight = h
+        return this
+    }
+    private fun lpladding(pad: JJPadding) : JJMotionLayout{
+        mlsPadding = pad
+        return this
+    }
+
+    private fun lplMargin(mar: JJMargin) : JJMotionLayout{
+        mlsMargins = mar
+        return this
+    }
+
+    //endregion 
+
+    //region CoordinatorLayout params
+
+    private fun setupCol() {
+        val a = layoutParams as?  CoordinatorLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun colGravity(gravity: Int): JJMotionLayout {
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    fun colBehavior(behavior: AppBarLayout.Behavior){
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
+    }
+
+    //endregion
+
+    //region AppBarLayout Params
+
+    private  fun setupAblp(){
+        val a = layoutParams as? AppBarLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun ablScrollFlags(flags: Int) : JJMotionLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
+        return this
+    }
+
+    fun ablScrollInterpolator(interpolator: Interpolator) : JJMotionLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
+        return this
+    }
+
+    //endregion
+
+    //region RelativeLayout Params
+
+    private fun setupRlp(){
+        val a = layoutParams as? RelativeLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun rlAbove(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
+        return this
+    }
+
+    fun rlBelow(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
+        return this
+    }
+
+    fun rlAlignParentBottom(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
+        return this
+    }
+
+    fun rlAlignParentTop(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
+        return this
+    }
+
+    fun rlAlignParentStart(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
+        return this
+    }
+
+    fun rlAlignParentEnd(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
+        return this
+    }
+
+    fun rlAlignParentLeft(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
+        return this
+    }
+
+    fun rlAlignParentRight(value : Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
+        return this
+    }
+
+    fun rlAlignEnd(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
+        return this
+    }
+
+    fun rlAlignStart(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
+        return this
+    }
+
+    fun rlAlignTop(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
+        return this
+    }
+
+    fun rlAlignBottom(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
+        return this
+    }
+
+
+    fun rlAlignLeft(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
+        return this
+    }
+
+    fun rlAlignRight(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
+        return this
+    }
+
+    fun rlRightToLeft(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
+        return this
+    }
+
+    fun rlLeftToRight(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
+        return this
+    }
+
+    fun rlStartToEnd(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
+        return this
+    }
+
+    fun rlEndToStart(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
+        return this
+    }
+
+    fun rlCenterInParent(value:Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
+        return this
+    }
+
+    fun rlCenterInParentVertically(value:Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
+        return this
+    }
+
+    fun rlCenterInParentHorizontally(value:Boolean = true): JJMotionLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
+        return this
+    }
+
+    fun rlAlignBaseline(viewId: Int): JJMotionLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
+        return this
+    }
+
+
+    //endregion
+
+    //region LinearLayout Params
+    private fun setupLlp() {
+        val a = layoutParams as? LinearLayout.LayoutParams
+        layoutParams = a
+    }
+    fun llWeight(w: Float): JJMotionLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
+        return this
+    }
+    fun llGravity(gravity: Int): JJMotionLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    //endregion
+
+
     //region ConstraintLayout LandScape Params
     protected val mConstraintSetLandScape = ConstraintSet()
 
@@ -3549,82 +3807,6 @@ open class JJMotionLayout : MotionLayout {
 
 
 //endregion
-    
-    //region CoordinatorLayout params
-
-    private var mCol: CoordinatorLayout.LayoutParams? = null
-    private fun setupCol() {
-        if (mCol == null) {
-            mCol = layoutParams as?  CoordinatorLayout.LayoutParams
-            layoutParams = mCol
-        }
-    }
-
-    fun colWidth(width: Int): JJMotionLayout {
-        setupCol()
-        mCol!!.width = width
-        return this
-    }
-
-    fun colHeight(height: Int): JJMotionLayout {
-        setupCol()
-        mCol!!.height = height
-        return this
-    }
-
-    fun colGravity(gravity: Int): JJMotionLayout {
-        setupCol()
-        mCol!!.gravity = gravity
-        return this
-    }
-
-    fun colBehavior(behavior: AppBarLayout.Behavior){
-        setupCol()
-        mCol!!.behavior = behavior
-    }
-
-    //endregion
-
-    //region AppBarLayout Params
-    private var ablp : AppBarLayout.LayoutParams? = null
-    protected open fun setupAblp(){
-        if(ablp == null) {
-            ablp = layoutParams as? AppBarLayout.LayoutParams
-            layoutParams = ablp
-        }
-    }
-
-    open fun ablWidth(width: Int): JJMotionLayout {
-        setupAblp()
-        ablp!!.width = width
-        return this
-    }
-
-    open fun ablHeight(height: Int): JJMotionLayout {
-        setupAblp()
-        ablp!!.height = height
-        return this
-    }
-
-    open fun ablScrollFlags(flags: Int) : JJMotionLayout {
-        setupAblp()
-        ablp!!.scrollFlags = flags
-        return this
-    }
-
-    open fun ablScrollInterpolator(interpolator: Interpolator) : JJMotionLayout {
-        setupAblp()
-        ablp!!.scrollInterpolator = interpolator
-        return this
-    }
-
-    open fun ablMargins(margins: JJMargin): JJMotionLayout {
-        setupAblp()
-        ablp!!.updateMarginsRelative(margins.left,margins.top,margins.right,margins.bottom)
-        return this
-    }
-
-    //endregion
 
     //region MotionLayout Params
 
@@ -4065,180 +4247,7 @@ open class JJMotionLayout : MotionLayout {
     }
 
     //endregion
-
-    //region RelativeLayout Params
-
-    private var mRlp: RelativeLayout.LayoutParams? = null
-
-    private fun setupRlp(){
-        if(mRlp == null) {
-            mRlp = layoutParams as? RelativeLayout.LayoutParams
-            layoutParams = mRlp
-        }
-    }
-
-    fun rlWidth(width: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.width = width
-        return this
-    }
-
-    fun rlHeight(height: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.height = height
-        return this
-    }
-
-    fun rlAbove(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ABOVE,viewId)
-        return this
-    }
-
-    fun rlBelow(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.BELOW,viewId)
-        return this
-    }
-
-    fun rlAlignParentBottom(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
-        return this
-    }
-
-    fun rlAlignParentTop(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
-        return this
-    }
-
-    fun rlAlignParentStart(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_START,data)
-        return this
-    }
-
-    fun rlAlignParentEnd(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_END,data)
-        return this
-    }
-
-    fun rlAlignParentLeft(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
-        return this
-    }
-
-    fun rlAlignParentRight(value : Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
-        return this
-    }
-
-    fun rlAlignEnd(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_END,viewId)
-        return this
-    }
-
-    fun rlAlignStart(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_START,viewId)
-        return this
-    }
-
-    fun rlAlignTop(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_TOP,viewId)
-        return this
-    }
-
-    fun rlAlignBottom(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
-        return this
-    }
-
-
-    fun rlAlignLeft(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_LEFT,viewId)
-        return this
-    }
-
-    fun rlAlignRight(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
-        return this
-    }
-
-    fun rlRightToLeft(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.LEFT_OF,viewId)
-        return this
-    }
-
-    fun rlLeftToRight(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.RIGHT_OF,viewId)
-        return this
-    }
-
-    fun rlStartToEnd(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.END_OF,viewId)
-        return this
-    }
-
-    fun rlEndToStart(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.START_OF,viewId)
-        return this
-    }
-
-    fun rlCenterInParent(value:Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_IN_PARENT,data)
-        return this
-    }
-
-    fun rlCenterInParentVertically(value:Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_VERTICAL,data)
-        return this
-    }
-
-    fun rlCenterInParentHorizontally(value:Boolean = true): JJMotionLayout {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
-        return this
-    }
-
-    fun rlAlignBaseline(viewId: Int): JJMotionLayout {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
-        return this
-    }
-
-    fun rlMargins(margins: JJMargin): JJMotionLayout {
-        setupRlp()
-        mRlp!!.setMargins(margins.left,margins.top,margins.right,margins.bottom)
-        return this
-    }
-
-    //endregion
-
+    
     //region ConstraintLayout Params
     protected val mConstraintSet = ConstraintSet()
 
@@ -4682,62 +4691,5 @@ open class JJMotionLayout : MotionLayout {
 
     //endregion
 
-    //region LinearLayout params
-
-    private var mLlp: LinearLayout.LayoutParams? = null
-    private fun setupLlp() {
-        if (mLlp == null) {
-            mLlp = layoutParams as? LinearLayout.LayoutParams
-            layoutParams = mLlp
-        }
-    }
-
-    fun llWidth(width: Int): JJMotionLayout {
-        setupLlp()
-        mLlp!!.width = width
-        return this
-    }
-
-    fun llHeight(height: Int): JJMotionLayout {
-        setupLlp()
-        mLlp!!.height = height
-        return this
-    }
-
-    fun llWeight(weigth: Float): JJMotionLayout {
-        setupLlp()
-        mLlp!!.weight = weigth
-        return this
-    }
-
-    fun llGravity(gravity: Int): JJMotionLayout {
-        setupLlp()
-        mLlp!!.gravity = gravity
-        return this
-    }
-
-    //endregion
-
-    //region ScrollView params
-    private var mSvp: FrameLayout.LayoutParams? = null
-
-    private fun setupSvp() {
-        if (mSvp == null) {
-            mSvp = layoutParams as? FrameLayout.LayoutParams
-            layoutParams = mSvp
-        }
-    }
-
-    fun svWidth(width: Int): JJMotionLayout {
-        setupSvp()
-        mSvp!!.width = width
-        return this
-    }
-
-    fun svHeight(height: Int): JJMotionLayout {
-        setupSvp()
-        mSvp!!.height = height
-        return this
-    }
-    //endregion
+   
 }

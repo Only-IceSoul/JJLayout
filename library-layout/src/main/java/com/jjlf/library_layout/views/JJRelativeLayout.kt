@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Interpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -15,6 +16,8 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.jjlf.library_layout.R
 import com.jjlf.jjkit_layoututils.JJScreen
 import com.jjlf.jjkit_layoututils.JJMargin
@@ -35,7 +38,7 @@ open class JJRelativeLayout : RelativeLayout {
 
     private var mIgnoreCl = false
     private var mSupportLandScape = false
-    @SuppressLint("ResourceType")
+    @SuppressLint("ResourceType", "CustomViewStyleable")
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
 
         mConstraintSet.constrainWidth(id,0)
@@ -3056,6 +3059,264 @@ open class JJRelativeLayout : RelativeLayout {
     //endregion
 
 
+
+    //region layout params 
+
+    private fun lpWidth(w: Int) : JJRelativeLayout{
+        mlpWidth = w
+        return this
+    }
+    private fun lpHeight(h: Int) : JJRelativeLayout{
+        mlpHeight = h
+        return this
+    }
+    private fun lpPadding(pad: JJPadding) : JJRelativeLayout{
+        mlpPadding = pad
+        return this
+    }
+
+    private fun lpMargin(mar: JJMargin) : JJRelativeLayout{
+        mlpMargins = mar
+        return this
+    }
+
+    //endregion
+
+    //region layout params landscape
+
+    private fun lplWidth(w: Int) : JJRelativeLayout{
+        mlsWidth = w
+        return this
+    }
+    private fun lplHeight(h: Int) : JJRelativeLayout{
+        mlsHeight = h
+        return this
+    }
+    private fun lpladding(pad: JJPadding) : JJRelativeLayout{
+        mlsPadding = pad
+        return this
+    }
+
+    private fun lplMargin(mar: JJMargin) : JJRelativeLayout{
+        mlsMargins = mar
+        return this
+    }
+
+    //endregion 
+
+    //region CoordinatorLayout params
+
+    private fun setupCol() {
+        val a = layoutParams as?  CoordinatorLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun colGravity(gravity: Int): JJRelativeLayout {
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    fun colBehavior(behavior: AppBarLayout.Behavior){
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
+    }
+
+    //endregion
+
+    //region AppBarLayout Params
+
+    private  fun setupAblp(){
+        val a = layoutParams as? AppBarLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun ablScrollFlags(flags: Int) : JJRelativeLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
+        return this
+    }
+
+    fun ablScrollInterpolator(interpolator: Interpolator) : JJRelativeLayout {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
+        return this
+    }
+
+    //endregion
+
+    //region RelativeLayout Params
+
+    private fun setupRlp(){
+        val a = layoutParams as? RelativeLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun rlAbove(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
+        return this
+    }
+
+    fun rlBelow(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
+        return this
+    }
+
+    fun rlAlignParentBottom(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
+        return this
+    }
+
+    fun rlAlignParentTop(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
+        return this
+    }
+
+    fun rlAlignParentStart(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
+        return this
+    }
+
+    fun rlAlignParentEnd(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
+        return this
+    }
+
+    fun rlAlignParentLeft(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
+        return this
+    }
+
+    fun rlAlignParentRight(value : Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
+        return this
+    }
+
+    fun rlAlignEnd(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
+        return this
+    }
+
+    fun rlAlignStart(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
+        return this
+    }
+
+    fun rlAlignTop(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
+        return this
+    }
+
+    fun rlAlignBottom(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
+        return this
+    }
+
+
+    fun rlAlignLeft(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
+        return this
+    }
+
+    fun rlAlignRight(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
+        return this
+    }
+
+    fun rlRightToLeft(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
+        return this
+    }
+
+    fun rlLeftToRight(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
+        return this
+    }
+
+    fun rlStartToEnd(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
+        return this
+    }
+
+    fun rlEndToStart(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
+        return this
+    }
+
+    fun rlCenterInParent(value:Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
+        return this
+    }
+
+    fun rlCenterInParentVertically(value:Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
+        return this
+    }
+
+    fun rlCenterInParentHorizontally(value:Boolean = true): JJRelativeLayout {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
+        return this
+    }
+
+    fun rlAlignBaseline(viewId: Int): JJRelativeLayout {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
+        return this
+    }
+
+
+    //endregion
+
+    //region LinearLayout Params
+    private fun setupLlp() {
+        val a = layoutParams as? LinearLayout.LayoutParams
+        layoutParams = a
+    }
+    fun llWeight(w: Float): JJRelativeLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
+        return this
+    }
+    fun llGravity(gravity: Int): JJRelativeLayout {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    //endregion
+
+
+
     //region ConstraintLayout LandScape Params
     protected val mConstraintSetLandScape = ConstraintSet()
 
@@ -4387,65 +4648,6 @@ open class JJRelativeLayout : RelativeLayout {
 
     //endregion
     
-    //region LinearLayout Params
 
-    private var mLlp: LinearLayout.LayoutParams? = null
-
-
-    private fun setupLlp() {
-        if (mLlp == null) {
-            mLlp =  layoutParams as? LinearLayout.LayoutParams
-            layoutParams = mLlp
-        }
-    }
-
-    fun llWidth(width: Int): JJRelativeLayout {
-        setupLlp()
-        mLlp!!.width = width
-        return this
-    }
-
-    fun llHeight(height: Int): JJRelativeLayout {
-        setupLlp()
-        mLlp!!.height = height
-        return this
-    }
-
-    fun llWeight(weigth: Float): JJRelativeLayout {
-        setupLlp()
-        mLlp!!.weight = weigth
-        return this
-    }
-
-    fun llGravity(gravity: Int): JJRelativeLayout {
-        setupLlp()
-        mLlp!!.gravity = gravity
-        return this
-    }
-
-    //endregion
-
-    //region ScrollView Params
-
-    private var mSvp: FrameLayout.LayoutParams? = null
-    private fun setupSvp() {
-        if (mSvp == null) {
-            mSvp =  layoutParams as? FrameLayout.LayoutParams
-            layoutParams = mSvp
-        }
-    }
-
-    fun svWidth(width: Int): JJRelativeLayout {
-        setupSvp()
-        mSvp!!.width = width
-        return this
-    }
-
-    fun svHeight(height: Int): JJRelativeLayout {
-        setupSvp()
-        mSvp!!.height = height
-        return this
-    }
-    //endregion
 
 }

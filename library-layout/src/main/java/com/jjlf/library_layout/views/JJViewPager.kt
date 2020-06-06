@@ -8,14 +8,18 @@ import android.util.AttributeSet
 import android.util.Log
 
 import android.view.View
+import android.view.animation.Interpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.appbar.AppBarLayout
 
 import com.jjlf.library_layout.R
 import com.jjlf.jjkit_layoututils.JJScreen
@@ -3059,6 +3063,264 @@ open class JJViewPager : ViewPager {
     }
     //endregion
 
+
+    //region layout params 
+
+    private fun lpWidth(w: Int) : JJViewPager{
+        mlpWidth = w
+        return this
+    }
+    private fun lpHeight(h: Int) : JJViewPager{
+        mlpHeight = h
+        return this
+    }
+    private fun lpPadding(pad: JJPadding) : JJViewPager{
+        mlpPadding = pad
+        return this
+    }
+
+    private fun lpMargin(mar: JJMargin) : JJViewPager{
+        mlpMargins = mar
+        return this
+    }
+
+    //endregion
+
+    //region layout params landscape
+
+    private fun lplWidth(w: Int) : JJViewPager{
+        mlsWidth = w
+        return this
+    }
+    private fun lplHeight(h: Int) : JJViewPager{
+        mlsHeight = h
+        return this
+    }
+    private fun lpladding(pad: JJPadding) : JJViewPager{
+        mlsPadding = pad
+        return this
+    }
+
+    private fun lplMargin(mar: JJMargin) : JJViewPager{
+        mlsMargins = mar
+        return this
+    }
+
+    //endregion 
+
+    //region CoordinatorLayout params
+
+    private fun setupCol() {
+        val a = layoutParams as?  CoordinatorLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun colGravity(gravity: Int): JJViewPager {
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    fun colBehavior(behavior: AppBarLayout.Behavior){
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
+    }
+
+    //endregion
+
+    //region AppBarLayout Params
+
+    private  fun setupAblp(){
+        val a = layoutParams as? AppBarLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun ablScrollFlags(flags: Int) : JJViewPager {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
+        return this
+    }
+
+    fun ablScrollInterpolator(interpolator: Interpolator) : JJViewPager {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
+        return this
+    }
+
+    //endregion
+
+    //region RelativeLayout Params
+
+    private fun setupRlp(){
+        val a = layoutParams as? RelativeLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun rlAbove(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
+        return this
+    }
+
+    fun rlBelow(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
+        return this
+    }
+
+    fun rlAlignParentBottom(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
+        return this
+    }
+
+    fun rlAlignParentTop(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
+        return this
+    }
+
+    fun rlAlignParentStart(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
+        return this
+    }
+
+    fun rlAlignParentEnd(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
+        return this
+    }
+
+    fun rlAlignParentLeft(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
+        return this
+    }
+
+    fun rlAlignParentRight(value : Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
+        return this
+    }
+
+    fun rlAlignEnd(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
+        return this
+    }
+
+    fun rlAlignStart(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
+        return this
+    }
+
+    fun rlAlignTop(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
+        return this
+    }
+
+    fun rlAlignBottom(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
+        return this
+    }
+
+
+    fun rlAlignLeft(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
+        return this
+    }
+
+    fun rlAlignRight(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
+        return this
+    }
+
+    fun rlRightToLeft(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
+        return this
+    }
+
+    fun rlLeftToRight(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
+        return this
+    }
+
+    fun rlStartToEnd(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
+        return this
+    }
+
+    fun rlEndToStart(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
+        return this
+    }
+
+    fun rlCenterInParent(value:Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
+        return this
+    }
+
+    fun rlCenterInParentVertically(value:Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
+        return this
+    }
+
+    fun rlCenterInParentHorizontally(value:Boolean = true): JJViewPager {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
+        return this
+    }
+
+    fun rlAlignBaseline(viewId: Int): JJViewPager {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
+        return this
+    }
+
+
+    //endregion
+
+    //region LinearLayout Params
+    private fun setupLlp() {
+        val a = layoutParams as? LinearLayout.LayoutParams
+        layoutParams = a
+    }
+    fun llWeight(w: Float): JJViewPager {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
+        return this
+    }
+    fun llGravity(gravity: Int): JJViewPager {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    //endregion
+
+
+
     //region ConstraintLayout LandScape Params
     protected val mConstraintSetLandScape = ConstraintSet()
 
@@ -4390,64 +4652,6 @@ open class JJViewPager : ViewPager {
 
     //endregion
 
-    //region LinearLayout Params
-
-    private var mLlp: LinearLayout.LayoutParams? = null
-
-    private fun setupLlp() {
-        if (mLlp == null) {
-            mLlp =  layoutParams as? LinearLayout.LayoutParams
-            layoutParams = mLlp
-        }
-    }
-
-    fun llWidth(width: Int): JJViewPager {
-        setupLlp()
-        mLlp?.width = width
-        return this
-    }
-
-    fun llHeight(height: Int): JJViewPager {
-        setupLlp()
-        mLlp?.height = height
-        return this
-    }
-
-    fun llWeight(weigth: Float): JJViewPager {
-        setupLlp()
-        mLlp?.weight = weigth
-        return this
-    }
-
-    fun llGravity(gravity: Int): JJViewPager {
-        setupLlp()
-        mLlp?.gravity = gravity
-        return this
-    }
-
-    //endregion
-
-    //region ScrollView Params
-
-    private var mSvp: FrameLayout.LayoutParams? = null
-    private fun setupSvp() {
-        if (mSvp == null) {
-            mSvp =  layoutParams as? FrameLayout.LayoutParams
-            layoutParams = mSvp
-        }
-    }
-
-    fun svWidth(width: Int): JJViewPager {
-        setupSvp()
-        mSvp?.width = width
-        return this
-    }
-
-    fun svHeight(height: Int): JJViewPager {
-        setupSvp()
-        mSvp?.height = height
-        return this
-    }
-    //endregion
+    
 
 }

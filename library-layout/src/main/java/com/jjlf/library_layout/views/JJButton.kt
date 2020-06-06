@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Interpolator
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -19,6 +20,8 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.jjlf.library_layout.R
 
 import com.jjlf.jjkit_layoututils.JJScreen
@@ -3305,6 +3308,263 @@ open class JJButton : AppCompatButton {
 
     //endregion
 
+
+    //region layout params 
+
+    private fun lpWidth(w: Int) : JJButton{
+        mlpWidth = w
+        return this
+    }
+    private fun lpHeight(h: Int) : JJButton{
+        mlpHeight = h
+        return this
+    }
+    private fun lpPadding(pad: JJPadding) : JJButton{
+        mlpPadding = pad
+        return this
+    }
+
+    private fun lpMargin(mar: JJMargin) : JJButton{
+        mlpMargins = mar
+        return this
+    }
+
+    //endregion
+
+    //region layout params landscape
+
+    private fun lplWidth(w: Int) : JJButton{
+        mlsWidth = w
+        return this
+    }
+    private fun lplHeight(h: Int) : JJButton{
+        mlsHeight = h
+        return this
+    }
+    private fun lpladding(pad: JJPadding) : JJButton{
+        mlsPadding = pad
+        return this
+    }
+
+    private fun lplMargin(mar: JJMargin) : JJButton{
+        mlsMargins = mar
+        return this
+    }
+
+    //endregion 
+
+    //region CoordinatorLayout params
+
+    private fun setupCol() {
+        val a = layoutParams as?  CoordinatorLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun colGravity(gravity: Int): JJButton {
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    fun colBehavior(behavior: AppBarLayout.Behavior){
+        setupCol()
+        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
+    }
+
+    //endregion
+
+    //region AppBarLayout Params
+
+    private  fun setupAblp(){
+        val a = layoutParams as? AppBarLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun ablScrollFlags(flags: Int) : JJButton {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
+        return this
+    }
+
+    fun ablScrollInterpolator(interpolator: Interpolator) : JJButton {
+        setupAblp()
+        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
+        return this
+    }
+
+    //endregion
+
+    //region RelativeLayout Params
+
+    private fun setupRlp(){
+        val a = layoutParams as? RelativeLayout.LayoutParams
+        layoutParams = a
+    }
+
+    fun rlAbove(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
+        return this
+    }
+
+    fun rlBelow(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
+        return this
+    }
+
+    fun rlAlignParentBottom(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
+        return this
+    }
+
+    fun rlAlignParentTop(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
+        return this
+    }
+
+    fun rlAlignParentStart(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
+        return this
+    }
+
+    fun rlAlignParentEnd(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
+        return this
+    }
+
+    fun rlAlignParentLeft(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
+        return this
+    }
+
+    fun rlAlignParentRight(value : Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
+        return this
+    }
+
+    fun rlAlignEnd(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
+        return this
+    }
+
+    fun rlAlignStart(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
+        return this
+    }
+
+    fun rlAlignTop(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
+        return this
+    }
+
+    fun rlAlignBottom(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
+        return this
+    }
+
+
+    fun rlAlignLeft(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
+        return this
+    }
+
+    fun rlAlignRight(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
+        return this
+    }
+
+    fun rlRightToLeft(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
+        return this
+    }
+
+    fun rlLeftToRight(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
+        return this
+    }
+
+    fun rlStartToEnd(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
+        return this
+    }
+
+    fun rlEndToStart(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
+        return this
+    }
+
+    fun rlCenterInParent(value:Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
+        return this
+    }
+
+    fun rlCenterInParentVertically(value:Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
+        return this
+    }
+
+    fun rlCenterInParentHorizontally(value:Boolean = true): JJButton {
+        setupRlp()
+        val data = if(value) 1 else 0
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
+        return this
+    }
+
+    fun rlAlignBaseline(viewId: Int): JJButton {
+        setupRlp()
+        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
+        return this
+    }
+
+
+    //endregion
+
+    //region LinearLayout Params
+    private fun setupLlp() {
+        val a = layoutParams as? LinearLayout.LayoutParams
+        layoutParams = a
+    }
+    fun llWeight(w: Float): JJButton {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
+        return this
+    }
+    fun llGravity(gravity: Int): JJButton {
+        setupLlp()
+        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
+        return this
+    }
+
+    //endregion
+
+
     //region MotionLayout Params
 
     var mMotionConstraintSet: ConstraintSet? = null
@@ -4194,128 +4454,6 @@ open class JJButton : AppCompatButton {
 
 //endregion
 
-    //region RelativeLayout Params
-
-    private var mRlp: RelativeLayout.LayoutParams? = null
-
-    private fun setupRlp(){
-        if(mRlp == null) {
-            mRlp = layoutParams as?  RelativeLayout.LayoutParams
-            layoutParams = mRlp
-        }
-    }
-
-    fun rlWidth(width: Int): JJButton {
-        setupRlp()
-        mRlp!!.width = width
-        return this
-    }
-
-    fun rlHeight(height: Int): JJButton {
-        setupRlp()
-        mRlp!!.height = height
-        return this
-    }
-
-    fun rlAbove(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ABOVE,viewId)
-        return this
-    }
-
-    fun rlBelow(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.BELOW,viewId)
-        return this
-    }
-
-    fun rlAlignParentBottom(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
-        return this
-    }
-
-    fun rlAlignParentTop(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
-        return this
-    }
-
-    fun rlAlignParentStart(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_START,data)
-        return this
-    }
-
-    fun rlAlignParentEnd(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_END,data)
-        return this
-    }
-
-    fun rlAlignParentLeft(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
-        return this
-    }
-
-    fun rlAlignParentRight(value : Boolean): JJButton {
-        setupRlp()
-        val data = if(value) 1 else 0
-        mRlp!!.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
-        return this
-    }
-
-    fun rlAlignEnd(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_END,viewId)
-        return this
-    }
-
-    fun rlAlignStart(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_START,viewId)
-        return this
-    }
-
-    fun rlAlignTop(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_TOP,viewId)
-        return this
-    }
-
-    fun rlAlignBottom(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
-        return this
-    }
-
-
-    fun rlAlignLeft(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_LEFT,viewId)
-        return this
-    }
-
-    fun rlAlignRight(viewId: Int): JJButton {
-        setupRlp()
-        mRlp!!.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
-        return this
-    }
-
-    fun rlMargins(margins: JJMargin): JJButton {
-        setupRlp()
-        mRlp!!.setMargins(margins.left,margins.top,margins.right,margins.bottom)
-        return this
-    }
-
-    //endregion
-
     //region ConstraintLayout Params
     protected val mConstraintSet = ConstraintSet()
 
@@ -4758,81 +4896,6 @@ open class JJButton : AppCompatButton {
 
     //endregion
 
-    //region LinearLayout params
-
-    private var mLlp: LinearLayout.LayoutParams? = null
-    private fun setupLlp() {
-        if (mLlp == null) {
-            mLlp = layoutParams as?  LinearLayout.LayoutParams
-            layoutParams = mLlp
-        }
-    }
-
-    fun llWidth(width: Int): JJButton {
-        setupLlp()
-        mLlp!!.width = width
-        return this
-    }
-
-    fun llHeight(height: Int): JJButton {
-        setupLlp()
-        mLlp!!.height = height
-        return this
-    }
-
-    fun llWeight(weigth: Float): JJButton {
-        setupLlp()
-        mLlp!!.weight = weigth
-        return this
-    }
-
-    fun llGravity(gravity: Int): JJButton {
-        setupLlp()
-        mLlp!!.gravity = gravity
-        return this
-    }
-
-    fun llMargins(margins: JJMargin) : JJButton {
-        setupLlp()
-        mLlp!!.setMargins(margins.left,margins.top,margins.right,margins.bottom)
-        return this
-    }
-
-    //endregion
-
-    //region ScrollView params
-    private var mSvp: FrameLayout.LayoutParams? = null
-
-    private fun setupSvp() {
-        if (mSvp == null) {
-            mSvp = layoutParams as?  FrameLayout.LayoutParams
-            layoutParams = mSvp
-        }
-    }
-
-    fun svWidth(width: Int): JJButton {
-        setupSvp()
-        mSvp!!.width = width
-        return this
-    }
-
-    fun svHeight(height: Int): JJButton {
-        setupSvp()
-        mSvp!!.height = height
-        return this
-    }
-
-    fun svGravity(grav : Int): JJButton {
-        setupSvp()
-        mSvp!!.gravity = grav
-        return this
-    }
-
-    fun svMargins(margins : JJMargin): JJButton {
-        setupSvp()
-        mSvp!!.setMargins(margins.left,margins.top,margins.right,margins.bottom)
-        return this
-    }
-    //endregion
+ 
 
 }
