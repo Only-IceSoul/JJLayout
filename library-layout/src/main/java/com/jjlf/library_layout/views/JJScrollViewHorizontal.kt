@@ -3,6 +3,7 @@ package com.jjlf.library_layout.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
@@ -27,32 +28,60 @@ import com.jjlf.jjkit_layoututils.JJScreen
 import com.jjlf.jjkit_layoututils.JJMargin
 import com.jjlf.jjkit_layoututils.JJPadding
 
+@SuppressLint("ResourceType")
 open class JJScrollViewHorizontal : HorizontalScrollView {
 
     private var mIsScrollEnabled = true
 
     //region init
 
-    constructor(context: Context) : super(context) {
-        this.id = View.generateViewId()
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.constrainHeight(id,0)
+    constructor(context: Context) : this(context,null)
 
+    private var mSupportLandScape = false
+    private var mIgnoreCl = false
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs){
+        setupInitConstraint()
+        setupLayout(attrs)
     }
 
-    private var mIgnoreCl = false
-    private var mSupportLandScape = false
-    @SuppressLint("ResourceType")
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
 
-        mConstraintSet.constrainWidth(id,0)
-        mConstraintSet.constrainHeight(id,0)
+    @SuppressLint("CustomViewStyleable")
+    private fun setupLayout(attrs: AttributeSet?){
+        val a = context.obtainStyledAttributes(attrs,
+            R.styleable.JJConstraintLayout, 0, 0)
+        mIgnoreCl = a.getBoolean(R.styleable.JJConstraintLayout_layout_ignoreCl,false)
+        mConfigurationChanged = a.getBoolean(R.styleable.JJConstraintLayout_support_configuration_changed,false)
+        mSupportLandScape = a.getBoolean(R.styleable.JJConstraintLayout_support_landscape,false)
 
-        mConstraintSetLandScape.constrainWidth(id,0)
-        mConstraintSetLandScape.constrainHeight(id,0)
+        setupAndroidBase(attrs)
 
+        for (i in 0 until a.indexCount) {
+            //region standard portrait
+            setupMarginLp(a, i)
+            setupPaddingLp(a,i)
+            setupSizeLp(a,i)
+            //endregion
+            //region constraint Layout portrait
+            setupSizeCl(a,i)
+            setupAnchorsCl(a, i)
+            setupMarginCl(a,i)
+            //endregion
+
+            //region standard landscape
+            setupMarginLpl(a,i)
+            setupPaddingLpl(a,i)
+            setupSizeLpl(a,i)
+            //endregion
+            //region constraint Layout landscape
+            setupSizeCll(a,i)
+            setupAnchorsCll(a, i)
+            setupMarginCll(a,i)
+            //endregion
+        }
+        a.recycle()
+
+    }
+    private fun setupAndroidBase(attrs: AttributeSet?){
         val attrsArray = intArrayOf(
             android.R.attr.id,
             android.R.attr.layout_width, // 1
@@ -64,2840 +93,1469 @@ open class JJScrollViewHorizontal : HorizontalScrollView {
         val attrWidth = ba.getLayoutDimension(1, 0)
         val attrHeight = ba.getLayoutDimension(2, 0)
 
-        val attrId = ba.getResourceId(0,View.NO_ID)
-        if(attrId == View.NO_ID) id = View.generateViewId()
-        ba.recycle()
-
-
-        val a = context.obtainStyledAttributes(attrs,
-            R.styleable.JJConstraintLayout, 0, 0)
-
-
-        mIgnoreCl = a.getBoolean(R.styleable.JJConstraintLayout_layout_ignoreCl,false)
-
-        mConfigurationChanged = a.getBoolean(R.styleable.JJConstraintLayout_support_configuration_changed,false)
-        mSupportLandScape = a.getBoolean(R.styleable.JJConstraintLayout_support_landscape,false)
-
-        //region attrs portrait
-
-        val aFillParent = a.getBoolean(R.styleable.JJConstraintLayout_clFillParent,false)
-        val aFillParentHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_clFillParentHorizontally,false)
-        val aFillParentVertical = a.getBoolean(R.styleable.JJConstraintLayout_clFillParentVertically,false)
-
-        val aCenterInParent = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParent,false)
-        val aCenterInParentHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentHorizontally,false)
-        val aCenterInParentVertical = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentVertically,false)
-        val aCenterInParentTopVertical = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentTopVertically,false)
-        val aCenterInParentBottomVertical = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentBottomVertically,false)
-        val aCenterInParentStartHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentStartHorizontally,false)
-        val aCenterInParentEndHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentEndHorizontally,false)
-
-        val aCenterInTopVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_clCenterInTopVerticallyOf,View.NO_ID)
-        val aCenterInBottomVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_clCenterInBottomVerticallyOf,View.NO_ID)
-        val aCenterInStartHorizontalOf= a.getResourceId(R.styleable.JJConstraintLayout_clCenterInStartHorizontallyOf,View.NO_ID)
-        val aCenterInEndHorizontalOf = a.getResourceId(R.styleable.JJConstraintLayout_clCenterInEndHorizontallyOf,View.NO_ID)
-
-        val aCenterVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_clCenterVerticallyOf,View.NO_ID)
-        val aCenterHorizontalOf = a.getResourceId(R.styleable.JJConstraintLayout_clCenterHorizontallyOf,View.NO_ID)
-
-        val aMarginEnd = a.getDimension(R.styleable.JJConstraintLayout_clMarginEnd,0f)
-        val aMarginStart = a.getDimension(R.styleable.JJConstraintLayout_clMarginStart,0f)
-        val aMarginTop = a.getDimension(R.styleable.JJConstraintLayout_clMarginTop,0f)
-        val aMarginBottom = a.getDimension(R.styleable.JJConstraintLayout_clMarginBottom,0f)
-        val aMarginEndPercent = a.getFloat(R.styleable.JJConstraintLayout_clMarginEndPercentScreenHeight,0f)
-        val aMarginStartPercent = a.getFloat(R.styleable.JJConstraintLayout_clMarginStartPercentScreenHeight,0f)
-        val aMarginTopPercent = a.getFloat(R.styleable.JJConstraintLayout_clMarginTopPercentScreenHeight,0f)
-        val aMarginBottomPercent = a.getFloat(R.styleable.JJConstraintLayout_clMarginBottomPercentScreenHeight,0f)
-        val aMarginEndPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginEndPercentScreenWidth,0f)
-        val aMarginStartPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginStartPercentScreenWidth,0f)
-        val aMarginTopPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginTopPercentScreenWidth,0f)
-        val aMarginBottomPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginBottomPercentScreenWidth,0f)
-
-        val aMargin = a.getDimension(R.styleable.JJConstraintLayout_clMargin,0f)
-        val aMarginPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_clMarginPerScHeight,0f)
-        val aMarginPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginPerScWidth,0f)
-        val aMarginResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginResponsive,NO_ID)
-        val aMarginResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginResPerScHeight,NO_ID)
-        val aMarginResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginResPerScWidth,NO_ID)
-
-        val aMarginEndResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginEndResponsive,NO_ID)
-        val aMarginStartResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginStartResponsive,NO_ID)
-        val aMarginTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginTopResponsive,NO_ID)
-        val aMarginBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginBottomResponsive,NO_ID)
-        val aMarginEndResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginEndResPerScHeight,NO_ID)
-        val aMarginStartResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginStartResPerScHeight,NO_ID)
-        val aMarginTopResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginTopResPerScHeight,NO_ID)
-        val aMarginBottomResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginBottomResPerScHeight,NO_ID)
-        val aMarginEndResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginEndResPerScWidth,NO_ID)
-        val aMarginStartResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginStartResPerScWidth,NO_ID)
-        val aMarginTopResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginTopResPerScWidth,NO_ID)
-        val aMarginBottomResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginBottomResPerScWidth,NO_ID)
-
-        val aMarginVertical = a.getDimension(R.styleable.JJConstraintLayout_clMarginVertical,0f)
-        val aMarginVerticalPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_clMarginVerticalPerScHeight,0f)
-        val aMarginVerticalPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginVerticalPerScWidth,0f)
-        val aMarginVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginVerticalResponsive,NO_ID)
-        val aMarginVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginVerticalResPerScHeight,NO_ID)
-        val aMarginVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginVerticalResPerScWidth,NO_ID)
-
-        val aMarginHorizontal = a.getDimension(R.styleable.JJConstraintLayout_clMarginHorizontal,0f)
-        val aMarginHorizontalPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_clMarginHorizontalPerScHeight,0f)
-        val aMarginHorizontalPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_clMarginHorizontalPerScWidth,0f)
-        val aMarginHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clMarginHorizontalResponsive,NO_ID)
-        val aMarginHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clMarginHorizontalResPerScHeight,NO_ID)
-        val aMarginHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clMarginHorizontalResPerScWidth,NO_ID)
-
-
-        val aVerticalBias = a.getFloat(R.styleable.JJConstraintLayout_clVerticalBias,0.5f)
-        val aHorizontalBias = a.getFloat(R.styleable.JJConstraintLayout_clHorizontalBias,0.5f)
-
-        val aStartToStartParent = a.getBoolean(R.styleable.JJConstraintLayout_clStartToStartParent,false)
-        val aStartToEndParent = a.getBoolean(R.styleable.JJConstraintLayout_clStartToEndParent,false)
-        val aEndToEndParent = a.getBoolean(R.styleable.JJConstraintLayout_clEndToEndParent,false)
-        val aEndToStartParent = a.getBoolean(R.styleable.JJConstraintLayout_clEndToStartParent,false)
-        val aTopToTopParent = a.getBoolean(R.styleable.JJConstraintLayout_clTopToTopParent,false)
-        val aTopToBottomParent = a.getBoolean(R.styleable.JJConstraintLayout_clTopToBottomParent,false)
-        val aBottomToBottomParent = a.getBoolean(R.styleable.JJConstraintLayout_clBottomToBottomParent,false)
-        val aBottomToTopParent = a.getBoolean(R.styleable.JJConstraintLayout_clBottomToTopParent,false)
-
-        val aStartToStartOf = a.getResourceId(R.styleable.JJConstraintLayout_clStartToStartOf,View.NO_ID)
-        val aStartToEndOf = a.getResourceId(R.styleable.JJConstraintLayout_clStartToEndOf,View.NO_ID)
-        val aEndToEndOf = a.getResourceId(R.styleable.JJConstraintLayout_clEndToEndOf,View.NO_ID)
-        val aEndToStartOf = a.getResourceId(R.styleable.JJConstraintLayout_clEndToStartOf,View.NO_ID)
-        val aTopToTopOf = a.getResourceId(R.styleable.JJConstraintLayout_clTopToTopOf,View.NO_ID)
-        val aTopToBottomOf = a.getResourceId(R.styleable.JJConstraintLayout_clTopToBottomOf,View.NO_ID)
-        val aBottomToBottomOf = a.getResourceId(R.styleable.JJConstraintLayout_clBottomToBottomOf,View.NO_ID)
-        val aBottomToTopOf = a.getResourceId(R.styleable.JJConstraintLayout_clBottomToTopOf,View.NO_ID)
-
-        val aHeightPercent = a.getFloat(R.styleable.JJConstraintLayout_clHeightPercent,0f)
-        val aWidthPercent = a.getFloat(R.styleable.JJConstraintLayout_clWidthPercent,0f)
-        val aHeightPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_clHeightPercentScreenWidth,0f)
-        val aWidthPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_clWidthPercentScreenWidth,0f)
-        val aHeightPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_clHeightPercentScreenHeight,0f)
-        val aWidthPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_clWidthPercentScreenHeight,0f)
-
-        val aHeightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clHeightResponsive,View.NO_ID)
-        val aWidthResponsive = a.getResourceId(R.styleable.JJConstraintLayout_clWidthResponsive,View.NO_ID)
-
-        val aHeightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenHeight,View.NO_ID)
-        val aWidthResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenWidth,View.NO_ID)
-        val aHeightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenWidth,View.NO_ID)
-        val aWidthResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenHeight,View.NO_ID)
-
-        val lHeightPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_lpHeightPercentScreenWidth,0f)
-        val lWidthPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_lpWidthPercentScreenWidth,0f)
-        val lHeightPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_lpHeightPercentScreenHeight,0f)
-        val lWidthPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_lpWidthPercentScreenHeight,0f)
-
-        val lHeightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpHeightResponsive,View.NO_ID)
-        val lWidthResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpWidthResponsive,View.NO_ID)
-        val lHeightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenHeight,View.NO_ID)
-        val lWidthResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenWidth,View.NO_ID)
-        val lHeightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenWidth,View.NO_ID)
-        val lWidthResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenHeight,View.NO_ID)
-
-        val lMarginTopPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginTopPerScHeight,0f)
-        val lMarginLeftPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginLeftPerScHeight,0f)
-        val lMarginRightPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginRightPerScHeight,0f)
-        val lMarginBottomPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginBottomPerScHeight,0f)
-
-        val lMarginTopPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginTopPerScWidth,0f)
-        val lMarginLeftPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginLeftPerScWidth,0f)
-        val lMarginRightPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginRightPerScWidth,0f)
-        val lMarginBottomPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginBottomPerScWidth,0f)
-
-        val lMarginTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginTopResponsive,View.NO_ID)
-        val lMarginLeftResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginLeftResponsive,View.NO_ID)
-        val lMarginRightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginRightResponsive,View.NO_ID)
-        val lMarginBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginBottomResponsive,View.NO_ID)
-
-        val lMarginTopResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginTopResPerScWidth,View.NO_ID)
-        val lMarginLeftResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginLeftResPerScWidth,View.NO_ID)
-        val lMarginRightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginRightResPerScWidth,View.NO_ID)
-        val lMarginBottomResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginBottomResPerScWidth,View.NO_ID)
-
-        val lMarginTopResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginTopResPerScHeight,View.NO_ID)
-        val lMarginLeftResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginLeftResPerScHeight,View.NO_ID)
-        val lMarginRightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginRightResPerScHeight,View.NO_ID)
-        val lMarginBottomResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginBottomResPerScHeight,View.NO_ID)
-
-        val lMarginPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginPercentScHeight,0f)
-        val lMarginPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginPercentScWidth,0f)
-        val lMarginResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginResponsive,View.NO_ID)
-        val lMarginResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginResPerScHeight,View.NO_ID)
-        val lMarginResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginResPerScWidth,View.NO_ID)
-
-        val lMarginVerticalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginVerticalPerScHeight,0f)
-        val lMarginVerticalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginVerticalPerScWidth,0f)
-        val lMarginVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginVerticalResponsive,View.NO_ID)
-        val lMarginVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginVerticalResPerScWidth,View.NO_ID)
-        val lMarginVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginVerticalResPerScHeight,View.NO_ID)
-
-        val lMarginHorizontalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpMarginHorizontalPerScHeight,0f)
-        val lMarginHorizontalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpMarginHorizontalPerScWidth,0f)
-        val lMarginHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginHorizontalResponsive,View.NO_ID)
-        val lMarginHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScWidth,View.NO_ID)
-        val lMarginHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScHeight,View.NO_ID)
-
-
-        val lPaddingTopPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingTopPerScHeight,0f)
-        val lPaddingLeftPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingLeftPerScHeight,0f)
-        val lPaddingRightPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingRightPerScHeight,0f)
-        val lPaddingBottomPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingBottomPerScHeight,0f)
-
-        val lPaddingTopPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingTopPerScWidth,0f)
-        val lPaddingLeftPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingLeftPerScWidth,0f)
-        val lPaddingRightPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingRightPerScWidth,0f)
-        val lPaddingBottomPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingBottomPerScWidth,0f)
-
-        val lPaddingTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingTopResponsive,View.NO_ID)
-        val lPaddingLeftResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingLeftResponsive,View.NO_ID)
-        val lPaddingRightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingRightResponsive,View.NO_ID)
-        val lPaddingBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingBottomResponsive,View.NO_ID)
-
-        val lPaddingTopResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingTopResPerScWidth,View.NO_ID)
-        val lPaddingLeftResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingLeftResPerScWidth,View.NO_ID)
-        val lPaddingRightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingRightResPerScWidth,View.NO_ID)
-        val lPaddingBottomResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingBottomResPerScWidth,View.NO_ID)
-
-        val lPaddingTopResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingTopResPerScHeight,View.NO_ID)
-        val lPaddingLeftResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingLeftResPerScHeight,View.NO_ID)
-        val lPaddingRightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingRightResPerScHeight,View.NO_ID)
-        val lPaddingBottomResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingBottomResPerScHeight,View.NO_ID)
-
-        val lPaddingPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingPercentScHeight,0f)
-        val lPaddingPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingPercentScWidth,0f)
-        val lPaddingResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingResponsive,View.NO_ID)
-        val lPaddingResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingResPerScHeight,View.NO_ID)
-        val lPaddingResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingResPerScWidth,View.NO_ID)
-
-        val lPaddingVerticalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingVerticalPerScHeight,0f)
-        val lPaddingVerticalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingVerticalPerScWidth,0f)
-        val lPaddingVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingVerticalResponsive,View.NO_ID)
-        val lPaddingVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScWidth,View.NO_ID)
-        val lPaddingVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScHeight,View.NO_ID)
-
-        val lPaddingHorizontalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScHeight,0f)
-        val lPaddingHorizontalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth,0f)
-        val lPaddingHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingHorizontalResponsive,View.NO_ID)
-        val lPaddingHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScWidth,View.NO_ID)
-        val lPaddingHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScHeight,View.NO_ID)
-
-
-        //endregion
-
-        //region attrs landscape
-
-        val alsFillParent = a.getBoolean(R.styleable.JJConstraintLayout_cllFillParent,false)
-        val alsFillParentHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_cllFillParentHorizontally,false)
-        val alsFillParentVertical = a.getBoolean(R.styleable.JJConstraintLayout_cllFillParentVertically,false)
-
-        val alsCenterInParent = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParent,false)
-        val alsCenterInParentHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentHorizontally,false)
-        val alsCenterInParentVertical = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentVertically,false)
-        val alsCenterInParentTopVertical = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentTopVertically,false)
-        val alsCenterInParentBottomVertical = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentBottomVertically,false)
-        val alsCenterInParentStartHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentStartHorizontally,false)
-        val alsCenterInParentEndHorizontal = a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentEndHorizontally,false)
-
-        val alsCenterInTopVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_cllCenterInTopVerticallyOf,View.NO_ID)
-        val alsCenterInBottomVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_cllCenterInBottomVerticallyOf,View.NO_ID)
-        val alsCenterInStartHorizontalOf= a.getResourceId(R.styleable.JJConstraintLayout_cllCenterInStartHorizontallyOf,View.NO_ID)
-        val alsCenterInEndHorizontalOf = a.getResourceId(R.styleable.JJConstraintLayout_cllCenterInEndHorizontallyOf,View.NO_ID)
-
-        val alsCenterVerticalOf = a.getResourceId(R.styleable.JJConstraintLayout_cllCenterVerticallyOf,View.NO_ID)
-        val alsCenterHorizontalOf = a.getResourceId(R.styleable.JJConstraintLayout_cllCenterHorizontallyOf,View.NO_ID)
-
-        val alsMarginEnd = a.getDimension(R.styleable.JJConstraintLayout_cllMarginEnd,0f)
-        val alsMarginStart = a.getDimension(R.styleable.JJConstraintLayout_cllMarginStart,0f)
-        val alsMarginTop = a.getDimension(R.styleable.JJConstraintLayout_cllMarginTop,0f)
-        val alsMarginBottom = a.getDimension(R.styleable.JJConstraintLayout_cllMarginBottom,0f)
-        val alsMarginEndPercent = a.getFloat(R.styleable.JJConstraintLayout_cllMarginEndPercentScreenHeight,0f)
-        val alsMarginStartPercent = a.getFloat(R.styleable.JJConstraintLayout_cllMarginStartPercentScreenHeight,0f)
-        val alsMarginTopPercent = a.getFloat(R.styleable.JJConstraintLayout_cllMarginTopPercentScreenHeight,0f)
-        val alsMarginBottomPercent = a.getFloat(R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenHeight,0f)
-        val alsMarginEndPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginEndPercentScreenWidth,0f)
-        val alsMarginStartPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginStartPercentScreenWidth,0f)
-        val alsMarginTopPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginTopPercentScreenWidth,0f)
-        val alsMarginBottomPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenWidth,0f)
-
-        val alsMargin = a.getDimension(R.styleable.JJConstraintLayout_cllMargin,0f)
-        val alsMarginPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_cllMarginPerScHeight,0f)
-        val alsMarginPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginPerScWidth,0f)
-        val alsMarginResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginResponsive,NO_ID)
-        val alsMarginResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginResPerScHeight,NO_ID)
-        val alsMarginResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginResPerScWidth,NO_ID)
-
-        val alsMarginEndResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginEndResponsive,NO_ID)
-        val alsMarginStartResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginStartResponsive,NO_ID)
-        val alsMarginTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginTopResponsive,NO_ID)
-        val alsMarginBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginBottomResponsive,NO_ID)
-        val alsMarginEndResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginEndResPerScHeight,NO_ID)
-        val alsMarginStartResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginStartResPerScHeight,NO_ID)
-        val alsMarginTopResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginTopResPerScHeight,NO_ID)
-        val alsMarginBottomResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginBottomResPerScHeight,NO_ID)
-        val alsMarginEndResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginEndResPerScWidth,NO_ID)
-        val alsMarginStartResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginStartResPerScWidth,NO_ID)
-        val alsMarginTopResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginTopResPerScWidth,NO_ID)
-        val alsMarginBottomResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginBottomResPerScWidth,NO_ID)
-
-        val alsMarginVertical = a.getDimension(R.styleable.JJConstraintLayout_cllMarginVertical,0f)
-        val alsMarginVerticalPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_cllMarginVerticalPerScHeight,0f)
-        val alsMarginVerticalPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginVerticalPerScWidth,0f)
-        val alsMarginVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginVerticalResponsive,NO_ID)
-        val alsMarginVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginVerticalResPerScHeight,NO_ID)
-        val alsMarginVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginVerticalResPerScWidth,NO_ID)
-
-        val alsMarginHorizontal = a.getDimension(R.styleable.JJConstraintLayout_cllMarginHorizontal,0f)
-        val alsMarginHorizontalPercentHeight = a.getFloat(R.styleable.JJConstraintLayout_cllMarginHorizontalPerScHeight,0f)
-        val alsMarginHorizontalPercentWidth = a.getFloat(R.styleable.JJConstraintLayout_cllMarginHorizontalPerScWidth,0f)
-        val alsMarginHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginHorizontalResponsive,NO_ID)
-        val alsMarginHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScHeight,NO_ID)
-        val alsMarginHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScWidth,NO_ID)
-
-
-        val alsVerticalBias = a.getFloat(R.styleable.JJConstraintLayout_cllVerticalBias,0.5f)
-        val alsHorizontalBias = a.getFloat(R.styleable.JJConstraintLayout_cllHorizontalBias,0.5f)
-
-        val alsStartToStartParent = a.getBoolean(R.styleable.JJConstraintLayout_cllStartToStartParent,false)
-        val alsStartToEndParent = a.getBoolean(R.styleable.JJConstraintLayout_cllStartToEndParent,false)
-        val alsEndToEndParent = a.getBoolean(R.styleable.JJConstraintLayout_cllEndToEndParent,false)
-        val alsEndToStartParent = a.getBoolean(R.styleable.JJConstraintLayout_cllEndToStartParent,false)
-        val alsTopToTopParent = a.getBoolean(R.styleable.JJConstraintLayout_cllTopToTopParent,false)
-        val alsTopToBottomParent = a.getBoolean(R.styleable.JJConstraintLayout_cllTopToBottomParent,false)
-        val alsBottomToBottomParent = a.getBoolean(R.styleable.JJConstraintLayout_cllBottomToBottomParent,false)
-        val alsBottomToTopParent = a.getBoolean(R.styleable.JJConstraintLayout_cllBottomToTopParent,false)
-
-        val alsStartToStartOf = a.getResourceId(R.styleable.JJConstraintLayout_cllStartToStartOf,View.NO_ID)
-        val alsStartToEndOf = a.getResourceId(R.styleable.JJConstraintLayout_cllStartToEndOf,View.NO_ID)
-        val alsEndToEndOf = a.getResourceId(R.styleable.JJConstraintLayout_cllEndToEndOf,View.NO_ID)
-        val alsEndToStartOf = a.getResourceId(R.styleable.JJConstraintLayout_cllEndToStartOf,View.NO_ID)
-        val alsTopToTopOf = a.getResourceId(R.styleable.JJConstraintLayout_cllTopToTopOf,View.NO_ID)
-        val alsTopToBottomOf = a.getResourceId(R.styleable.JJConstraintLayout_cllTopToBottomOf,View.NO_ID)
-        val alsBottomToBottomOf = a.getResourceId(R.styleable.JJConstraintLayout_cllBottomToBottomOf,View.NO_ID)
-        val alsBottomToTopOf = a.getResourceId(R.styleable.JJConstraintLayout_cllBottomToTopOf,View.NO_ID)
-
-        val alsHeightPercent = a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercent,0f)
-        val alsWidthPercent = a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercent,0f)
-        val alsHeightPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercentScreenWidth,0f)
-        val alsWidthPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercentScreenWidth,0f)
-        val alsHeightPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercentScreenHeight,0f)
-        val alsWidthPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercentScreenHeight,0f)
-
-        val alsHeightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllHeightResponsive,View.NO_ID)
-        val alsWidthResponsive = a.getResourceId(R.styleable.JJConstraintLayout_cllWidthResponsive,View.NO_ID)
-
-        val alsHeightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenHeight,View.NO_ID)
-        val alsWidthResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenWidth,View.NO_ID)
-        val alsHeightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenWidth,View.NO_ID)
-        val alsWidthResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenHeight,View.NO_ID)
-
-
-        val attrHeightLs = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_height_landscape,0)
-        val attrWidthLs = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_width_landscape,0)
-
-        val llsPadding = a.getDimension(R.styleable.JJConstraintLayout_lplPadding,-100f)
-        val llsPaddingVertical = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingVertical,-100f)
-        val llsPaddingHorizontal = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingHorizontal,-100f)
-        val llsPaddingStart = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingStart,-100f)
-        val llsPaddingEnd = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingEnd,-100f)
-        val llsPaddingBottom = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingBottom,-100f)
-        val llsPaddingTop = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingTop,-100f)
-
-        val llsMargin = a.getDimension(R.styleable.JJConstraintLayout_lplMargin,-100f)
-        val llsMarginVertical = a.getDimension(R.styleable.JJConstraintLayout_lplMarginVertical,-100f)
-        val llsMarginHorizontal = a.getDimension(R.styleable.JJConstraintLayout_lplMarginHorizontal,-100f)
-        val llsMarginStart = a.getDimension(R.styleable.JJConstraintLayout_lplMarginStart,-100f)
-        val llsMarginEnd = a.getDimension(R.styleable.JJConstraintLayout_lplMarginEnd,-100f)
-        val llsMarginBottom = a.getDimension(R.styleable.JJConstraintLayout_lplMarginBottom,-100f)
-        val llsMarginTop = a.getDimension(R.styleable.JJConstraintLayout_lplMarginTop,-100f)
-
-        val llsHeightPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_lplHeightPercentScreenWidth,0f)
-        val llsWidthPercentScreenWidth = a.getFloat(R.styleable.JJConstraintLayout_lplWidthPercentScreenWidth,0f)
-        val llsHeightPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_lplHeightPercentScreenHeight,0f)
-        val llsWidthPercentScreenHeight = a.getFloat(R.styleable.JJConstraintLayout_lplWidthPercentScreenHeight,0f)
-
-        val llsHeightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplHeightResponsive,View.NO_ID)
-        val llsWidthResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplWidthResponsive,View.NO_ID)
-        val llsHeightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenHeight,View.NO_ID)
-        val llsWidthResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenWidth,View.NO_ID)
-        val llsHeightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenWidth,View.NO_ID)
-        val llsWidthResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenHeight,View.NO_ID)
-
-        val llsMarginTopPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginTopPerScHeight,0f)
-        val llsMarginLeftPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginLeftPerScHeight,0f)
-        val llsMarginRightPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginRightPerScHeight,0f)
-        val llsMarginBottomPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginBottomPerScHeight,0f)
-
-        val llsMarginTopPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginTopPerScWidth,0f)
-        val llsMarginLeftPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginLeftPerScWidth,0f)
-        val llsMarginRightPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginRightPerScWidth,0f)
-        val llsMarginBottomPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginBottomPerScWidth,0f)
-
-        val llsMarginTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginTopResponsive,View.NO_ID)
-        val llsMarginLeftResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginLeftResponsive,View.NO_ID)
-        val llsMarginRightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginRightResponsive,View.NO_ID)
-        val llsMarginBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginBottomResponsive,View.NO_ID)
-
-        val llsMarginTopResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginTopResPerScWidth,View.NO_ID)
-        val llsMarginLeftResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginLeftResPerScWidth,View.NO_ID)
-        val llsMarginRightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginRightResPerScWidth,View.NO_ID)
-        val llsMarginBottomResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginBottomResPerScWidth,View.NO_ID)
-
-        val llsMarginTopResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginTopResPerScHeight,View.NO_ID)
-        val llsMarginLeftResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginLeftResPerScHeight,View.NO_ID)
-        val llsMarginRightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginRightResPerScHeight,View.NO_ID)
-        val llsMarginBottomResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginBottomResPerScHeight,View.NO_ID)
-
-        val llsMarginPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginPercentScHeight,0f)
-        val llsMarginPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginPercentScWidth,0f)
-        val llsMarginResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginResponsive,View.NO_ID)
-        val llsMarginResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginResPerScHeight,View.NO_ID)
-        val llsMarginResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginResPerScWidth,View.NO_ID)
-
-        val llsMarginVerticalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginVerticalPerScHeight,0f)
-        val llsMarginVerticalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginVerticalPerScWidth,0f)
-        val llsMarginVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginVerticalResponsive,View.NO_ID)
-        val llsMarginVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginVerticalResPerScWidth,View.NO_ID)
-        val llsMarginVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginVerticalResPerScHeight,View.NO_ID)
-
-        val llsMarginHorizontalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplMarginHorizontalPerScHeight,0f)
-        val llsMarginHorizontalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplMarginHorizontalPerScWidth,0f)
-        val llsMarginHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginHorizontalResponsive,View.NO_ID)
-        val llsMarginHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScWidth,View.NO_ID)
-        val llsMarginHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScHeight,View.NO_ID)
-
-
-        val llsPaddingTopPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingTopPerScHeight,0f)
-        val llsPaddingLeftPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingLeftPerScHeight,0f)
-        val llsPaddingRightPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingRightPerScHeight,0f)
-        val llsPaddingBottomPercentScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingBottomPerScHeight,0f)
-
-        val llsPaddingTopPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingTopPerScWidth,0f)
-        val llsPaddingLeftPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingLeftPerScWidth,0f)
-        val llsPaddingRightPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingRightPerScWidth,0f)
-        val llsPaddingBottomPercentScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingBottomPerScWidth,0f)
-
-        val llsPaddingTopResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingTopResponsive,View.NO_ID)
-        val llsPaddingLeftResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingLeftResponsive,View.NO_ID)
-        val llsPaddingRightResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingRightResponsive,View.NO_ID)
-        val llsPaddingBottomResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingBottomResponsive,View.NO_ID)
-
-        val llsPaddingTopResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingTopResPerScWidth,View.NO_ID)
-        val llsPaddingLeftResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingLeftResPerScWidth,View.NO_ID)
-        val llsPaddingRightResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingRightResPerScWidth,View.NO_ID)
-        val llsPaddingBottomResponsivePercentScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingBottomResPerScWidth,View.NO_ID)
-
-        val llsPaddingTopResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingTopResPerScHeight,View.NO_ID)
-        val llsPaddingLeftResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingLeftResPerScHeight,View.NO_ID)
-        val llsPaddingRightResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingRightResPerScHeight,View.NO_ID)
-        val llsPaddingBottomResponsivePercentScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingBottomResPerScHeight,View.NO_ID)
-
-        val llsPaddingPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingPercentScHeight,0f)
-        val llsPaddingPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingPercentScWidth,0f)
-        val llsPaddingResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingResponsive,View.NO_ID)
-        val llsPaddingResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingResPerScHeight,View.NO_ID)
-        val llsPaddingResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingResPerScWidth,View.NO_ID)
-
-        val llsPaddingVerticalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingVerticalPerScHeight,0f)
-        val llsPaddingVerticalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingVerticalPerScWidth,0f)
-        val llsPaddingVerticalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingVerticalResponsive,View.NO_ID)
-        val llsPaddingVerticalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScWidth,View.NO_ID)
-        val llsPaddingVerticalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScHeight,View.NO_ID)
-
-        val llsPaddingHorizontalPerScHeight = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScHeight,0f)
-        val llsPaddingHorizontalPerScWidth = a.getFloat(R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScWidth,0f)
-        val llsPaddingHorizontalResponsive = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingHorizontalResponsive,View.NO_ID)
-        val llsPaddingHorizontalResPerScWidth = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScWidth,View.NO_ID)
-        val llsPaddingHorizontalResPerScHeight = a.getResourceId(R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScHeight,View.NO_ID)
-
-        //endregion
-
-        a.recycle()
-
-        //region standard portrait
-
-        //region margin
-
-        if(lMarginPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lMarginPerScHeight)
-            mlpMargins = JJMargin(mar,mar,mar,mar)
-        }
-        if(lMarginPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lMarginPerScWidth)
-            mlpMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(lMarginResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(lMarginResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(lMarginResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-
-        //endregion
-
-        //region margin vertical
-        if(lMarginVerticalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lMarginVerticalPerScHeight)
-            mlpMargins.top = mar ; mlpMargins.bottom = mar
-        }
-        if(lMarginVerticalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lMarginVerticalPerScWidth)
-            mlpMargins.top = mar ; mlpMargins.bottom = mar
-        }
-
-        if(lMarginVerticalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.top = mar ; mlpMargins.bottom = mar
-        }
-
-        if(lMarginVerticalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.top = mar ; mlpMargins.bottom = mar
-        }
-
-        if(lMarginVerticalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.top = mar ; mlpMargins.bottom = mar
-        }
-        //endregion
-
-        //region Horizontal margin
-
-        if(lMarginHorizontalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lMarginHorizontalPerScHeight)
-            mlpMargins.left = mar ; mlpMargins.right = mar
-        }
-        if(lMarginHorizontalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lMarginHorizontalPerScWidth)
-            mlpMargins.left = mar ; mlpMargins.right = mar
-        }
-
-        if(lMarginHorizontalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.left = mar ; mlpMargins.right = mar
-        }
-
-        if(lMarginHorizontalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.left = mar ; mlpMargins.right = mar
-        }
-
-        if(lMarginHorizontalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lMarginHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.left = mar ; mlpMargins.right = mar
-        }
-
-        //endregion
-
-        //region margin start end top bottom
-
-        if(lMarginTopPercentScHeight > 0f)  mlpMargins.top = JJScreen.percentHeight(lMarginTopPercentScHeight)
-        if(lMarginLeftPercentScHeight > 0f)  mlpMargins.left = JJScreen.percentHeight(lMarginLeftPercentScHeight)
-        if(lMarginRightPercentScHeight > 0f) mlpMargins.right = JJScreen.percentHeight(lMarginRightPercentScHeight)
-        if(lMarginBottomPercentScHeight > 0f) mlpMargins.bottom = JJScreen.percentHeight(lMarginBottomPercentScHeight)
-
-        if(lMarginTopPercentScWidth > 0f)  mlpMargins.top = JJScreen.percentWidth(lMarginTopPercentScWidth)
-        if(lMarginLeftPercentScWidth > 0f)  mlpMargins.left = JJScreen.percentWidth(lMarginLeftPercentScWidth)
-        if(lMarginRightPercentScWidth > 0f) mlpMargins.right = JJScreen.percentWidth(lMarginRightPercentScWidth)
-        if(lMarginBottomPercentScWidth > 0f) mlpMargins.bottom = JJScreen.percentWidth(lMarginBottomPercentScWidth)
-
-
-        if(lMarginTopResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.top = v
-        }
-
-        if(lMarginLeftResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginLeftResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.left = v
-        }
-
-        if(lMarginRightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginRightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.right = v
-        }
-
-        if(lMarginBottomResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpMargins.bottom = v
-        }
-
-
-        if(lMarginTopResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginTopResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.top = v
-        }
-
-        if(lMarginLeftResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginLeftResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.left = v
-        }
-
-        if(lMarginRightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginRightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.right = v
-        }
-
-        if(lMarginBottomResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginBottomResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpMargins.bottom = v
-        }
-
-        if(lMarginTopResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginTopResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.top = v
-        }
-
-        if(lMarginLeftResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginLeftResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.left = v
-        }
-
-        if(lMarginRightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginRightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.right = v
-        }
-
-        if(lMarginBottomResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lMarginBottomResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpMargins.bottom = v
-        }
-
-        //endregion
-
-        //region padding
-
-        if(lPaddingPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lPaddingPerScHeight)
-            mlpPadding = JJPadding(mar,mar,mar,mar)
-        }
-        if(lPaddingPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lPaddingPerScWidth)
-            mlpPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(lPaddingResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(lPaddingResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(lPaddingResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-
-        //endregion
-
-        //region padding vertical
-
-        if(lPaddingVerticalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lPaddingVerticalPerScHeight)
-            mlpPadding.top = mar ; mlpPadding.bottom = mar
-        }
-        if(lPaddingVerticalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lMarginVerticalPerScWidth)
-            mlpPadding.top = mar ; mlpPadding.bottom = mar
-        }
-
-        if(lPaddingVerticalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.top = mar ; mlpPadding.bottom = mar
-        }
-
-        if(lPaddingVerticalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.top = mar ; mlpPadding.bottom = mar
-        }
-
-        if(lPaddingVerticalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.top = mar ; mlpPadding.bottom = mar
-        }
-        //endregion
-
-        //region Horizontal padding
-
-        if(lPaddingHorizontalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(lPaddingHorizontalPerScHeight)
-            mlpPadding.left = mar ; mlpPadding.right = mar
-        }
-        if(lPaddingHorizontalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lPaddingHorizontalPerScWidth)
-            mlpPadding.left = mar ; mlpPadding.right = mar
-        }
-
-        if(lPaddingHorizontalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.left = mar ; mlpPadding.right = mar
-        }
-
-        if(lPaddingHorizontalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.left = mar ; mlpPadding.right = mar
-        }
-
-        if(lPaddingHorizontalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(lPaddingHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.left = mar ; mlpPadding.right = mar
-        }
-
-        //endregion
-
-        //region padding start end top bottom
-
-        if(lPaddingTopPercentScHeight > 0f)  mlpPadding.top = JJScreen.percentHeight(lPaddingTopPercentScHeight)
-        if(lPaddingLeftPercentScHeight > 0f)  mlpPadding.left = JJScreen.percentHeight(lPaddingLeftPercentScHeight)
-        if(lPaddingRightPercentScHeight > 0f) mlpPadding.right = JJScreen.percentHeight(lPaddingRightPercentScHeight)
-        if(lPaddingBottomPercentScHeight > 0f) mlpPadding.bottom = JJScreen.percentHeight(lPaddingBottomPercentScHeight)
-
-        if(lPaddingTopPercentScWidth > 0f)  mlpPadding.top = JJScreen.percentWidth(lPaddingTopPercentScWidth)
-        if(lPaddingLeftPercentScWidth > 0f)  mlpPadding.left = JJScreen.percentWidth(lPaddingLeftPercentScWidth)
-        if(lPaddingRightPercentScWidth > 0f) mlpPadding.right = JJScreen.percentWidth(lPaddingRightPercentScWidth)
-        if(lPaddingBottomPercentScWidth > 0f) mlpPadding.bottom = JJScreen.percentWidth(lPaddingBottomPercentScWidth)
-
-
-        if(lPaddingTopResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.top = v
-        }
-
-        if(lPaddingLeftResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingLeftResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.left = v
-        }
-
-        if(lPaddingRightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingRightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.right = v
-        }
-
-        if(lPaddingBottomResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlpPadding.bottom = v
-        }
-
-
-        if(lPaddingTopResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingTopResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.top = v
-        }
-
-        if(lPaddingLeftResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingLeftResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.left = v
-        }
-
-        if(lPaddingRightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingRightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.right = v
-        }
-
-        if(lPaddingBottomResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingBottomResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpPadding.bottom = v
-        }
-
-        if(lPaddingTopResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingTopResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.top = v
-        }
-
-        if(lPaddingLeftResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingLeftResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.left = v
-        }
-
-        if(lPaddingRightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingRightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.right = v
-        }
-
-        if(lPaddingBottomResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lPaddingBottomResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpPadding.bottom = v
-        }
-
-        //endregion
-
-        //region params layout height width
+        if(attrWidth > 0 || attrWidth == -2) clWidth(attrWidth)
+        if(attrHeight > 0 || attrHeight == -2) clHeight(attrHeight)
 
         mlpHeight = attrHeight
         mlpWidth = attrWidth
 
-        if(lHeightPercentScreenWidth > 0f)  mlpHeight = JJScreen.percentWidth(lHeightPercentScreenWidth)
-        if(lHeightPercentScreenHeight > 0f)  mlpHeight = JJScreen.percentHeight(lHeightPercentScreenHeight)
-        if(lWidthPercentScreenWidth > 0f) mlpWidth = JJScreen.percentWidth(lWidthPercentScreenWidth)
-        if(lWidthPercentScreenHeight > 0f) mlpWidth = JJScreen.percentHeight(lWidthPercentScreenHeight)
+        val attrId = ba.getResourceId(0, View.NO_ID)
+        if(attrId == View.NO_ID) id = View.generateViewId()
 
-        if(lHeightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lHeightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
+        ba.recycle()
 
-            val h = JJScreen.responsiveSize(first,second,three,four)
-            mlpHeight = h
-        }
-
-        if(lWidthResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lWidthResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSize(first,second,three,four)
-            mlpWidth = w
-        }
-
-
-        if(lHeightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lHeightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlpHeight = h
-        }
-
-        if(lWidthResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lWidthResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-
-            mlpWidth = w
-        }
-
-        if(lHeightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lHeightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlpHeight = h
-        }
-
-        if(lWidthResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(lWidthResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-
-            mlpWidth = w
-        }
-
-        //endregion
-
-        //endregion
-
-        //region constraint Layout attr
-
-        //region margin
-        var margins = JJMargin()
-
-        if(aMargin > 0f) margins = JJMargin(aMargin.toInt(),aMargin.toInt(),aMargin.toInt(),aMargin.toInt())
-
-        if(aMarginPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(aMarginPercentHeight)
-            margins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(aMarginPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(aMarginPercentWidth)
-            margins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(aMarginResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            margins = JJMargin(v,v,v,v)
-        }
-
-        if(aMarginResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins = JJMargin(v,v,v,v)
-        }
-
-        if(aMarginResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins = JJMargin(v,v,v,v)
-        }
-
-        //endregion
-
-        //region margin Vertical
-
-        if(aMarginVertical > 0f) { margins.top = aMarginVertical.toInt() ; margins.bottom = aMarginVertical.toInt() }
-
-        if(aMarginVerticalPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(aMarginVerticalPercentHeight)
-            margins.top = mar ; margins.bottom = mar
-        }
-
-        if(aMarginVerticalPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(aMarginVerticalPercentWidth)
-            margins.top = mar ; margins.bottom = mar
-        }
-
-        if(aMarginVerticalResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.top = mar ; margins.bottom = mar
-        }
-
-        if(aMarginVerticalResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.top = mar ; margins.bottom = mar
-        }
-
-        if(aMarginVerticalResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.top = mar ; margins.bottom = mar
-        }
-
-        //endregion
-
-        // region margin Horizontal
-
-        if(aMarginHorizontal > 0f) { margins.left = aMarginHorizontal.toInt() ; margins.right = aMarginHorizontal.toInt() }
-
-        if(aMarginHorizontalPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(aMarginHorizontalPercentHeight)
-            margins.left = mar ; margins.right = mar
-        }
-
-        if(aMarginHorizontalPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(aMarginHorizontalPercentWidth)
-            margins.left = mar ; margins.right = mar
-        }
-
-        if(aMarginHorizontalResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.left = mar ; margins.right = mar
-        }
-
-        if(aMarginHorizontalResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.left = mar ; margins.right = mar
-        }
-
-        if(aMarginHorizontalResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.left = mar ; margins.right = mar
-        }
-
-        //endregion
-
-        //region margin start end top bottom
-
-        if(aMarginStart > 0f)   margins.left = aMarginStart.toInt()
-        if(aMarginEnd > 0f)   margins.right = aMarginEnd.toInt()
-        if(aMarginTop > 0f)   margins.top = aMarginTop.toInt()
-        if(aMarginBottom > 0f)   margins.bottom = aMarginBottom.toInt()
-
-        if(aMarginStartPercent > 0f) margins.left = JJScreen.percentHeight(aMarginStartPercent)
-        if(aMarginTopPercent > 0f)  margins.top = JJScreen.percentHeight(aMarginTopPercent)
-        if(aMarginEndPercent > 0f)  margins.right = JJScreen.percentHeight(aMarginEndPercent)
-        if(aMarginBottomPercent > 0f)  margins.bottom = JJScreen.percentHeight(aMarginBottomPercent)
-
-        if(aMarginStartPercentWidth > 0f)  margins.left = JJScreen.percentWidth(aMarginStartPercentWidth)
-        if(aMarginTopPercentWidth > 0f) margins.top = JJScreen.percentWidth(aMarginTopPercentWidth)
-        if(aMarginEndPercentWidth > 0f) margins.right = JJScreen.percentWidth(aMarginEndPercentWidth)
-        if(aMarginBottomPercentWidth > 0f) margins.bottom = JJScreen.percentWidth(aMarginBottomPercentWidth)
-
-        if(aMarginStartResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(aMarginStartResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.left = mar
-        }
-        if(aMarginEndResponsive > 0f)   {
-            val arrayDimen = resources.obtainTypedArray(aMarginEndResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.right = mar
-        }
-        if(aMarginTopResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(aMarginTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.top = mar
-        }
-        if(aMarginBottomResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(aMarginBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            margins.bottom = mar
-        }
-
-        if(aMarginStartResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginStartResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.left = mar
-        }
-
-        if(aMarginEndResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginEndResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.right = mar
-        }
-
-        if(aMarginTopResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginTopResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.top = mar
-        }
-
-        if(aMarginBottomResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginBottomResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            margins.bottom = mar
-        }
-
-        if(aMarginStartResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginStartResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.left = mar
-        }
-
-        if(aMarginEndResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginEndResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.right = mar
-        }
-
-        if(aMarginTopResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginTopResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.top = mar
-        }
-
-        if(aMarginBottomResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aMarginBottomResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            margins.bottom = mar
-        }
-
-
-        //endregion
-
-        //region width height
-
-        if(attrWidth > 0 || attrWidth == -2) clWidth(attrWidth)
-        if(attrHeight > 0 || attrHeight == -2) clHeight(attrHeight)
-
-        if(aHeightPercent > 0f) clPercentHeight(aHeightPercent)
-
-        if(aHeightPercentScreenWidth > 0f) clHeight(JJScreen.percentWidth(aHeightPercentScreenWidth))
-        if(aHeightPercentScreenHeight > 0f) clHeight(JJScreen.percentHeight(aHeightPercentScreenHeight))
-
-        if(aWidthPercent > 0f) clPercentWidth(aWidthPercent)
-        if(aWidthPercentScreenWidth > 0f) clWidth(JJScreen.percentWidth(aWidthPercentScreenWidth))
-        if(aWidthPercentScreenHeight > 0f) clWidth(JJScreen.percentHeight(aWidthPercentScreenHeight))
-
-        if(aHeightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aHeightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSize(first,second,three,four)
-            clHeight(h)
-        }
-
-        if(aWidthResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aWidthResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSize(first,second,three,four)
-
-            clWidth(w)
-        }
-
-        if(aHeightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aHeightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            clHeight(h)
-        }
-
-        if(aWidthResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aWidthResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-
-            clWidth(w)
-        }
-
-        if(aHeightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aHeightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            clHeight(h)
-        }
-
-        if(aWidthResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(aWidthResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-
-            clWidth(w)
-        }
-
-        //endregion
-
-        //region anchors
-
-        if(aStartToStartOf != View.NO_ID) clStartToStart(aStartToStartOf)
-        if(aStartToEndOf != View.NO_ID) clStartToEnd(aStartToEndOf)
-        if(aEndToEndOf != View.NO_ID) clEndToEnd(aEndToEndOf)
-        if(aEndToStartOf != View.NO_ID) clEndToStart(aEndToStartOf)
-        if(aTopToTopOf != View.NO_ID) clTopToTop(aTopToTopOf)
-        if(aTopToBottomOf != View.NO_ID) clTopToBottom(aTopToBottomOf)
-        if(aBottomToBottomOf != View.NO_ID) clBottomToBottom(aBottomToBottomOf)
-        if(aBottomToTopOf != View.NO_ID) clBottomToTop(aBottomToTopOf)
-
-        if(aStartToStartParent) clStartToStartParent()
-        if(aStartToEndParent) clStartToEndParent()
-        if(aEndToEndParent) clEndToEndParent()
-        if(aEndToStartParent) clEndToStartParent()
-        if(aTopToTopParent) clTopToTopParent()
-        if(aTopToBottomParent) clTopToBottomParent()
-        if(aBottomToBottomParent) clBottomToBottomParent()
-        if(aBottomToTopParent) clBottomToTopParent()
-
-
-        if(aCenterInParentTopVertical) clCenterInParentTopVertically()
-        if(aCenterInParentBottomVertical) clCenterInParentBottomVertically()
-        if(aCenterInParentStartHorizontal) clCenterInParentStartHorizontally()
-        if(aCenterInParentEndHorizontal) clCenterInParentEndHorizontally()
-
-        if(aCenterInTopVerticalOf != View.NO_ID) clCenterInTopVertically(aCenterInTopVerticalOf)
-        if(aCenterInBottomVerticalOf != View.NO_ID) clCenterInBottomVertically(aCenterInBottomVerticalOf)
-        if(aCenterInStartHorizontalOf != View.NO_ID) clCenterInStartHorizontally(aCenterInStartHorizontalOf)
-        if(aCenterInEndHorizontalOf != View.NO_ID) clCenterInEndHorizontally(aCenterInEndHorizontalOf)
-
-        if(aCenterVerticalOf != View.NO_ID) clCenterVerticallyOf(aCenterVerticalOf)
-        if(aCenterHorizontalOf != View.NO_ID) clCenterHorizontallyOf(aCenterHorizontalOf)
-
-        if(aCenterInParentHorizontal) clCenterInParentHorizontally()
-        if(aCenterInParentVertical)  clCenterInParentVertically()
-
-        if(aFillParentHorizontal) clFillParentHorizontally()
-        if(aFillParentVertical) clFillParentVertically()
-
-        if(aCenterInParent) clCenterInParent()
-        if(aFillParent) clFillParent()
-
-        if(aVerticalBias > 0f)  clVerticalBias(aVerticalBias)
-        if(aHorizontalBias > 0f)  clHorizontalBias(aHorizontalBias)
-
-        clMargins(margins)
-
-        //endregion
-
-        //endregion
-
-        //region standard landscape
-
-        //region margin
-
-
-        if(llsMargin > 0f) {
-            mlsMargins.top =  llsMargin.toInt()
-            mlsMargins.left =  llsMargin.toInt()
-            mlsMargins.right =  llsMargin.toInt()
-            mlsMargins.bottom =  llsMargin.toInt()
-        }
-
-        if(llsMarginPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsMarginPerScHeight)
-            mlsMargins = JJMargin(mar,mar,mar,mar)
-        }
-        if(llsMarginPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(llsMarginPerScWidth)
-            mlsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(llsMarginResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(llsMarginResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(llsMarginResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-
-//endregion
-
-        //region margin vertical
-
-        if(llsMarginVertical > 0f){
-            mlsMargins.top = llsMarginVertical.toInt()
-            mlsMargins.bottom = llsMarginVertical.toInt()
-        }
-
-        if(llsMarginVerticalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsMarginVerticalPerScHeight)
-            mlsMargins.top = mar ; mlsMargins.bottom = mar
-        }
-        if(llsMarginVerticalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(llsMarginVerticalPerScWidth)
-            mlsMargins.top = mar ; mlsMargins.bottom = mar
-        }
-
-        if(llsMarginVerticalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.top = mar ; mlsMargins.bottom = mar
-        }
-
-        if(llsMarginVerticalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.top = mar ; mlsMargins.bottom = mar
-        }
-
-        if(llsMarginVerticalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.top = mar ; mlsMargins.bottom = mar
-        }
-//endregion
-
-        //region Horizontal margin
-
-        if(llsMarginHorizontal > 0f){
-            mlsMargins.left = llsMarginHorizontal.toInt()
-            mlsMargins.right = llsMarginHorizontal.toInt()
-        }
-
-        if(llsMarginHorizontalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsMarginHorizontalPerScHeight)
-            mlsMargins.left = mar ; mlsMargins.right = mar
-        }
-        if(llsMarginHorizontalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(llsMarginHorizontalPerScWidth)
-            mlsMargins.left = mar ; mlsMargins.right = mar
-        }
-
-        if(llsMarginHorizontalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.left = mar ; mlsMargins.right = mar
-        }
-
-        if(llsMarginHorizontalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.left = mar ; mlsMargins.right = mar
-        }
-
-        if(llsMarginHorizontalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsMarginHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.left = mar ; mlsMargins.right = mar
-        }
-
-//endregion
-
-        //region margin start end top bottom
-
-        if(llsMarginTop > 0f) mlsMargins.top = llsMarginTop.toInt()
-        if(llsMarginBottom > 0f) mlsMargins.bottom = llsMarginBottom.toInt()
-        if(llsMarginEnd > 0f) mlsMargins.right = llsMarginEnd.toInt()
-        if(llsMarginStart > 0f) mlsMargins.left = llsMarginStart.toInt()
-
-        if(llsMarginTopPercentScHeight > 0f)  mlsMargins.top = JJScreen.percentHeight(llsMarginTopPercentScHeight)
-        if(llsMarginLeftPercentScHeight > 0f)  mlsMargins.left = JJScreen.percentHeight(llsMarginLeftPercentScHeight)
-        if(llsMarginRightPercentScHeight > 0f) mlsMargins.right = JJScreen.percentHeight(llsMarginRightPercentScHeight)
-        if(llsMarginBottomPercentScHeight > 0f) mlsMargins.bottom = JJScreen.percentHeight(llsMarginBottomPercentScHeight)
-
-        if(llsMarginTopPercentScWidth > 0f)  mlsMargins.top = JJScreen.percentWidth(llsMarginTopPercentScWidth)
-        if(llsMarginLeftPercentScWidth > 0f)  mlsMargins.left = JJScreen.percentWidth(llsMarginLeftPercentScWidth)
-        if(llsMarginRightPercentScWidth > 0f) mlsMargins.right = JJScreen.percentWidth(llsMarginRightPercentScWidth)
-        if(llsMarginBottomPercentScWidth > 0f) mlsMargins.bottom = JJScreen.percentWidth(llsMarginBottomPercentScWidth)
-
-
-        if(llsMarginTopResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.top = v
-        }
-
-        if(llsMarginLeftResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginLeftResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.left = v
-        }
-
-        if(llsMarginRightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginRightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.right = v
-        }
-
-        if(llsMarginBottomResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsMargins.bottom = v
-        }
-
-
-        if(llsMarginTopResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginTopResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.top = v
-        }
-
-        if(llsMarginLeftResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginLeftResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.left = v
-        }
-
-        if(llsMarginRightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginRightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.right = v
-        }
-
-        if(llsMarginBottomResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginBottomResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsMargins.bottom = v
-        }
-
-        if(llsMarginTopResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginTopResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.top = v
-        }
-
-        if(llsMarginLeftResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginLeftResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.left = v
-        }
-
-        if(llsMarginRightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginRightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.right = v
-        }
-
-        if(llsMarginBottomResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsMarginBottomResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsMargins.bottom = v
-        }
-
-//endregion
-
-        //region padding
-
-        if(llsPadding > 0f) {
-            mlsPadding.top = llsPadding.toInt()
-            mlsPadding.left = llsPadding.toInt()
-            mlsPadding.right = llsPadding.toInt()
-            mlsPadding.bottom = llsPadding.toInt()
-        }
-
-
-        if(llsPaddingPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsPaddingPerScHeight)
-            mlsPadding = JJPadding(mar,mar,mar,mar)
-        }
-        if(llsPaddingPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(llsPaddingPerScWidth)
-            mlsPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(llsPaddingResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(llsPaddingResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-        if(llsPaddingResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding = JJPadding(mar,mar,mar,mar)
-        }
-
-
-//endregion
-
-        //region padding vertical
-
-        if(llsPaddingVertical > 0f){
-            mlsPadding.top = llsPaddingVertical.toInt()
-            mlsPadding.bottom = llsPaddingVertical.toInt()
-        }
-
-        if(llsPaddingVerticalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsPaddingVerticalPerScHeight)
-            mlsPadding.top = mar ; mlsPadding.bottom = mar
-        }
-        if(llsPaddingVerticalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(lMarginVerticalPerScWidth)
-            mlsPadding.top = mar ; mlsPadding.bottom = mar
-        }
-
-        if(llsPaddingVerticalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.top = mar ; mlsPadding.bottom = mar
-        }
-
-        if(llsPaddingVerticalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.top = mar ; mlsPadding.bottom = mar
-        }
-
-        if(llsPaddingVerticalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.top = mar ; mlsPadding.bottom = mar
-        }
-//endregion
-
-        //region Horizontal padding
-
-        if(llsPaddingHorizontal > 0f){
-            mlsPadding.left = llsPaddingHorizontal.toInt()
-            mlsPadding.right = llsPaddingHorizontal.toInt()
-        }
-
-        if(llsPaddingHorizontalPerScHeight > 0f) {
-            val mar = JJScreen.percentHeight(llsPaddingHorizontalPerScHeight)
-            mlsPadding.left = mar ; mlsPadding.right = mar
-        }
-        if(llsPaddingHorizontalPerScWidth > 0f) {
-            val mar = JJScreen.percentWidth(llsPaddingHorizontalPerScWidth)
-            mlsPadding.left = mar ; mlsPadding.right = mar
-        }
-
-        if(llsPaddingHorizontalResponsive != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.left = mar ; mlsPadding.right = mar
-        }
-
-        if(llsPaddingHorizontalResPerScHeight != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.left = mar ; mlsPadding.right = mar
-        }
-
-        if(llsPaddingHorizontalResPerScWidth != View.NO_ID) {
-            val arrayDimen = resources.obtainTypedArray(llsPaddingHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.left = mar ; mlsPadding.right = mar
-        }
-
-//endregion
-
-        //region padding start end top bottom
-
-        if(llsPaddingStart > 0f) mlsPadding.left = llsPaddingStart.toInt()
-        if(llsPaddingTop > 0f) mlsPadding.top = llsPaddingTop.toInt()
-        if(llsPaddingEnd > 0f) mlsPadding.right = llsPaddingEnd.toInt()
-        if(llsPaddingBottom > 0f) mlsPadding.bottom = llsPaddingBottom.toInt()
-
-        if(llsPaddingTopPercentScHeight > 0f)  mlsPadding.top = JJScreen.percentHeight(llsPaddingTopPercentScHeight)
-        if(llsPaddingLeftPercentScHeight > 0f)  mlsPadding.left = JJScreen.percentHeight(llsPaddingLeftPercentScHeight)
-        if(llsPaddingRightPercentScHeight > 0f) mlsPadding.right = JJScreen.percentHeight(llsPaddingRightPercentScHeight)
-        if(llsPaddingBottomPercentScHeight > 0f) mlsPadding.bottom = JJScreen.percentHeight(llsPaddingBottomPercentScHeight)
-
-        if(llsPaddingTopPercentScWidth > 0f)  mlsPadding.top = JJScreen.percentWidth(llsPaddingTopPercentScWidth)
-        if(llsPaddingLeftPercentScWidth > 0f)  mlsPadding.left = JJScreen.percentWidth(llsPaddingLeftPercentScWidth)
-        if(llsPaddingRightPercentScWidth > 0f) mlsPadding.right = JJScreen.percentWidth(llsPaddingRightPercentScWidth)
-        if(llsPaddingBottomPercentScWidth > 0f) mlsPadding.bottom = JJScreen.percentWidth(llsPaddingBottomPercentScWidth)
-
-
-        if(llsPaddingTopResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.top = v
-        }
-
-        if(llsPaddingLeftResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingLeftResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.left = v
-        }
-
-        if(llsPaddingRightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingRightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.right = v
-        }
-
-        if(llsPaddingBottomResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            mlsPadding.bottom = v
-        }
-
-
-        if(llsPaddingTopResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingTopResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.top = v
-        }
-
-        if(llsPaddingLeftResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingLeftResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.left = v
-        }
-
-        if(llsPaddingRightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingRightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.right = v
-        }
-
-        if(llsPaddingBottomResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingBottomResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsPadding.bottom = v
-        }
-
-        if(llsPaddingTopResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingTopResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.top = v
-        }
-
-        if(llsPaddingLeftResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingLeftResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.left = v
-        }
-
-        if(llsPaddingRightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingRightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.right = v
-        }
-
-        if(llsPaddingBottomResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsPaddingBottomResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsPadding.bottom = v
-        }
-
-//endregion
-
-        //region params layout height width
-
-        mlsHeight = attrHeightLs
-        mlsWidth = attrWidthLs
-
-        if(llsHeightPercentScreenWidth > 0f)  mlsHeight = JJScreen.percentWidth(llsHeightPercentScreenWidth)
-        if(llsHeightPercentScreenHeight > 0f)  mlsHeight = JJScreen.percentHeight(llsHeightPercentScreenHeight)
-        if(llsWidthPercentScreenWidth > 0f) mlsWidth = JJScreen.percentWidth(llsWidthPercentScreenWidth)
-        if(llsWidthPercentScreenHeight > 0f) mlsWidth = JJScreen.percentHeight(llsWidthPercentScreenHeight)
-
-        if(llsHeightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsHeightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSize(first,second,three,four)
-            mlsHeight = h
-        }
-
-        if(llsWidthResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsWidthResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSize(first,second,three,four)
-            mlsWidth = w
-        }
-
-
-        if(llsHeightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsHeightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            mlsHeight = h
-        }
-
-        if(llsWidthResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsWidthResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-
-            mlsWidth = w
-        }
-
-        if(llsHeightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsHeightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            mlsHeight = h
-        }
-
-        if(llsWidthResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(llsWidthResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-
-            mlsWidth = w
-        }
-
-        //endregion
-
-        //endregion
-
-        //region constraint Layout landscape
-
-        //region margin
-        var lsMargins = JJMargin()
-
-        if(alsMargin > 0f) lsMargins = JJMargin(alsMargin.toInt(),alsMargin.toInt(),alsMargin.toInt(),alsMargin.toInt())
-
-        if(alsMarginPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(alsMarginPercentHeight)
-            lsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(alsMarginPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(alsMarginPercentWidth)
-            lsMargins = JJMargin(mar,mar,mar,mar)
-        }
-
-        if(alsMarginResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins = JJMargin(v,v,v,v)
-        }
-
-        if(alsMarginResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins = JJMargin(v,v,v,v)
-        }
-
-        if(alsMarginResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val v = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins = JJMargin(v,v,v,v)
-        }
-
-        //endregion
-
-        //region margin Vertical
-
-        if(alsMarginVertical > 0f) { lsMargins.top = alsMarginVertical.toInt() ; lsMargins.bottom = alsMarginVertical.toInt() }
-
-        if(alsMarginVerticalPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(alsMarginVerticalPercentHeight)
-            lsMargins.top = mar ; lsMargins.bottom = mar
-        }
-
-        if(alsMarginVerticalPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(alsMarginVerticalPercentWidth)
-            lsMargins.top = mar ; lsMargins.bottom = mar
-        }
-
-        if(alsMarginVerticalResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginVerticalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.top = mar ; lsMargins.bottom = mar
-        }
-
-        if(alsMarginVerticalResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginVerticalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.top = mar ; lsMargins.bottom = mar
-        }
-
-        if(alsMarginVerticalResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginVerticalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.top = mar ; lsMargins.bottom = mar
-        }
-
-//endregion
-
-        // region margin Horizontal
-
-        if(alsMarginHorizontal > 0f) { lsMargins.left = alsMarginHorizontal.toInt() ; lsMargins.right = alsMarginHorizontal.toInt() }
-
-        if(alsMarginHorizontalPercentHeight > 0f) {
-            val mar = JJScreen.percentHeight(alsMarginHorizontalPercentHeight)
-            lsMargins.left = mar ; lsMargins.right = mar
-        }
-
-        if(alsMarginHorizontalPercentWidth > 0f) {
-            val mar = JJScreen.percentWidth(alsMarginHorizontalPercentWidth)
-            lsMargins.left = mar ; lsMargins.right = mar
-        }
-
-        if(alsMarginHorizontalResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginHorizontalResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.left = mar ; lsMargins.right = mar
-        }
-
-        if(alsMarginHorizontalResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginHorizontalResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.left = mar ; lsMargins.right = mar
-        }
-
-        if(alsMarginHorizontalResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginHorizontalResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.left = mar ; lsMargins.right = mar
-        }
-
-//endregion
-
-        //region margin start end top bottom
-
-        if(alsMarginStart > 0f)   lsMargins.left = alsMarginStart.toInt()
-        if(alsMarginEnd > 0f)   lsMargins.right = alsMarginEnd.toInt()
-        if(alsMarginTop > 0f)   lsMargins.top = alsMarginTop.toInt()
-        if(alsMarginBottom > 0f)   lsMargins.bottom = alsMarginBottom.toInt()
-
-        if(alsMarginStartPercent > 0f) lsMargins.left = JJScreen.percentHeight(alsMarginStartPercent)
-        if(alsMarginTopPercent > 0f)  lsMargins.top = JJScreen.percentHeight(alsMarginTopPercent)
-        if(alsMarginEndPercent > 0f)  lsMargins.right = JJScreen.percentHeight(alsMarginEndPercent)
-        if(alsMarginBottomPercent > 0f)  lsMargins.bottom = JJScreen.percentHeight(alsMarginBottomPercent)
-
-        if(alsMarginStartPercentWidth > 0f)  lsMargins.left = JJScreen.percentWidth(alsMarginStartPercentWidth)
-        if(alsMarginTopPercentWidth > 0f) lsMargins.top = JJScreen.percentWidth(alsMarginTopPercentWidth)
-        if(alsMarginEndPercentWidth > 0f) lsMargins.right = JJScreen.percentWidth(alsMarginEndPercentWidth)
-        if(alsMarginBottomPercentWidth > 0f) lsMargins.bottom = JJScreen.percentWidth(alsMarginBottomPercentWidth)
-
-        if(alsMarginStartResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(alsMarginStartResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.left = mar
-        }
-        if(alsMarginEndResponsive > 0f)   {
-            val arrayDimen = resources.obtainTypedArray(alsMarginEndResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.right = mar
-        }
-        if(alsMarginTopResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(alsMarginTopResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.top = mar
-        }
-        if(alsMarginBottomResponsive > 0f)  {
-            val arrayDimen = resources.obtainTypedArray(alsMarginBottomResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSize(first,second,three,four)
-            lsMargins.bottom = mar
-        }
-
-        if(alsMarginStartResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginStartResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.left = mar
-        }
-
-        if(alsMarginEndResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginEndResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.right = mar
-        }
-
-        if(alsMarginTopResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginTopResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.top = mar
-        }
-
-        if(alsMarginBottomResPerScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginBottomResPerScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            lsMargins.bottom = mar
-        }
-
-        if(alsMarginStartResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginStartResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.left = mar
-        }
-
-        if(alsMarginEndResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginEndResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.right = mar
-        }
-
-        if(alsMarginTopResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginTopResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.top = mar
-        }
-
-        if(alsMarginBottomResPerScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsMarginBottomResPerScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val mar = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            lsMargins.bottom = mar
-        }
-
-
-        //endregion
-
-        //region width height
-
-        if(attrWidthLs > 0 || attrWidthLs == -2 ) cllWidth(attrWidthLs)
-        if(attrHeightLs > 0 || attrHeightLs == -2 ) cllHeight(attrHeightLs)
-
-        if( alsHeightPercent > 0f) cllPercentHeight( alsHeightPercent)
-
-        if( alsHeightPercentScreenWidth > 0f) cllHeight(JJScreen.percentWidth( alsHeightPercentScreenWidth))
-        if( alsHeightPercentScreenHeight > 0f) cllHeight(JJScreen.percentHeight( alsHeightPercentScreenHeight))
-
-        if(alsWidthPercent > 0f) cllPercentWidth(alsWidthPercent)
-        if(alsWidthPercentScreenWidth > 0f) cllWidth(JJScreen.percentWidth(alsWidthPercentScreenWidth))
-        if(alsWidthPercentScreenHeight > 0f) cllWidth(JJScreen.percentHeight(alsWidthPercentScreenHeight))
-
-        if( alsHeightResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray( alsHeightResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSize(first,second,three,four)
-            cllHeight(h)
-        }
-
-        if(alsWidthResponsive != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsWidthResponsive)
-            val first = arrayDimen.getDimension(0, 0f).toInt()
-            val second = arrayDimen.getDimension(1, 0f).toInt()
-            val three = arrayDimen.getDimension(2, 0f).toInt()
-            val four = arrayDimen.getDimension(3, 0f).toInt()
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSize(first,second,three,four)
-
-            cllWidth(w)
-        }
-
-        if( alsHeightResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray( alsHeightResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-            cllHeight(h)
-        }
-
-        if(alsWidthResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsWidthResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-
-            cllWidth(w)
-        }
-
-        if( alsHeightResponsivePercentScWidth != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray( alsHeightResponsivePercentScWidth)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val h = JJScreen.responsiveSizePercentScreenWidth(first,second,three,four)
-            cllHeight(h)
-        }
-
-        if(alsWidthResponsivePercentScHeight != View.NO_ID){
-            val arrayDimen = resources.obtainTypedArray(alsWidthResponsivePercentScHeight)
-            val first = arrayDimen.getFloat(0, 0f)
-            val second = arrayDimen.getFloat(1, 0f)
-            val three = arrayDimen.getFloat(2, 0f)
-            val four = arrayDimen.getFloat(3, 0f)
-            arrayDimen.recycle()
-
-            val w = JJScreen.responsiveSizePercentScreenHeight(first,second,three,four)
-
-            cllWidth(w)
-        }
-
-//endregion
-
-        //region anchors
-
-        if(alsStartToStartOf != View.NO_ID) cllStartToStart(alsStartToStartOf)
-        if(alsStartToEndOf != View.NO_ID) cllStartToEnd(alsStartToEndOf)
-        if(alsEndToEndOf != View.NO_ID) cllEndToEnd(alsEndToEndOf)
-        if(alsEndToStartOf != View.NO_ID) cllEndToStart(alsEndToStartOf)
-        if(alsTopToTopOf != View.NO_ID) cllTopToTop(alsTopToTopOf)
-        if(alsTopToBottomOf != View.NO_ID) cllTopToBottom(alsTopToBottomOf)
-        if(alsBottomToBottomOf != View.NO_ID) cllBottomToBottom(alsBottomToBottomOf)
-        if(alsBottomToTopOf != View.NO_ID) cllBottomToTop(alsBottomToTopOf)
-
-        if(alsStartToStartParent) cllStartToStartParent()
-        if(alsStartToEndParent) cllStartToEndParent()
-        if(alsEndToEndParent) cllEndToEndParent()
-        if(alsEndToStartParent) cllEndToStartParent()
-        if(alsTopToTopParent) cllTopToTopParent()
-        if(alsTopToBottomParent) cllTopToBottomParent()
-        if(alsBottomToBottomParent) cllBottomToBottomParent()
-        if(alsBottomToTopParent) cllBottomToTopParent()
-
-
-        if(alsCenterInParentTopVertical) cllCenterInParentTopVertically()
-        if(alsCenterInParentBottomVertical) cllCenterInParentBottomVertically()
-        if(alsCenterInParentStartHorizontal) cllCenterInParentStartHorizontally()
-        if(alsCenterInParentEndHorizontal) cllCenterInParentEndHorizontally()
-
-        if(alsCenterInTopVerticalOf != View.NO_ID) cllCenterInTopVertically(alsCenterInTopVerticalOf)
-        if(alsCenterInBottomVerticalOf != View.NO_ID) cllCenterInBottomVertically(alsCenterInBottomVerticalOf)
-        if(alsCenterInStartHorizontalOf != View.NO_ID) cllCenterInStartHorizontally(alsCenterInStartHorizontalOf)
-        if(alsCenterInEndHorizontalOf != View.NO_ID) cllCenterInEndHorizontally(alsCenterInEndHorizontalOf)
-
-        if(alsCenterVerticalOf != View.NO_ID) cllCenterVerticallyOf(alsCenterVerticalOf)
-        if(alsCenterHorizontalOf != View.NO_ID) cllCenterHorizontallyOf(alsCenterHorizontalOf)
-
-        if(alsCenterInParentHorizontal) cllCenterInParentHorizontally()
-        if(alsCenterInParentVertical)  cllCenterInParentVertically()
-
-        if(alsFillParentHorizontal) cllFillParentHorizontally()
-        if(alsFillParentVertical) cllFillParentVertically()
-
-        if(alsCenterInParent) cllCenterInParent()
-        if(alsFillParent) cllFillParent()
-
-        if(alsVerticalBias > 0f)  cllVerticalBias(alsVerticalBias)
-        if(alsHorizontalBias > 0f)  cllHorizontalBias(alsHorizontalBias)
-
-        cllMargins(lsMargins)
-
-        //endregion
-
-        //endregion
     }
 
-    private var mInit = true
+    private fun setupSizeLp(a: TypedArray, index:Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_lpHeightPercentScreenWidth -> {
+                mlpHeight = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpHeightPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpHeightPercentScreenHeight -> {
+                mlpHeight = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpHeightPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpWidthPercentScreenWidth -> {
+                mlpWidth = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpWidthPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpWidthPercentScreenHeight -> {
+                mlpWidth = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpWidthPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpHeightResponsive -> {
+                mlpHeight =  responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpHeightResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpWidthResponsive -> {
+                mlpWidth =  responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpWidthResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenHeight -> {
+                mlpHeight = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenHeight)
+            }
+            R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenHeight -> {
+                mlpWidth = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenHeight)
+            }
+            R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenWidth -> {
+                mlpHeight = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpHeightResponsivePercentScreenWidth)
+            }
+            R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenWidth -> {
+                mlpWidth = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpWidthResponsivePercentScreenWidth)
+            }
+        }
+    }
+    private fun setupMarginLp(a: TypedArray, index: Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_lpMarginTopPerScHeight -> {
+                mlpMargins.top = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpMarginTopPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginLeftPerScHeight -> {
+                mlpMargins.left = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpMarginLeftPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginRightPerScHeight -> {
+                mlpMargins.right = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpMarginRightPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginBottomPerScHeight -> {
+                mlpMargins.bottom = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpMarginBottomPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginTopPerScWidth -> {
+                mlpMargins.top = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpMarginTopPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginLeftPerScWidth -> {
+                mlpMargins.left = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpMarginLeftPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginRightPerScWidth->{
+                mlpMargins.right = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpMarginRightPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginBottomPerScWidth -> {
+                mlpMargins.bottom = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpMarginBottomPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpMarginTopResponsive -> {
+                mlpMargins.top = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpMarginLeftResponsive ->{
+                mlpMargins.left =  responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginLeftResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpMarginRightResponsive -> {
+                mlpMargins.right =   responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginRightResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpMarginBottomResponsive -> {
+                mlpMargins.bottom =  responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginBottomResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpMarginTopResPerScWidth -> {
+                mlpMargins.top  = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginTopResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lpMarginLeftResPerScWidth -> {
+                mlpMargins.left = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginLeftResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lpMarginRightResPerScWidth -> {
+                mlpMargins.right =  responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginRightResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lpMarginBottomResPerScWidth -> {
+                mlpMargins.bottom = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginBottomResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lpMarginTopResPerScHeight ->{
+                mlpMargins.top = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginTopResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lpMarginLeftResPerScHeight ->{
+                mlpMargins.left = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginLeftResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lpMarginRightResPerScHeight ->{
+                mlpMargins.right = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginRightResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lpMarginBottomResPerScHeight ->{
+                mlpMargins.bottom = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginBottomResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lpMarginPercentScHeight -> {
+                mlpMargins = JJMargin.all(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpMarginPercentScHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_lpMarginPercentScWidth -> {
+                mlpMargins = JJMargin.all(JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpMarginPercentScWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_lpMarginResponsive -> {
+                mlpMargins = JJMargin.all(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginResponsive))
+            }
+            R.styleable.JJConstraintLayout_lpMarginResPerScHeight -> {
+                mlpMargins = JJMargin.all(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginResPerScHeight))
+            }
+            R.styleable.JJConstraintLayout_lpMarginResPerScWidth -> {
+                mlpMargins =  JJMargin.all(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginResPerScWidth))
+            }
+            R.styleable.JJConstraintLayout_lpMarginVerticalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpMarginVerticalPerScHeight,0f))
+                mlpMargins.top = mar ; mlpMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginVerticalPerScWidth ->{
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpMarginVerticalPerScWidth,0f))
+                mlpMargins.top = mar ; mlpMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginVerticalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginVerticalResponsive)
+                mlpMargins.top = mar ; mlpMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginVerticalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginVerticalResPerScWidth )
+                mlpMargins.top = mar ; mlpMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginVerticalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginVerticalResPerScHeight)
+                mlpMargins.top = mar ; mlpMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginHorizontalPerScHeight -> {
+                val mar = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpMarginHorizontalPerScHeight,0f))
+                mlpMargins.left = mar ; mlpMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginHorizontalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpMarginHorizontalPerScWidth,0f))
+                mlpMargins.left = mar ; mlpMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginHorizontalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpMarginHorizontalResponsive)
+                mlpMargins.left = mar ; mlpMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScWidth)
+                mlpMargins.left = mar ; mlpMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpMarginHorizontalResPerScHeight)
+                mlpMargins.left = mar ; mlpMargins.right = mar
+            }
+        }
+
+    }
+    private fun setupPaddingLp(a: TypedArray, index:Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_lpPaddingTopPerScHeight -> {
+                mlpPadding.top = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingTopPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingLeftPerScHeight -> {
+                mlpPadding.left = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingLeftPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingRightPerScHeight -> {
+                mlpPadding.right = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingRightPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingBottomPerScHeight -> {
+                mlpPadding.bottom = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingBottomPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingTopPerScWidth -> {
+                mlpPadding.top = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingTopPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingLeftPerScWidth -> {
+                mlpPadding.left = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingLeftPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingRightPerScWidth -> {
+                mlpPadding.right = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingRightPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingBottomPerScWidth -> {
+                mlpPadding.bottom = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lpPaddingBottomPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingTopResponsive -> {
+                mlpPadding.top = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpPaddingLeftResponsive -> {
+                mlpPadding.left = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingLeftResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpPaddingRightResponsive -> {
+                mlpPadding.right = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingRightResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpPaddingBottomResponsive -> {
+                mlpPadding.bottom = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingBottomResponsive)
+            }
+            R.styleable.JJConstraintLayout_lpPaddingTopResPerScWidth -> {
+                mlpPadding.top = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingTopResPerScWidth )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingLeftResPerScWidth -> {
+                mlpPadding.left = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingLeftResPerScWidth )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingRightResPerScWidth -> {
+                mlpPadding.right = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingRightResPerScWidth )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingBottomResPerScWidth -> {
+                mlpPadding.bottom = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingBottomResPerScWidth )
+            }
+
+            R.styleable.JJConstraintLayout_lpPaddingTopResPerScHeight -> {
+                mlpPadding.top = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingTopResPerScHeight )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingLeftResPerScHeight -> {
+                mlpPadding.left = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingLeftResPerScHeight )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingRightResPerScHeight -> {
+                mlpPadding.right = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingRightResPerScHeight )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingBottomResPerScHeight -> {
+                mlpPadding.bottom = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingBottomResPerScHeight )
+            }
+            R.styleable.JJConstraintLayout_lpPaddingPercentScHeight -> {
+                mlpPadding = JJPadding.all(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingPercentScHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingPercentScWidth -> {
+                mlpPadding = JJPadding.all(JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingPercentScWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingResponsive -> {
+                mlpPadding = JJPadding.all(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingResponsive))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingResPerScHeight -> {
+                mlpPadding = JJPadding.all(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingResPerScHeight))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingResPerScWidth -> {
+                mlpPadding = JJPadding.all(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingResPerScWidth))
+            }
+            R.styleable.JJConstraintLayout_lpPaddingVerticalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingVerticalPerScHeight,0f))
+                mlpPadding.top = mar ; mlpPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingVerticalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingVerticalPerScWidth,0f))
+                mlpPadding.top = mar ; mlpPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingVerticalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingVerticalResponsive)
+                mlpPadding.top = mar ; mlpPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScWidth)
+                mlpPadding.top = mar ; mlpPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingVerticalResPerScHeight)
+                mlpPadding.top = mar ; mlpPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScHeight,0f))
+                mlpPadding.left = mar ; mlpPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth,0f))
+                mlpPadding.left = mar ; mlpPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingHorizontalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lpPaddingHorizontalResponsive)
+                mlpPadding.left = mar ; mlpPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScWidth ->{
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScWidth)
+                mlpPadding.left = mar ; mlpPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScHeight ->{
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lpPaddingHorizontalResPerScHeight)
+                mlpPadding.left = mar ; mlpPadding.right = mar
+            }
+
+        }
+
+    }
+
+    private fun setupSizeCl(a: TypedArray, index:Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_clHeightPercent -> {
+                clPercentHeight( a.getFloat(R.styleable.JJConstraintLayout_clHeightPercent,0f))
+            }
+            R.styleable.JJConstraintLayout_clWidthPercent -> {
+                clPercentWidth( a.getFloat(R.styleable.JJConstraintLayout_clWidthPercent,0f))
+            }
+            R.styleable.JJConstraintLayout_clHeightPercentScreenWidth -> {
+                clHeight(JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clHeightPercentScreenWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_clWidthPercentScreenWidth -> {
+                clWidth(JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clWidthPercentScreenWidth,0f)))
+            }
+
+            R.styleable.JJConstraintLayout_clHeightPercentScreenHeight -> {
+                clHeight(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clHeightPercentScreenHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_clWidthPercentScreenHeight -> {
+                clWidth(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clWidthPercentScreenHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_clHeightResponsive -> {
+                clHeight(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clHeightResponsive))
+            }
+            R.styleable.JJConstraintLayout_clWidthResponsive -> {
+                clWidth(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clWidthResponsive))
+            }
+            R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenHeight ->{
+                clHeight(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenHeight))
+            }
+            R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenHeight ->{
+                clWidth(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenHeight))
+            }
+
+            R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenWidth ->{
+                clHeight(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clHeightResponsivePercentScreenWidth))
+            }
+            R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenWidth ->{
+                clWidth(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clWidthResponsivePercentScreenWidth))
+            }
+        }
+
+
+
+
+    }
+    private fun setupAnchorsCl(a: TypedArray, index:Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_clFillParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clFillParent,false)) clFillParent()
+            }
+            R.styleable.JJConstraintLayout_clFillParentHorizontally -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clFillParentHorizontally,false)) clFillParentHorizontally()
+            }
+            R.styleable.JJConstraintLayout_clFillParentVertically -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clFillParentVertically,false)) clFillParentVertically()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParent,false)) clCenterInParent()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentHorizontally -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentHorizontally,false)) clCenterInParentHorizontally()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentVertically -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentVertically,false)) clCenterInParentVertically()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentTopVertically -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentTopVertically,false))  clCenterInParentTopVertically()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentBottomVertically -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentBottomVertically,false)) clCenterInParentBottomVertically()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentStartHorizontally -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentStartHorizontally,false)) clCenterInParentStartHorizontally()
+            }
+            R.styleable.JJConstraintLayout_clCenterInParentEndHorizontally -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clCenterInParentEndHorizontally,false)) clCenterInParentEndHorizontally()
+            }
+
+            R.styleable.JJConstraintLayout_clCenterInTopVerticallyOf -> {
+                clCenterInTopVertically(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterInTopVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clCenterInBottomVerticallyOf -> {
+                clCenterInBottomVertically(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterInBottomVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clCenterInStartHorizontallyOf -> {
+                clCenterInStartHorizontally(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterInStartHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clCenterInEndHorizontallyOf -> {
+                clCenterInEndHorizontally(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterInEndHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clCenterVerticallyOf -> {
+                clCenterVerticallyOf(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clCenterHorizontallyOf -> {
+                clCenterHorizontallyOf(a.getResourceId(
+                    R.styleable.JJConstraintLayout_clCenterHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clVerticalBias -> {
+                clVerticalBias(a.getFloat(R.styleable.JJConstraintLayout_clVerticalBias,0.5f))
+            }
+            R.styleable.JJConstraintLayout_clHorizontalBias -> {
+                clHorizontalBias( a.getFloat(R.styleable.JJConstraintLayout_clHorizontalBias,0.5f))
+            }
+            R.styleable.JJConstraintLayout_clStartToStartParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clStartToStartParent,false)) clStartToStartParent()
+            }
+            R.styleable.JJConstraintLayout_clStartToEndParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clStartToEndParent,false)) clStartToEndParent()
+            }
+            R.styleable.JJConstraintLayout_clEndToEndParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clEndToEndParent,false)) clEndToEndParent()
+            }
+            R.styleable.JJConstraintLayout_clEndToStartParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clEndToStartParent,false)) clEndToStartParent()
+            }
+            R.styleable.JJConstraintLayout_clTopToTopParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clTopToTopParent,false)) clTopToTopParent()
+            }
+            R.styleable.JJConstraintLayout_clTopToBottomParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clTopToBottomParent,false)) clTopToBottomParent()
+            }
+            R.styleable.JJConstraintLayout_clBottomToBottomParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clBottomToBottomParent,false)) clBottomToBottomParent()
+            }
+            R.styleable.JJConstraintLayout_clBottomToTopParent -> {
+                if(a.getBoolean(R.styleable.JJConstraintLayout_clBottomToTopParent,false)) clBottomToTopParent()
+            }
+
+            R.styleable.JJConstraintLayout_clStartToStartOf -> {
+                clStartToStart(a.getResourceId(R.styleable.JJConstraintLayout_clStartToStartOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clStartToEndOf -> {
+                clStartToEnd(a.getResourceId(R.styleable.JJConstraintLayout_clStartToEndOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clEndToEndOf -> {
+                clEndToEnd(a.getResourceId(R.styleable.JJConstraintLayout_clEndToEndOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clEndToStartOf -> {
+                clEndToStart(a.getResourceId(R.styleable.JJConstraintLayout_clEndToStartOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clTopToTopOf -> {
+                clTopToTop(a.getResourceId(R.styleable.JJConstraintLayout_clTopToTopOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clTopToBottomOf -> {
+                clTopToBottom(a.getResourceId(R.styleable.JJConstraintLayout_clTopToBottomOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clBottomToBottomOf -> {
+                clBottomToBottom(a.getResourceId(R.styleable.JJConstraintLayout_clBottomToBottomOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_clBottomToTopOf -> {
+                clBottomToTop(a.getResourceId(R.styleable.JJConstraintLayout_clBottomToTopOf, View.NO_ID))
+            }
+
+        }
+    }
+    private fun setupMarginCl(a: TypedArray, index:Int){
+        var margins = JJMargin()
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_clMarginEnd ->{
+                margins.right = a.getDimension(R.styleable.JJConstraintLayout_clMarginEnd,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_clMarginStart ->{
+                margins.left = a.getDimension(R.styleable.JJConstraintLayout_clMarginStart,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_clMarginTop ->{
+                margins.top = a.getDimension(R.styleable.JJConstraintLayout_clMarginTop,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_clMarginBottom ->{
+                margins.bottom = a.getDimension(R.styleable.JJConstraintLayout_clMarginBottom,0f).toInt()
+            }
+
+            R.styleable.JJConstraintLayout_clMarginEndPercentScreenHeight -> {
+                margins.right = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginEndPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginStartPercentScreenHeight -> {
+                margins.left = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginStartPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginTopPercentScreenHeight -> {
+                margins.top = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginTopPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginBottomPercentScreenHeight -> {
+                margins.bottom = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginBottomPercentScreenHeight,0f))
+            }
+
+            R.styleable.JJConstraintLayout_clMarginEndPercentScreenWidth -> {
+                margins.right = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginEndPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginStartPercentScreenWidth -> {
+                margins.left = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginStartPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginTopPercentScreenWidth -> {
+                margins.top = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginTopPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_clMarginBottomPercentScreenWidth -> {
+                margins.bottom = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginBottomPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_clMargin -> {
+                margins = JJMargin.all(a.getDimension(R.styleable.JJConstraintLayout_clMargin,0f).toInt())
+            }
+            R.styleable.JJConstraintLayout_clMarginPerScHeight -> {
+                margins = JJMargin.all(JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_clMarginPerScHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_clMarginPerScWidth -> {
+                margins = JJMargin.all(JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_clMarginPerScWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_clMarginResponsive -> {
+                margins = JJMargin.all(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginResponsive))
+            }
+            R.styleable.JJConstraintLayout_clMarginResPerScHeight -> {
+                margins = JJMargin.all(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginResPerScHeight))
+            }
+            R.styleable.JJConstraintLayout_clMarginResPerScWidth -> {
+                margins = JJMargin.all(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginResPerScWidth))
+            }
+            R.styleable.JJConstraintLayout_clMarginEndResponsive -> {
+                margins.right = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginEndResponsive)
+            }
+            R.styleable.JJConstraintLayout_clMarginStartResponsive -> {
+                margins.left = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginStartResponsive)
+            }
+            R.styleable.JJConstraintLayout_clMarginTopResponsive -> {
+                margins.top = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_clMarginBottomResponsive -> {
+                margins.bottom = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginBottomResponsive)
+            }
+
+            R.styleable.JJConstraintLayout_clMarginEndResPerScHeight -> {
+                margins.right = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginEndResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_clMarginStartResPerScHeight -> {
+                margins.left = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginStartResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_clMarginTopResPerScHeight -> {
+                margins.top = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginTopResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_clMarginBottomResPerScHeight -> {
+                margins.bottom = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginBottomResPerScHeight)
+            }
+
+            R.styleable.JJConstraintLayout_clMarginEndResPerScWidth -> {
+                margins.right = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginEndResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_clMarginStartResPerScWidth -> {
+                margins.left = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginStartResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_clMarginTopResPerScWidth -> {
+                margins.top = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginTopResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_clMarginBottomResPerScWidth -> {
+                margins.bottom = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginBottomResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_clMarginVertical -> {
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_clMarginVertical,0f).toInt()
+                margins.top = mar ; margins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginVerticalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginVerticalPerScHeight,0f))
+                margins.top = mar ; margins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginVerticalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginVerticalPerScWidth,0f))
+                margins.top = mar ; margins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginVerticalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginVerticalResponsive)
+                margins.top = mar ; margins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginVerticalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginVerticalResPerScHeight)
+                margins.top = mar ; margins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginVerticalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginVerticalResPerScWidth)
+                margins.top = mar ; margins.bottom = mar
+            }
+
+            R.styleable.JJConstraintLayout_clMarginHorizontal -> {
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_clMarginHorizontal,0f).toInt()
+                margins.left = mar ; margins.right = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginHorizontalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_clMarginHorizontalPerScHeight,0f))
+                margins.left = mar ; margins.right = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginHorizontalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_clMarginHorizontalPerScWidth,0f))
+                margins.left = mar ; margins.right = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginHorizontalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_clMarginHorizontalResponsive)
+                margins.left = mar ; margins.right = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginHorizontalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_clMarginHorizontalResPerScHeight)
+                margins.left = mar ; margins.right = mar
+            }
+            R.styleable.JJConstraintLayout_clMarginHorizontalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_clMarginHorizontalResPerScWidth)
+                margins.left = mar ; margins.right = mar
+            }
+
+        }
+        clMargins(margins)
+    }
+
+    private fun setupMarginLpl(a: TypedArray, index:Int) {
+        when (a.getIndex(index)) {
+            R.styleable.JJConstraintLayout_lplMargin -> {
+                mlsMargins =
+                    JJMargin.all(a.getDimension(R.styleable.JJConstraintLayout_lplMargin, 0f).toInt())
+            }
+            R.styleable.JJConstraintLayout_lplMarginVertical -> {
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_lplMarginVertical, 0f).toInt()
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginHorizontal -> {
+                val mar =
+                    a.getDimension(R.styleable.JJConstraintLayout_lplMarginHorizontal, 0f).toInt()
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginStart -> {
+                mlsMargins.left =
+                    a.getDimension(R.styleable.JJConstraintLayout_lplMarginStart, 0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplMarginEnd -> {
+                mlsMargins.right =
+                    a.getDimension(R.styleable.JJConstraintLayout_lplMarginEnd, 0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottom -> {
+                mlsMargins.bottom =
+                    a.getDimension(R.styleable.JJConstraintLayout_lplMarginBottom, 0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplMarginTop -> {
+                mlsMargins.top =
+                    a.getDimension(R.styleable.JJConstraintLayout_lplMarginTop, 0f).toInt()
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginLeftPerScHeight -> {
+                mlsMargins.left = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginLeftPerScHeight,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginRightPerScHeight -> {
+                mlsMargins.right = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginRightPerScHeight,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottomPerScHeight -> {
+                mlsMargins.bottom = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginBottomPerScHeight,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginTopPerScHeight -> {
+                mlsMargins.top = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginTopPerScHeight,
+                        0f
+                    )
+                )
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginLeftPerScWidth -> {
+                mlsMargins.left = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginLeftPerScWidth,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginRightPerScWidth -> {
+                mlsMargins.right = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginRightPerScWidth,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottomPerScWidth -> {
+                mlsMargins.bottom = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginBottomPerScWidth,
+                        0f
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginTopPerScWidth -> {
+                mlsMargins.top = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginTopPerScWidth,
+                        0f
+                    )
+                )
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginTopResponsive -> {
+                mlsMargins.top =
+                    responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplMarginTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplMarginLeftResponsive -> {
+                mlsMargins.left =
+                    responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplMarginLeftResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplMarginRightResponsive -> {
+                mlsMargins.right = responsiveSizeDimension(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginRightResponsive
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottomResponsive -> {
+                mlsMargins.bottom = responsiveSizeDimension(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginBottomResponsive
+                )
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginTopResPerScWidth -> {
+                mlsMargins.top = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginTopResPerScWidth
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginLeftResPerScWidth -> {
+                mlsMargins.left = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginLeftResPerScWidth
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginRightResPerScWidth -> {
+                mlsMargins.right = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginRightResPerScWidth
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottomResPerScWidth -> {
+                mlsMargins.bottom = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginBottomResPerScWidth
+                )
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginTopResPerScHeight -> {
+                mlsMargins.top = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginTopResPerScHeight
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginLeftResPerScHeight -> {
+                mlsMargins.left = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginLeftResPerScHeight
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginRightResPerScHeight -> {
+                mlsMargins.right = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginRightResPerScHeight
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginBottomResPerScHeight -> {
+                mlsMargins.bottom = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginBottomResPerScHeight
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginPercentScHeight -> {
+                mlsMargins = JJMargin.all(
+                    JJScreen.percentHeight(
+                        a.getFloat(
+                            R.styleable.JJConstraintLayout_lplMarginPercentScHeight,
+                            0f
+                        )
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginPercentScWidth -> {
+                mlsMargins = JJMargin.all(
+                    JJScreen.percentWidth(
+                        a.getFloat(
+                            R.styleable.JJConstraintLayout_lplMarginPercentScWidth,
+                            0f
+                        )
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginResponsive -> {
+                mlsMargins = JJMargin.all(
+                    responsiveSizeDimension(
+                        a,
+                        R.styleable.JJConstraintLayout_lplMarginResponsive
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginResPerScHeight -> {
+                mlsMargins = JJMargin.all(
+                    responsiveSizePercentScreenHeight(
+                        a,
+                        R.styleable.JJConstraintLayout_lplMarginResPerScHeight
+                    )
+                )
+            }
+            R.styleable.JJConstraintLayout_lplMarginResPerScWidth -> {
+                mlsMargins = JJMargin.all(
+                    responsiveSizePercentScreenWidth(
+                        a,
+                        R.styleable.JJConstraintLayout_lplMarginResPerScWidth
+                    )
+                )
+            }
+
+            R.styleable.JJConstraintLayout_lplMarginVerticalPerScHeight -> {
+                val mar = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginVerticalPerScHeight,
+                        0f
+                    )
+                )
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginVerticalPerScWidth -> {
+                val mar = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginVerticalPerScWidth,
+                        0f
+                    )
+                )
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginVerticalResponsive -> {
+                val mar = responsiveSizeDimension(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginVerticalResponsive
+                )
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginVerticalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginVerticalResPerScWidth
+                )
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginVerticalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginVerticalResPerScHeight
+                )
+                mlsMargins.top = mar; mlsMargins.bottom = mar
+            }
+
+
+            R.styleable.JJConstraintLayout_lplMarginHorizontalPerScHeight -> {
+                val mar = JJScreen.percentHeight(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginHorizontalPerScHeight,
+                        0f
+                    )
+                )
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginHorizontalPerScWidth -> {
+                val mar = JJScreen.percentWidth(
+                    a.getFloat(
+                        R.styleable.JJConstraintLayout_lplMarginHorizontalPerScWidth,
+                        0f
+                    )
+                )
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginHorizontalResponsive -> {
+                val mar = responsiveSizeDimension(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginHorizontalResponsive
+                )
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScWidth
+                )
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(
+                    a,
+                    R.styleable.JJConstraintLayout_lplMarginHorizontalResPerScHeight
+                )
+                mlsMargins.left = mar; mlsMargins.right = mar
+            }
+
+        }
+    }
+    private fun setupPaddingLpl(a: TypedArray, index: Int){
+        when(a.getIndex(index)){
+            R.styleable.JJConstraintLayout_lplPadding -> {
+                mlsPadding = JJPadding.all( a.getDimension(R.styleable.JJConstraintLayout_lplPadding,0f).toInt())
+            }
+            R.styleable.JJConstraintLayout_lplPaddingVertical -> {
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingVertical,0f).toInt()
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingHorizontal -> {
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingHorizontal,0f).toInt()
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingStart -> {
+                mlsPadding.left = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingStart,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplPaddingEnd -> {
+                mlsPadding.right = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingEnd,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplPaddingTop -> {
+                mlsPadding.top = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingTop,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottom -> {
+                mlsPadding.bottom = a.getDimension(R.styleable.JJConstraintLayout_lplPaddingBottom,0f).toInt()
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingTopPerScHeight -> {
+                mlsPadding.top = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingTopPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingLeftPerScHeight -> {
+                mlsPadding.left = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingLeftPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingRightPerScHeight -> {
+                mlsPadding.right = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingRightPerScHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottomPerScHeight -> {
+                mlsPadding.bottom = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingBottomPerScHeight,0f))
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingTopPerScWidth -> {
+                mlsPadding.top = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingTopPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingLeftPerScWidth -> {
+                mlsPadding.left = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingLeftPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingRightPerScWidth -> {
+                mlsPadding.right = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingRightPerScWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottomPerScWidth -> {
+                mlsPadding.bottom = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingBottomPerScWidth,0f))
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingTopResponsive -> {
+                mlsPadding.top = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingLeftResponsive -> {
+                mlsPadding.left = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingLeftResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingRightResponsive -> {
+                mlsPadding.right = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingRightResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottomResponsive -> {
+                mlsPadding.bottom = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingBottomResponsive)
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingTopResPerScWidth -> {
+                mlsPadding.top = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingTopResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingLeftResPerScWidth -> {
+                mlsPadding.left = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingLeftResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingRightResPerScWidth -> {
+                mlsPadding.right = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingRightResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottomResPerScWidth -> {
+                mlsPadding.bottom = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingBottomResPerScWidth)
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingTopResPerScHeight -> {
+                mlsPadding.top = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingTopResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingLeftResPerScHeight -> {
+                mlsPadding.left = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingLeftResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingRightResPerScHeight -> {
+                mlsPadding.right = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingRightResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingBottomResPerScHeight -> {
+                mlsPadding.bottom = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingBottomResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_lplPaddingPercentScHeight->{
+                mlsPadding = JJPadding.all(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingPercentScHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingPercentScWidth->{
+                mlsPadding = JJPadding.all(JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingPercentScWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingResponsive->{
+                mlsPadding = JJPadding.all(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingResponsive))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingResPerScHeight->{
+                mlsPadding = JJPadding.all(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingResPerScHeight))
+            }
+            R.styleable.JJConstraintLayout_lplPaddingResPerScWidth->{
+                mlsPadding = JJPadding.all(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingResPerScWidth))
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingVerticalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingVerticalPerScHeight,0f))
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingVerticalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingVerticalPerScWidth,0f))
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingVerticalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingVerticalResponsive)
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScWidth)
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingVerticalResPerScHeight)
+                mlsPadding.top = mar ; mlsPadding.bottom = mar
+            }
+
+            R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScHeight -> {
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScHeight,0f))
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScWidth -> {
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lplPaddingHorizontalPerScWidth,0f))
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingHorizontalResponsive -> {
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplPaddingHorizontalResponsive)
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScWidth -> {
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScWidth)
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+            R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScHeight -> {
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplPaddingHorizontalResPerScHeight)
+                mlsPadding.left = mar ; mlsPadding.right = mar
+            }
+        }
+    }
+    private fun setupSizeLpl(a: TypedArray, index:Int){
+        when (a.getIndex(index)) {
+            R.styleable.JJConstraintLayout_layout_height_landscape -> {
+                mlsHeight = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_height_landscape,0)
+            }
+            R.styleable.JJConstraintLayout_layout_width_landscape -> {
+                mlsWidth = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_width_landscape,0)
+            }
+            R.styleable.JJConstraintLayout_lplHeightPercentScreenWidth -> {
+                mlsHeight = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lplHeightPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_lplWidthPercentScreenWidth -> {
+                mlsWidth = JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_lplWidthPercentScreenWidth,0f))
+            }
+
+            R.styleable.JJConstraintLayout_lplHeightPercentScreenHeight -> {
+                mlsHeight = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lplHeightPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lplWidthPercentScreenHeight -> {
+                mlsWidth = JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_lplWidthPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_lplHeightResponsive -> {
+                mlsHeight = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplHeightResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplWidthResponsive -> {
+                mlsWidth = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_lplWidthResponsive)
+            }
+            R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenHeight -> {
+                mlsHeight = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenHeight)
+            }
+            R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenHeight -> {
+                mlsWidth = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenHeight)
+            }
+            R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenWidth -> {
+                mlsHeight = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplHeightResponsivePercentScreenWidth)
+            }
+            R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenWidth -> {
+                mlsWidth = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_lplWidthResponsivePercentScreenWidth)
+            }
+
+        }
+    }
+
+    private fun setupMarginCll(a: TypedArray, index:Int){
+        var lsMargins = JJMargin()
+        when (a.getIndex(index)) {
+            R.styleable.JJConstraintLayout_cllMarginEnd -> {
+                lsMargins.right = a.getDimension(R.styleable.JJConstraintLayout_cllMarginEnd,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_cllMarginStart -> {
+                lsMargins.left = a.getDimension(R.styleable.JJConstraintLayout_cllMarginStart,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_cllMarginTop -> {
+                lsMargins.top = a.getDimension(R.styleable.JJConstraintLayout_cllMarginTop,0f).toInt()
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottom -> {
+                lsMargins.bottom = a.getDimension(R.styleable.JJConstraintLayout_cllMarginBottom,0f).toInt()
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginEndPercentScreenHeight -> {
+                lsMargins.right = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginEndPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginStartPercentScreenHeight -> {
+                lsMargins.left = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginStartPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginTopPercentScreenHeight -> {
+                lsMargins.top = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginTopPercentScreenHeight,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenHeight -> {
+                lsMargins.bottom = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenHeight,0f))
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginEndPercentScreenWidth -> {
+                lsMargins.right = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginEndPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginStartPercentScreenWidth -> {
+                lsMargins.left = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginStartPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginTopPercentScreenWidth -> {
+                lsMargins.top = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginTopPercentScreenWidth,0f))
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenWidth -> {
+                lsMargins.bottom = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginBottomPercentScreenWidth,0f))
+            }
+
+            R.styleable.JJConstraintLayout_cllMargin -> {
+                lsMargins = JJMargin.all(a.getDimension(R.styleable.JJConstraintLayout_cllMargin,0f).toInt())
+            }
+            R.styleable.JJConstraintLayout_cllMarginPerScHeight -> {
+                lsMargins = JJMargin.all(JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginPerScHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllMarginPerScWidth -> {
+                lsMargins = JJMargin.all(JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginPerScWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllMarginResponsive -> {
+                lsMargins = JJMargin.all(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginResponsive))
+            }
+            R.styleable.JJConstraintLayout_cllMarginResPerScHeight -> {
+                lsMargins = JJMargin.all(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginResPerScHeight))
+            }
+            R.styleable.JJConstraintLayout_cllMarginResPerScWidth -> {
+                lsMargins = JJMargin.all(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginResPerScWidth))
+            }
+            R.styleable.JJConstraintLayout_cllMarginEndResponsive ->{
+                lsMargins.right = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginEndResponsive)
+            }
+            R.styleable.JJConstraintLayout_cllMarginStartResponsive ->{
+                lsMargins.left = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginStartResponsive)
+            }
+            R.styleable.JJConstraintLayout_cllMarginTopResponsive ->{
+                lsMargins.top = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginTopResponsive)
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottomResponsive ->{
+                lsMargins.bottom = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginBottomResponsive)
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginEndResPerScHeight ->{
+                lsMargins.right = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginEndResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_cllMarginStartResPerScHeight ->{
+                lsMargins.left = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginStartResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_cllMarginTopResPerScHeight ->{
+                lsMargins.top = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginTopResPerScHeight)
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottomResPerScHeight ->{
+                lsMargins.bottom = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginBottomResPerScHeight)
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginEndResPerScWidth ->{
+                lsMargins.right = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginEndResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_cllMarginStartResPerScWidth ->{
+                lsMargins.left = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginStartResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_cllMarginTopResPerScWidth ->{
+                lsMargins.top = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginTopResPerScWidth)
+            }
+            R.styleable.JJConstraintLayout_cllMarginBottomResPerScWidth ->{
+                lsMargins.bottom = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginBottomResPerScWidth)
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginVertical->{
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_cllMarginVertical,0f).toInt()
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginVerticalPerScHeight->{
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginVerticalPerScHeight,0f))
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginVerticalPerScWidth->{
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginVerticalPerScWidth,0f))
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginVerticalResponsive->{
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginVerticalResponsive)
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginVerticalResPerScHeight->{
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginVerticalResPerScHeight)
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginVerticalResPerScWidth->{
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginVerticalResPerScWidth)
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+
+            R.styleable.JJConstraintLayout_cllMarginHorizontal->{
+                val mar = a.getDimension(R.styleable.JJConstraintLayout_cllMarginHorizontal,0f).toInt()
+                lsMargins.top = mar ; lsMargins.bottom = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginHorizontalPerScHeight->{
+                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_cllMarginHorizontalPerScHeight,0f))
+                lsMargins.left = mar ; lsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginHorizontalPerScWidth->{
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_cllMarginHorizontalPerScWidth,0f))
+                lsMargins.left = mar ; lsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginHorizontalResponsive->{
+                val mar = responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllMarginHorizontalResponsive)
+                lsMargins.left = mar ; lsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScHeight->{
+                val mar = responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScHeight)
+                lsMargins.left = mar ; lsMargins.right = mar
+            }
+            R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScWidth->{
+                val mar = responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllMarginHorizontalResPerScWidth)
+                lsMargins.left = mar ; lsMargins.right = mar
+            }
+        }
+        cllMargins(lsMargins)
+    }
+    private fun setupSizeCll(a: TypedArray, index:Int){
+        when (a.getIndex(index)) {
+            R.styleable.JJConstraintLayout_layout_height_landscape->{
+                val value = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_height_landscape,0)
+                if(value > 0 || value == -2 ) cllHeight(value)
+            }
+            R.styleable.JJConstraintLayout_layout_width_landscape->{
+                val value = a.getLayoutDimension(R.styleable.JJConstraintLayout_layout_width_landscape,0)
+                if(value > 0 || value == -2 ) cllWidth(value)
+            }
+            R.styleable.JJConstraintLayout_cllHeightPercent -> {
+                cllPercentHeight( a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercent,0f))
+            }
+            R.styleable.JJConstraintLayout_cllWidthPercent -> {
+                cllPercentWidth( a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercent,0f))
+            }
+            R.styleable.JJConstraintLayout_cllHeightPercentScreenWidth -> {
+                cllHeight(JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercentScreenWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllWidthPercentScreenWidth -> {
+                cllWidth(JJScreen.percentWidth( a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercentScreenWidth,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllHeightPercentScreenHeight -> {
+                cllHeight(JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_cllHeightPercentScreenHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllWidthPercentScreenHeight -> {
+                cllWidth(JJScreen.percentHeight( a.getFloat(R.styleable.JJConstraintLayout_cllWidthPercentScreenHeight,0f)))
+            }
+            R.styleable.JJConstraintLayout_cllHeightResponsive -> {
+                cllHeight(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllHeightResponsive))
+            }
+            R.styleable.JJConstraintLayout_cllWidthResponsive -> {
+                cllWidth(responsiveSizeDimension(a, R.styleable.JJConstraintLayout_cllWidthResponsive))
+            }
+
+            R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenHeight -> {
+                cllHeight(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenHeight))
+            }
+            R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenHeight -> {
+                cllWidth(responsiveSizePercentScreenHeight(a, R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenHeight))
+            }
+            R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenWidth -> {
+                cllHeight(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllWidthResponsivePercentScreenWidth))
+            }
+            R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenWidth -> {
+                cllWidth(responsiveSizePercentScreenWidth(a, R.styleable.JJConstraintLayout_cllHeightResponsivePercentScreenWidth))
+            }
+        }
+
+    }
+    private fun setupAnchorsCll(a: TypedArray, index:Int){
+        when (a.getIndex(index)) {
+            R.styleable.JJConstraintLayout_cllFillParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllFillParent,false)) cllFillParent()
+            }
+            R.styleable.JJConstraintLayout_cllFillParentHorizontally ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllFillParentHorizontally,false)) cllFillParentHorizontally()
+            }
+            R.styleable.JJConstraintLayout_cllFillParentVertically ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllFillParentVertically,false)) cllFillParentVertically()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParent,false)) cllCenterInParent()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentHorizontally ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentHorizontally,false)) cllCenterInParentHorizontally()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentVertically ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentVertically,false)) cllCenterInParentVertically()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentTopVertically ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentTopVertically,false)) cllCenterInParentTopVertically()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentBottomVertically ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentBottomVertically,false)) cllCenterInParentBottomVertically()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentStartHorizontally ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentStartHorizontally,false)) cllCenterInParentStartHorizontally()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInParentEndHorizontally ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllCenterInParentEndHorizontally,false)) cllCenterInParentEndHorizontally()
+            }
+            R.styleable.JJConstraintLayout_cllCenterInTopVerticallyOf ->{
+                cllCenterInTopVertically(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterInTopVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllCenterInBottomVerticallyOf ->{
+                cllCenterInBottomVertically(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterInBottomVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllCenterInStartHorizontallyOf ->{
+                cllCenterInStartHorizontally(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterInStartHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllCenterInEndHorizontallyOf ->{
+                cllCenterInEndHorizontally(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterInEndHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllCenterVerticallyOf ->{
+                cllCenterVerticallyOf(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterVerticallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllCenterHorizontallyOf ->{
+                cllCenterHorizontallyOf(a.getResourceId(
+                    R.styleable.JJConstraintLayout_cllCenterHorizontallyOf,
+                    View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllVerticalBias -> {
+                cllVerticalBias(a.getFloat(R.styleable.JJConstraintLayout_cllVerticalBias,0.5f))
+            }
+            R.styleable.JJConstraintLayout_cllHorizontalBias -> {
+                cllHorizontalBias(a.getFloat(R.styleable.JJConstraintLayout_cllHorizontalBias,0.5f))
+            }
+
+            R.styleable.JJConstraintLayout_cllStartToStartParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllStartToStartParent,false)) cllStartToStartParent()
+            }
+            R.styleable.JJConstraintLayout_cllStartToEndParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllStartToEndParent,false)) cllStartToEndParent()
+            }
+            R.styleable.JJConstraintLayout_cllEndToEndParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllEndToEndParent,false)) cllEndToEndParent()
+            }
+            R.styleable.JJConstraintLayout_cllEndToStartParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllEndToStartParent,false)) cllEndToStartParent()
+            }
+            R.styleable.JJConstraintLayout_cllTopToTopParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllTopToTopParent,false)) cllTopToTopParent()
+            }
+            R.styleable.JJConstraintLayout_cllTopToBottomParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllTopToBottomParent,false)) cllTopToBottomParent()
+            }
+            R.styleable.JJConstraintLayout_cllBottomToBottomParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllBottomToBottomParent,false)) cllBottomToBottomParent()
+            }
+            R.styleable.JJConstraintLayout_cllBottomToTopParent ->{
+                if(a.getBoolean(R.styleable.JJConstraintLayout_cllBottomToTopParent,false)) cllBottomToTopParent()
+            }
+
+            R.styleable.JJConstraintLayout_cllStartToStartOf -> {
+                cllStartToStart(a.getResourceId(R.styleable.JJConstraintLayout_cllStartToStartOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllStartToEndOf -> {
+                cllStartToEnd(a.getResourceId(R.styleable.JJConstraintLayout_cllStartToEndOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllEndToEndOf -> {
+                cllEndToEnd(a.getResourceId(R.styleable.JJConstraintLayout_cllEndToEndOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllEndToStartOf -> {
+                cllEndToStart(a.getResourceId(R.styleable.JJConstraintLayout_cllEndToStartOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllTopToTopOf -> {
+                cllTopToTop(a.getResourceId(R.styleable.JJConstraintLayout_cllTopToTopOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllTopToBottomOf -> {
+                cllTopToBottom(a.getResourceId(R.styleable.JJConstraintLayout_cllTopToBottomOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllBottomToBottomOf -> {
+                cllBottomToBottom(a.getResourceId(R.styleable.JJConstraintLayout_cllBottomToBottomOf, View.NO_ID))
+            }
+            R.styleable.JJConstraintLayout_cllBottomToTopOf -> {
+                cllBottomToTop(a.getResourceId(R.styleable.JJConstraintLayout_cllBottomToTopOf, View.NO_ID))
+            }
+
+        }
+
+    }
+
+    private fun setupInitConstraint(){
+        mConstraintSet.constrainWidth(id,0)
+        mConstraintSet.constrainHeight(id,0)
+        mConstraintSetLandScape.constrainWidth(id,0)
+        mConstraintSetLandScape.constrainHeight(id,0)
+        mConstraintSet.setVisibilityMode(id,ConstraintSet.VISIBILITY_MODE_IGNORE)
+        mConstraintSetLandScape.setVisibilityMode(id,ConstraintSet.VISIBILITY_MODE_IGNORE)
+    }
+    private fun responsiveSizeDimension(a: TypedArray, style:Int) : Int {
+        val t = resources.obtainTypedArray(a.getResourceId(style,
+            View.NO_ID))
+        val re = JJScreen.responsiveSize(t.getDimension(0, 0f).toInt(),
+            t.getDimension(1, 0f).toInt(),
+            t.getDimension(2, 0f).toInt(),
+            t.getDimension(3, 0f).toInt())
+        t.recycle()
+        return re
+    }
+
+    private fun responsiveSizePercentScreenWidth(a: TypedArray, style:Int) : Int {
+        val t = resources.obtainTypedArray(a.getResourceId(style,
+            View.NO_ID))
+        val re = JJScreen.responsiveSizePercentScreenWidth(t.getFloat(0, 0f),
+            t.getFloat(1, 0f),
+            t.getFloat(2, 0f),
+            t.getFloat(3, 0f))
+        t.recycle()
+        return re
+    }
+    private fun responsiveSizePercentScreenHeight(a: TypedArray, style:Int) : Int {
+        val t = resources.obtainTypedArray(a.getResourceId(style,
+            View.NO_ID))
+        val re = JJScreen.responsiveSizePercentScreenHeight(t.getFloat(0, 0f),
+            t.getFloat(1, 0f),
+            t.getFloat(2, 0f),
+            t.getFloat(3, 0f))
+        t.recycle()
+        return re
+    }
+
+
+    var mInit = true
     private var mlsHeight = 0
     private var mlsWidth = 0
     private var mlsMargins = JJMargin()
@@ -3109,15 +1767,14 @@ open class JJScrollViewHorizontal : HorizontalScrollView {
 
     //region Override
 
-
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        var result = false
-        if (mIsScrollEnabled) {
-            result = super.onInterceptTouchEvent(ev)
-        }
-        return result
+        return mIsScrollEnabled && super.onInterceptTouchEvent(ev)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        return mIsScrollEnabled && super.onTouchEvent(ev)
+    }
     //endregion
 
 
