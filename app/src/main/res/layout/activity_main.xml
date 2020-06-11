@@ -9,12 +9,12 @@
     android:id="@+id/MainContainer"
     tools:context=".MainActivity">
 
+
     <com.jjlf.library_layout.views.JJConstraintLayout
 
         android:id="@+id/topView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
         app:support_configuration_changed="true"
         app:support_landscape="true"
         app:clFillParentHorizontally="true"
@@ -31,18 +31,17 @@
 
         app:clMarginTopPercentScreenHeight="0.1"
         app:cllMarginTopPercentScreenHeight="0.1"
-
         android:padding="20dp"
         app:lplPadding="5dp"
 
         android:background="@color/colorPrimary"
         tools:ignore="MissingConstraints">
 
+
         <com.jjlf.library_layout.views.JJView
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:clFillParent="true"
-
             android:background="@color/colorAccent" />
 
     </com.jjlf.library_layout.views.JJConstraintLayout>

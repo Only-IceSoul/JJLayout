@@ -20,81 +20,66 @@ dependencies {
 	}
 ```
 
-## **Using XML** 
+## **XML** 
 
-### **ConstrainLayout:**
+**cl** = Contraint Layout    
+**lp** = Layout Params (margin,padding,size)
+
 
 [See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
 
-**cl** = Contraint Layout 
 
-**lp** = just padding
+ **Responsive:** 
+  * ResPercentScreenHeight/Witdh (array-float[4])
+  * Responsive (array-dimension[4])        
 
- **Responsive:** ResPercentScreenHeight/Witdh (array-float[4]),   
- Responsive (array-dimension[4])  [Responsive](#Responsive)
+[Responsive](#Responsive)
+
+Make layout with a JJConstraintLayout
 
 
-
+```xml
 
     <JJConstraintLayout
         android:id="@+id/childView"
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
+
         app:clFillParentVertically="true"
         app:clCenterInParentHorizontally="true"
         app:clMarginTop="20dp"
         app:clMarginBottomPercentScreenHeight="0.4"
         />
 
-     <JJImageView
-        android:id="@+id/childView2"
+
+```
+
+Now change the view name for u desired view.
+
+```xml
+
+    <JJImageView
+        android:id="@+id/childView"
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@color/colorAccent"
-        app:clCenterInParent="true"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+
+        app:clFillParentVertically="true"
+        app:clCenterInParentHorizontally="true"
+        app:clMarginTop="20dp"
+        app:clMarginBottomPercentScreenHeight="0.4"
         />
 
 
-
-**Preview XML:**
-
-Force Preview: click force refresh layout or Re-build 
-
-![Refresh](assets/refresh_preview.jpg)
+```
 
 
-
-![Preview](assets/cljjkit.jpg)
-
-
-### **Other Views:**
-
-[See all Attributes](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/res/values/attrs.xml)
-
-**lp** = Layout params
-
-**Atributes:** Height, Width, Margin and Padding.
-
- **Responsive:** ResPercentScreenHeight/Witdh (array-float[4]),  
-  Responsive (array-dimension[4]) [Responsive](#Responsive)
-
-
-        <JJButton
-            android:id="@+id/childView2"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            android:background="@color/colorAccent"
-            app:lpHeightPercentScreenHeight="0.5"
-            app:lpMarginTopPerScHeight="0.02"
-        />
-
-
-## **Using Programmatically**
+## **Programmatically**
 
 #### Parent ConstraintLayout
 
-```
+```kotlin
        val childview = JJConstraintLayout(this)
         val childview2 = JJConstraintLayout(this)
         val parentView = JJConstraintLayout(this)
@@ -108,17 +93,19 @@ Force Preview: click force refresh layout or Re-build
             .clFillParentHorizontally()
             .clTopToTopParent(20)
             .clMargins(JJMargin.left(50))
-            .clApply()
+            .clApply() //no need use in method onCreate
 
         childview2
             .clHeight(JJScreen.dp(200))
             .clWidth(JJScreen.dp(200))
             .clCenterInParent()
-            .clApply()
+            .clApply() //called in onAttachedToWindow
 
 ```
 
 #### Other Views
+
+**lp** = LayoutParams (margin,size,padding)
 
 **abl** = AppBarLayout
 
@@ -129,7 +116,7 @@ Force Preview: click force refresh layout or Re-build
 **ll** = LinearLayout
 
 
-```
+```kotlin
         val childview = JJConstraintLayout(this)
 
         val parentView = JJLinearLayout(this)
@@ -137,20 +124,22 @@ Force Preview: click force refresh layout or Re-build
                         .ssOrientation(LinearLayout.VERTICAL)
                         .ssPadding(JJPadding.top(100))
 
-        childview.llWidth(LinearLayout.LayoutParams.MATCH_PARENT)
-            .llHeight(200)
+        childview
+        .lpWidth(LinearLayout.LayoutParams.MATCH_PARENT)
+        .lpHeight(200)
+            
 
 
 ```
 
-### **Motion Layout**
+## **Motion Layout**
 
 **Just code**
 
 Set = ss  
 Get = gg
 
-``` 
+```kotlin 
         val motionLayout = JJMotionLayout(this)
                          .ssLoadLayoutDescriptio(R.xml.scene_movingTest)
 
@@ -197,7 +186,7 @@ Get = gg
 
 **Motion Scene**
 
-```
+```xml
 <MotionScene xmlns:motion="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -206,6 +195,7 @@ Get = gg
             motion:constraintSetEnd="@+id/end"
             motion:duration="1000"
             motion:motionInterpolator="linear">
+
             <OnSwipe
                 motion:touchAnchorId="@+id/childView"
                 motion:touchAnchorSide="bottom"
@@ -226,7 +216,7 @@ Get = gg
 
 ```
 
-## Responsive
+## **Responsive**
 
 Based in Height
 
@@ -235,11 +225,11 @@ Based in Height
 1300px to 2000px **Medium**  
 1px to 1299px **Small**  
 
-[See Class JJScreen](https://github.com/Only-IceSoul/JJLayout/blob/master/library-layout/src/main/java/com/jjlf/library_layout/JJScreen.kt)
+[See Class JJScreen](https://github.com/Only-IceSoul/JJLayoutUtils/blob/master/jjkit-layoututils/src/main/java/com/jjlf/jjkit_layoututils/JJScreen.kt)
 
-### XML
+**XML**
 
-```
+```xml
 <resources>
      <array name="arrayDimen" >
          <item>300dp</item> xHigher  0
