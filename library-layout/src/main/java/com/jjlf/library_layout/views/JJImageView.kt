@@ -82,6 +82,8 @@ open class JJImageView : AppCompatImageView {
         clMargins(mClMargin)
         cllMargins(mCllMargin)
 
+        if(id == View.NO_ID) id = View.generateViewId()
+
 
     }
     private fun setupAndroidBase(attrs: AttributeSet?){
@@ -101,9 +103,6 @@ open class JJImageView : AppCompatImageView {
 
         mlpHeight = attrHeight
         mlpWidth = attrWidth
-
-        val attrId = ba.getResourceId(0, View.NO_ID)
-        if(attrId == View.NO_ID) id = View.generateViewId()
 
         ba.recycle()
 

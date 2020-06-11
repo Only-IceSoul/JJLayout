@@ -85,6 +85,8 @@ open class JJImageButton : AppCompatImageButton {
         clMargins(mClMargin)
         cllMargins(mCllMargin)
 
+        if(id == View.NO_ID) id = View.generateViewId()
+
 
     }
     private fun setupAndroidBase(attrs: AttributeSet?){
@@ -104,9 +106,6 @@ open class JJImageButton : AppCompatImageButton {
 
         mlpHeight = attrHeight
         mlpWidth = attrWidth
-
-        val attrId = ba.getResourceId(0, View.NO_ID)
-        if(attrId == View.NO_ID) id = View.generateViewId()
 
         ba.recycle()
 
