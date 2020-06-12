@@ -46,11 +46,9 @@
 
     </com.jjlf.library_layout.views.JJConstraintLayout>
 
-    <com.jjlf.library_layout.views.JJView
+    <com.jjlf.library_layout.views.JJConstraintLayout
         android:layout_width="0dp"
         android:layout_height="50dp"
-
-
 
         app:support_configuration_changed="true"
         app:support_landscape="true"
@@ -65,7 +63,7 @@
         app:cllCenterHorizontallyOf="@id/topView"
 
         android:background="@color/colorAccent"
-        tools:ignore="MissingConstraints" />
+         />
 
 
 </com.jjlf.library_layout.views.JJConstraintLayout>

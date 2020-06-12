@@ -361,7 +361,7 @@ open class JJRelativeLayout : RelativeLayout {
                 mlpPadding.left = mar ; mlpPadding.right = mar
             }
             R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth -> {
-                val mar = JJScreen.percentHeight(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth,0f))
+                val mar = JJScreen.percentWidth(a.getFloat(R.styleable.JJConstraintLayout_lpPaddingHorizontalPerScWidth,0f))
                 mlpPadding.left = mar ; mlpPadding.right = mar
             }
             R.styleable.JJConstraintLayout_lpPaddingHorizontalResponsive -> {
