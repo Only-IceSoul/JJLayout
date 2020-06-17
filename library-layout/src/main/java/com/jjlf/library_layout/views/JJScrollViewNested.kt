@@ -79,9 +79,6 @@ open class JJScrollViewNested : NestedScrollView {
         clMargins(mClMargin)
         cllMargins(mCllMargin)
 
-        if(id == View.NO_ID) id = View.generateViewId()
-
-
     }
     private fun setupAndroidBase(attrs: AttributeSet?){
         val attrsArray = intArrayOf(
@@ -94,7 +91,8 @@ open class JJScrollViewNested : NestedScrollView {
 
         val attrWidth = ba.getLayoutDimension(1, 0)
         val attrHeight = ba.getLayoutDimension(2, 0)
-
+        val resId = ba.getResourceId(0,View.generateViewId())
+        id = resId
         if(attrWidth > 0 || attrWidth == -2) clWidth(attrWidth)
         if(attrHeight > 0 || attrHeight == -2) clHeight(attrHeight)
 

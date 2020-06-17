@@ -85,7 +85,6 @@ open class JJImageButton : AppCompatImageButton {
         clMargins(mClMargin)
         cllMargins(mCllMargin)
 
-        if(id == View.NO_ID) id = View.generateViewId()
 
 
     }
@@ -97,7 +96,8 @@ open class JJImageButton : AppCompatImageButton {
         )
         val ba = context.obtainStyledAttributes(attrs,
             attrsArray, 0, 0)
-
+        val resId = ba.getResourceId(0,View.generateViewId())
+        id = resId
         val attrWidth = ba.getLayoutDimension(1, 0)
         val attrHeight = ba.getLayoutDimension(2, 0)
 

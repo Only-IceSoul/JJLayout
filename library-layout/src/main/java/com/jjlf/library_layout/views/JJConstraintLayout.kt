@@ -82,10 +82,9 @@ open class JJConstraintLayout : ConstraintLayout {
         clMargins(mClMargin)
         cllMargins(mCllMargin)
 
-        if(id == View.NO_ID) id = View.generateViewId()
-
 
     }
+
     private fun setupAndroidBase(attrs: AttributeSet?){
         val attrsArray = intArrayOf(
             android.R.attr.id,
@@ -95,6 +94,8 @@ open class JJConstraintLayout : ConstraintLayout {
         val ba = context.obtainStyledAttributes(attrs,
             attrsArray, 0, 0)
 
+        val resId = ba.getResourceId(0,View.generateViewId())
+        id = resId
         val attrWidth = ba.getLayoutDimension(1, 0)
         val attrHeight = ba.getLayoutDimension(2, 0)
 
@@ -103,6 +104,7 @@ open class JJConstraintLayout : ConstraintLayout {
 
         mlpHeight = attrHeight
         mlpWidth = attrWidth
+
 
         ba.recycle()
 
@@ -1521,6 +1523,7 @@ open class JJConstraintLayout : ConstraintLayout {
         mConstraintSet.setVisibilityMode(id,ConstraintSet.VISIBILITY_MODE_IGNORE)
         mConstraintSetLandScape.setVisibilityMode(id,ConstraintSet.VISIBILITY_MODE_IGNORE)
     }
+
     private fun responsiveSizeDimension(a: TypedArray, style:Int) : Int {
         val t = resources.obtainTypedArray(a.getResourceId(style,
             View.NO_ID))
@@ -1531,7 +1534,6 @@ open class JJConstraintLayout : ConstraintLayout {
         t.recycle()
         return re
     }
-
     private fun responsiveSizePercentScreenWidth(a: TypedArray, style:Int) : Int {
         val t = resources.obtainTypedArray(a.getResourceId(style,
             View.NO_ID))
@@ -1590,7 +1592,7 @@ open class JJConstraintLayout : ConstraintLayout {
                 margin?.marginStart =  mlpMargins.left
                 margin?.marginEnd =  mlpMargins.right
                 margin?.bottomMargin =  mlpMargins.bottom
-
+                requestLayout()
             }
         }
 
