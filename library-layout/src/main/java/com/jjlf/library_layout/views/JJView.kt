@@ -1566,6 +1566,7 @@ open class JJView : View {
     }
 
     private fun applyLayoutParams(orientation:Int){
+        if(layoutParams == null) layoutParams = ViewGroup.MarginLayoutParams(0, 0)
         val isLandScale = orientation == Configuration.ORIENTATION_LANDSCAPE
         if(isLandScale && mSupportLandScape) applyLayoutParamsLandScape() else applyLayoutParamsPortrait()
     }
