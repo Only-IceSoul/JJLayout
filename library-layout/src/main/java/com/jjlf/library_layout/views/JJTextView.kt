@@ -1560,23 +1560,28 @@ open class JJTextView : AppCompatTextView {
 
 
     var mInit = true
-    private var mlsHeight = 0
-    private var mlsWidth = 0
+    private var mlsHeight = -3
+    private var mlsWidth = -3
     private var mlsMargins = JJMargin()
     private var mlsPadding = JJPadding()
     private var mConfigurationChanged = false
-    private var mlpHeight = 0
-    private var mlpWidth = 0
+    private var mlpHeight = -3
+    private var mlpWidth = -3
     private var mlpMargins = JJMargin()
     private var mlpPadding = JJPadding()
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        val isLandScale = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         if(mInit){
-            if(isLandScale && mSupportLandScape) applyLayoutParamsLandScape() else applyLayoutParamsPortrait()
+            applyLayoutParams(resources.configuration.orientation)
             mInit = false
         }
     }
+
+    private fun applyLayoutParams(orientation:Int){
+        val isLandScale = orientation == Configuration.ORIENTATION_LANDSCAPE
+        if(isLandScale && mSupportLandScape) applyLayoutParamsLandScape() else applyLayoutParamsPortrait()
+    }
+
     private fun applyLayoutParamsPortrait(){
         val csParent = parent as? ConstraintLayout
         val mlParent = parent as? MotionLayout
@@ -1588,8 +1593,8 @@ open class JJTextView : AppCompatTextView {
                 }
             }
             else -> {
-                layoutParams.height = mlpHeight
-                layoutParams.width = mlpWidth
+                if(mlpHeight != -3) layoutParams.height = mlpHeight
+                if(mlpWidth != -3)  layoutParams.width = mlpWidth
                 val margin = layoutParams as? ViewGroup.MarginLayoutParams
                 margin?.topMargin = mlpMargins.top
                 margin?.marginStart =  mlpMargins.left
@@ -1622,8 +1627,8 @@ open class JJTextView : AppCompatTextView {
                 }
             }
             else -> {
-                layoutParams.height = mlsHeight
-                layoutParams.width = mlsWidth
+                if(mlsHeight != -3) layoutParams.height = mlsHeight
+                if(mlsWidth != -3)  layoutParams.width = mlsWidth
                 val margin = layoutParams as? ViewGroup.MarginLayoutParams
                 margin?.topMargin = mlsMargins.top
                 margin?.marginStart = mlsMargins.left
@@ -1636,11 +1641,10 @@ open class JJTextView : AppCompatTextView {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         if(mConfigurationChanged){
-            if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE && mSupportLandScape) {
-                applyLayoutParamsLandScape()
-            } else  {
-                applyLayoutParamsPortrait()
+            newConfig?.orientation?.let {
+                applyLayoutParams(it)
             }
+
         }
     }
 
@@ -1844,31 +1848,23 @@ open class JJTextView : AppCompatTextView {
 
      fun lpWidth(w: Int) : JJTextView{
         mlpWidth = w
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
      fun lpHeight(h: Int) : JJTextView{
         mlpHeight = h
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
      fun lpPadding(pad: JJPadding) : JJTextView{
         mlpPadding = pad
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
 
      fun lpMargin(mar: JJMargin) : JJTextView{
         mlpMargins = mar
-        return this
-    }
-
-    fun lpApply() :  JJTextView {
-        layoutParams.height = mlpHeight
-        layoutParams.width = mlpWidth
-        val margin = layoutParams as? ViewGroup.MarginLayoutParams
-        margin?.topMargin = mlpMargins.top
-        margin?.marginStart =  mlpMargins.left
-        margin?.marginEnd =  mlpMargins.right
-        margin?.bottomMargin =  mlpMargins.bottom
-        setPaddingRelative(mlpPadding.left,mlpPadding.top,mlpPadding.right,mlpPadding.bottom)
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
 
@@ -1878,31 +1874,23 @@ open class JJTextView : AppCompatTextView {
 
      fun lplWidth(w: Int) : JJTextView{
         mlsWidth = w
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
      fun lplHeight(h: Int) : JJTextView{
         mlsHeight = h
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
      fun lplPadding(pad: JJPadding) : JJTextView{
         mlsPadding = pad
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
 
      fun lplMargin(mar: JJMargin) : JJTextView{
         mlsMargins = mar
-        return this
-    }
-
-    fun lplApply():JJTextView{
-        layoutParams.height = mlsHeight
-        layoutParams.width = mlsWidth
-        val margin = layoutParams as? ViewGroup.MarginLayoutParams
-        margin?.topMargin = mlsMargins.top
-        margin?.marginStart = mlsMargins.left
-        margin?.marginEnd = mlsMargins.right
-        margin?.bottomMargin = mlsMargins.bottom
-        setPaddingRelative(mlsPadding.left,mlsPadding.top,mlsPadding.right,mlsPadding.bottom)
+         applyLayoutParams(resources.configuration.orientation)
         return this
     }
 
@@ -1911,19 +1899,25 @@ open class JJTextView : AppCompatTextView {
     //region CoordinatorLayout params
 
     private fun setupCol() {
-        val a = layoutParams as?  CoordinatorLayout.LayoutParams
-        layoutParams = a
+        val lp = CoordinatorLayout.LayoutParams(0,0)
+        if(mGravityCol != 0) lp.gravity = mGravityCol
+        if(mBehavior != null) lp.behavior = mBehavior
+        layoutParams = lp
+        applyLayoutParams(resources.configuration.orientation)
     }
 
+    private var mGravityCol = 0
     fun colGravity(gravity: Int): JJTextView {
+        mGravityCol = gravity
         setupCol()
-        (layoutParams as?  CoordinatorLayout.LayoutParams)?.gravity = gravity
         return this
     }
 
-    fun colBehavior(behavior: AppBarLayout.Behavior){
+    private var mBehavior : AppBarLayout.Behavior? = null
+    fun colBehavior(behavior: AppBarLayout.Behavior): JJTextView{
+        mBehavior = behavior
         setupCol()
-        (layoutParams as?  CoordinatorLayout.LayoutParams)?.behavior = behavior
+        return this
     }
 
     //endregion
@@ -1931,193 +1925,54 @@ open class JJTextView : AppCompatTextView {
     //region AppBarLayout Params
 
     private  fun setupAblp(){
-        val a = layoutParams as? AppBarLayout.LayoutParams
-        layoutParams = a
+        val lp =  AppBarLayout.LayoutParams(0,0)
+        if(mScrollFlags != 0) lp.scrollFlags = mScrollFlags
+        if(mScrollInterpolator != null ) lp.scrollInterpolator = mScrollInterpolator
+        layoutParams = lp
+        applyLayoutParams(resources.configuration.orientation)
     }
 
+    private var mScrollFlags = 0
     fun ablScrollFlags(flags: Int) : JJTextView {
+        mScrollFlags = flags
         setupAblp()
-        (layoutParams as? AppBarLayout.LayoutParams)?.scrollFlags = flags
+
         return this
     }
 
+    private var mScrollInterpolator : Interpolator? = null
     fun ablScrollInterpolator(interpolator: Interpolator) : JJTextView {
+        mScrollInterpolator = interpolator
         setupAblp()
-        (layoutParams as? AppBarLayout.LayoutParams)?.scrollInterpolator = interpolator
         return this
     }
-
-    //endregion
-
-    //region RelativeLayout Params
-
-    private fun setupRlp(){
-        val a = layoutParams as? RelativeLayout.LayoutParams
-        layoutParams = a
-    }
-
-    fun rlAbove(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ABOVE,viewId)
-        return this
-    }
-
-    fun rlBelow(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.BELOW,viewId)
-        return this
-    }
-
-    fun rlAlignParentBottom(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,data)
-        return this
-    }
-
-    fun rlAlignParentTop(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_TOP,data)
-        return this
-    }
-
-    fun rlAlignParentStart(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_START,data)
-        return this
-    }
-
-    fun rlAlignParentEnd(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_END,data)
-        return this
-    }
-
-    fun rlAlignParentLeft(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_LEFT,data)
-        return this
-    }
-
-    fun rlAlignParentRight(value : Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,data)
-        return this
-    }
-
-    fun rlAlignEnd(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_END,viewId)
-        return this
-    }
-
-    fun rlAlignStart(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_START,viewId)
-        return this
-    }
-
-    fun rlAlignTop(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_TOP,viewId)
-        return this
-    }
-
-    fun rlAlignBottom(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BOTTOM,viewId)
-        return this
-    }
-
-
-    fun rlAlignLeft(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_LEFT,viewId)
-        return this
-    }
-
-    fun rlAlignRight(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_RIGHT,viewId)
-        return this
-    }
-
-    fun rlRightToLeft(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.LEFT_OF,viewId)
-        return this
-    }
-
-    fun rlLeftToRight(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.RIGHT_OF,viewId)
-        return this
-    }
-
-    fun rlStartToEnd(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.END_OF,viewId)
-        return this
-    }
-
-    fun rlEndToStart(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.START_OF,viewId)
-        return this
-    }
-
-    fun rlCenterInParent(value:Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_IN_PARENT,data)
-        return this
-    }
-
-    fun rlCenterInParentVertically(value:Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_VERTICAL,data)
-        return this
-    }
-
-    fun rlCenterInParentHorizontally(value:Boolean = true): JJTextView {
-        setupRlp()
-        val data = if(value) 1 else 0
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.CENTER_HORIZONTAL,data)
-        return this
-    }
-
-    fun rlAlignBaseline(viewId: Int): JJTextView {
-        setupRlp()
-        (layoutParams as? RelativeLayout.LayoutParams)?.addRule(RelativeLayout.ALIGN_BASELINE,viewId)
-        return this
-    }
-
 
     //endregion
 
     //region LinearLayout Params
     private fun setupLlp() {
-        val a = layoutParams as? LinearLayout.LayoutParams
-        layoutParams = a
+        val lp = LinearLayout.LayoutParams(0,0)
+        if(mWeight != 0f) lp.weight = mWeight
+        if(mGravity != -1) lp.gravity = mGravity
+        layoutParams = lp
+        applyLayoutParams(resources.configuration.orientation)
     }
+
+    private var mWeight = 0f
     fun llWeight(w: Float): JJTextView {
+        mWeight = w
         setupLlp()
-        (layoutParams as? LinearLayout.LayoutParams)?.weight = w
         return this
     }
+    private var mGravity = -1
     fun llGravity(gravity: Int): JJTextView {
+        mGravity = gravity
         setupLlp()
-        (layoutParams as? LinearLayout.LayoutParams)?.gravity = gravity
         return this
     }
 
     //endregion
+
 
 
 
